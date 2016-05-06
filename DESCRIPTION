@@ -1,0 +1,11 @@
+Package: NIcalc
+Title: Functions to Calculate a Nature Index
+Version: 0.0.0.9000
+Authors@R: c(
+person("Bard", "Pedersen", email = "Bard.Pedersen@nina.no", role = c("aut", "cre"),
+person("Jens", "AStrom", email = "Jens.Astrom@nina.no", role = c("aut", "cre"))
+Description: Contains functions and sample data to calculate a Nature Index [link].
+Depends: R (>= 3.2.3)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
