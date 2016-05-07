@@ -95,5 +95,42 @@ Vignettes are a nice way to provide a fuller manual of how to work with a packag
 use_vignette("Workflow")
 ```
 
+Include data in the package
+================
+Datasets can be included in the package as well. Easiest is to use the `devtools::use_data()` function. Here, I include a dummy dataset. This code stores the dummy dataframe "NIdata1" in the "NIcalc/data" folder. 
+
+```{r, eval=F}
+set.seed(12345)
+NIdata1<-as.data.frame(matrix(runif(200), ncol=5))
+names(NIdata1)<-paste("column", 1:5, sep="_")
+
+use_data(NIdata1)
+
+```
+
+Such datasets should also be documented. This is put in a file in the "R-folder" called "NIdata.R"
+
+```{r, eval=F}
+#' Dummy dataset
+#'
+#' A dataset of 200 random numbers put in a dataframe
+#'
+#' @format A data frame with 40 rows and 5 columns:
+#' \describe{
+#'   \item{column1}{random numbers}
+#'   \item{column1}{random numbers}
+#'   \item{column1}{random numbers}
+#'   \item{column1}{random numbers}
+#'   \item{column1}{random numbers}
+#'   }
+"NIdata1"
+
+```
+
+Once the package is installed (and loaded), this data can be loaded through `data(NIdata)`
+
+Note that you can also include raw data. This is perhaps better, if you want to show users by examples of how to user their own data. See Hadley Wickham's R-package book.
+
+
 
 
