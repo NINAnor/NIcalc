@@ -10,6 +10,6 @@
 I think this is the wrong way to go about it.
 }
 \details{
-Should probably document different methods separately
+I don't know what more to say.
 }
 
