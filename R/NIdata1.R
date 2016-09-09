@@ -10,4 +10,4 @@
 #'   \item{column1}{random numbers}
 #'   \item{column1}{random numbers}
 #'   }
-"NIdata1"
+"NIdata1" 
