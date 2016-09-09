@@ -3,7 +3,8 @@ Title: Functions to Calculate a Nature Index
 Version: 0.0.0.9000
 Authors@R: c(
   person("Bard", "Pedersen", email = "Bard.Pedersen@nina.no", role = c("aut")),
-  person("Jens", "Astrom", email = "Jens.Astrom@nina.no", role = c("cre"))
+  person("Jens", "Astrom", email = "Jens.Astrom@nina.no", role = c("cre")),
+  person("Stein Are", "Saether", email = "Stein.Are.Saether@nina.no", role = c("aut"))
   )
 Description: Contains functions and sample data to calculate a Nature Index
     [link].
