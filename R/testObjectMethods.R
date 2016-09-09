@@ -4,7 +4,6 @@
 #'
 #' Should probably document different methods separately
 #'
-#'
 
 mean.testObject <- function(x) mean(x[["RandomNumbers"]])
 
