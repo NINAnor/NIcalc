@@ -1,12 +1,10 @@
-#' Methods for class testObject
+#' Plot method for class testObject
 #'
-#' I think this is the wrong way to go about it.
+#' Example method to see how it works
 #'
-#' Should probably document different methods separately
-#'
-
-mean.testObject <- function(x) mean(x[["RandomNumbers"]])
-
+#' Some details
+#' @method plot testObject
+#' @export
 
 plot.testObject <- function(x) {
   old.par <- par()
