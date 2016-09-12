@@ -10,6 +10,11 @@ Description: Contains functions and sample data to calculate a Nature Index
     [link].
 Depends:
     R (>= 3.2.3)
+Imports:
+  gamlss.dist,
+  truncnorm,
+  stats,
+  msm
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

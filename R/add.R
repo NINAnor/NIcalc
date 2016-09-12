@@ -7,6 +7,8 @@
 #' add(1, 1)
 #' add(13, 1)
 #' @export
+#'
+#'
 add <- function(x, y) {
     x + y
-} 
+}
