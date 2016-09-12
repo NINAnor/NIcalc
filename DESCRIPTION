@@ -9,7 +9,7 @@ Authors@R: c(
 Description: Contains functions and sample data to calculate a Nature Index
     [link].
 Depends:
-    R (>= 3.2.3)
+    R (>= 3.1.0)
 Imports:
   gamlss.dist,
   truncnorm,
