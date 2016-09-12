@@ -12,7 +12,6 @@
 #' distributions have two parameters, except the Poisson with only one parameter.
 #'
 #'
-#'
 #' @name qdev
 #' @author All functions programmed by Nigel Yoccoz except qdev.ZEXP programmed by Bård Pedersen
 #'
