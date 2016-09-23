@@ -1,18 +1,27 @@
 #' Random Draws
 #'
-#' \code{sampleobs} returns \code{nsim} random draws from a two-parameter
-#' probability distribution specified by the arguments.
+#' \code{sampleobs} either returns \code{nsim} random draws from a two-parameter
+#' probability distribution specified by the function's arguments, or \code{nsim}
+#' copies of the argument \code{obs}, depending on the argument \code{distrib}.
 #'
-#' \code{distrib} and the parameters mu and sig
+#' \code{sampleobs} samples from a single distribution among a predetermined set
+#' of distribution families. The predetermined set consists of the truncated
+#' normal-, lognormal-, Weibull-, gamma-, zero-inflated exponential-, Poisson-,
+#' negative binomial-, and zero-inflated Poisson distribution families. The lower
+#' bound in the truncated normal distribution is always zero, while the upper
+#' bound is infinity. With these restrictions all distributions in the set have
+#' two parameters, except the Poisson with only one parameter.
+#' Alternatively, if \code{distrib == "NoBoot"}, the function returns \code{nsim}
+#' copies of \code{obs}.
 #'
-#' from a predetermined set of distribution families. The predetermined set includes
-#' normal-, truncated normal-, lognormal-, weibull-, gumbell-, gamma-, poisson-, negative binomial-, and zero-inflated poisson distribution.
-#' The lower bound in the truncated normal distribution is always zero, while the upper bound is infinity.
-#' With these restrictions all theoretical distributions have two parameters, except the poisson with only one parameter.
-#' Alternatively, if distrib == "NoBoot", the function returns nsim copies of obs.
+#' Functions called:
+#' random generation functions rtnorm, rLOGNO, rWEI, qGA, rPO, rNBII, rZIP
+#' in the gamlss package, and rexp in the stats package.
 
 #' @name sampleobs
 #' @author Nigel Yoccoz and Bård Pedersen
+#'
+#' @import gamlss.dist
 #'
 #' @param nsim	double	length = 1, number of draws (simulations)
 #' @param distrib 	character	length = 1, distribution family ("Normal","TruncNormal","LogNormal","Gumbel","Weibull","ZIExponential","Gamma","Poisson","NegBinom","ZIP") or copy obs (when distrib == "NoBoot")
@@ -22,12 +31,6 @@
 #
 #' @return double vector length = \code{nsim}, \code{nsim} random draws from
 #' specified (by distrib, mu and sig) model or \code{nsim} copies of \code{obs}.
-#
-# Functions called:
-# rNO, rtnorm, rLOGNO, rWEI, rGU, qGA, rPO, rNBII, rZIP
-# random generation functions in the gamlss package
-#
-
 
 sampleobs <- function(nsim = 99, distrib, mu, sig, obs) {
 
