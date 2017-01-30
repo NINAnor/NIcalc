@@ -10,7 +10,7 @@
 \alias{qdev.WEI}
 \alias{qdev.ZEXP}
 \alias{qdev.ZIP}
-\title{Sum of squared differences between distribution parameters}
+\title{Sum of squared Differences between Distribution Parameters}
 \usage{
 qdev.TNO(par, obs, prob)
 
@@ -36,7 +36,7 @@ qdev.ZIP(par, obs, prob)
 \item{prob}{double    length=2    "vector of confidence", i.e. proba=(p(rand.obs < q1),p(rand.obs < q2))}
 }
 \value{
-All functions returns an unnamed object of length=2 with residual sums of squares
+All functions returns an unnamed object of length=1 with the residual sum of squares
 }
 \description{
 Functions for calculating sum of squared differences between "observed" parameter values and
@@ -45,9 +45,9 @@ model distribution parameters
 \details{
 Functions qdev.TNO, qdev.LOGNO, qdev.WEI, qdev.ZEXP, qdev.GA, qdev.PO, qdev.NBII, qdev.ZIP below
 returns the sum of squared differences between "observed" values for the expected value (obs[2]) and two
-quantiles (obs[1] and obs[3]) from an empirical distribution and ditto (m/q2, q1 and q3) predicted from
-respectively a given truncated normal-, lognormal-, weibull-, zero-inflated exponential distribution
-gamma-, poisson-, negative binomial-, and zero-inflated poisson distribution. The lower bound in the truncated
+quantiles (obs[1] and obs[3]) from an empirical distribution and ditto predicted from
+respectively a given truncated normal-, lognormal-, Weibull-, zero-inflated exponential-,
+gamma-, Poisson-, negative binomial-, and zero-inflated poisson distribution. The lower bound in the truncated
 normal distribution is always zero, while the upper bound is infinity. With these restrictions all theoretical
 distributions have two parameters, except the Poisson with only one parameter.
 }
