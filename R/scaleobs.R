@@ -43,7 +43,7 @@
 #' split accordingly into a set of matrices, where each matrix contains draws of scaled indicator observations
 #' for one single year only.
 #'
-#' @example
+#' @examples
 #' \dontrun{
 #' ##Add example, here, possibly as a don't run
 #' }
