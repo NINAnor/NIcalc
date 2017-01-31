@@ -17,19 +17,19 @@
 #' @return \code{estim.fct} returns a data.frame with \code{dim = c(1,4)},
 #' consisting of the following vectors\cr \code{[[1]] $distrib} character,
 #' selected family for model distribution, i.e. one of \code{c("LogNormal",
-#' "Poisson", "NegBinom")}. \cr \code{[[2]] $mu} double,
+#' "NegBinom", "Poisson")}. \cr \code{[[2]] $mu} double,
 #' first parameter of fitted model distribution\cr \code{[[3]] $sig}
 #' double, second parameter of fitted model distribution\cr
-#' \code{[[4]] $ssq} double, sum of squared deviations between observed
+#' \code{[[4]] $crit} double, sum of squared deviations between observed
 #' parameters and those of the fitted model distribution.
 #'
 #' @examples
-#' estimlight.fct(obsval = c(6,13,25),proba = c(0.25,0.75), type = "continuous")
+#' estimlight.fct(obsval = c(6,13,25))
 #' estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "continuous")
 #' estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "discrete")
 #' @export
 
-estimlight.fct <- function(obsval = c(0.3,0.6,0.8), proba = c(0.25, 0.75),
+estimlight.fct <- function(obsval = NULL, proba = c(0.25, 0.75),
                            type = "continuous") {
 
   if(obsval[2] == 0) {obsval[2] <- 0.0001}

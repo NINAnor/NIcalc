@@ -31,6 +31,9 @@
 #' function \code{\link{estim.fct}}. If this results in an error, it calls
 #' \code{\link{estimlight.fct}} instead.
 #'
+#' \code{elicitation} is a utility function adapted to the mathematical framework
+#' for calculating the nature index.
+#'
 #' @seealso \code{\link{estim.fct}}, \code{\link{estimlight.fct}},\cr
 #' \code{\link{qdev}} for the calculation of sum of squares between
 #' the parameters of the indicator observation and model distributions.
@@ -67,7 +70,7 @@
 #'
 #' @export
 
- elicitate <- function(expected.value=c(1.0), lower=c(0.75), upper = c(1.25),
+ elicitate <- function(expected.value=NULL, lower=NULL, upper = NULL,
                          type.t = c("continuous"), prob.quant = c(0.25,0.75)) {
 
   N.values <- length(expected.value)
