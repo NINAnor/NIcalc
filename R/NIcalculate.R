@@ -13,7 +13,6 @@
 #' Area weights should not be entered to \code{NIcalculate} if NI is calculated for basic spatial units.
 #'
 #' \code{NIcalculate} returns a matrix of \code{nsim} draws of NI for each NI-area (or basic spatial unit).
-#
 #'
 #' @name NIcalculate
 #' @author Bård Pedersen
@@ -27,8 +26,8 @@
 #' @param scaled.bootmat	double matrix,	dim = N.omr x nsim,			nsim random draws of scaled indicator observations or nsim copies of scaled expected values
 #' @param Weights.trof	double matrix,	dim = N.kom x N.ind	,		trophic weights * fidelity weights
 #' @param Weights.reg.area	double array,	dim = N.kom x N.ind x N.reg	array of area weights
-#' @return NI, double matrix,	dim=(N.kom or N.reg) x \code{nsim} 	matrix of NI draws
-#' @author Bård Pedersen
+#'
+#' @return \code{NI}, double matrix,	dim=(N.kom or N.reg) x \code{nsim} 	matrix of NI draws
 #' @keywords
 #' @export
 #' @examples

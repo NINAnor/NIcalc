@@ -5,5 +5,6 @@
 # N.Omr
 # N.kom
 # FK_OmraadeID
-# Scaled.ind.per.mun  også
+# Scaled.ind.per.mun  også stor S
+# kvantiler
 # endre funksjonsnavn til verb, NIcalculation -> NIcalculate
