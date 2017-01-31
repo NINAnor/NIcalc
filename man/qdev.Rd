@@ -56,10 +56,11 @@ qdev.TNO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 qdev.LOGNO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 qdev.WEI(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 qdev.ZEXP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
-qdev.GA(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
-qdev.PO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
-qdev.NBII(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 qdev.ZIP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+qdev.NBII(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+qdev.PO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+qdev.GA(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+
 }
 \author{
 All functions programmed by Nigel Yoccoz except qdev.ZEXP programmed by Bård Pedersen
