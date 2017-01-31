@@ -15,27 +15,27 @@ munweights.fct(Municipalities = paste("Mun", 1:36, sep = ""),
   sample(1:36, 30))])
 }
 \arguments{
-\item{Municipalities}{character        length=length(Municipality)    vector of names of basic spatial units}
+\item{Municipalities}{character vector of length=length(Municipality) with names of basic spatial units.}
 
-\item{Indicators}{character        length=length(Indicators)    vector of the names of all indicators included in the calculation}
+\item{Indicators}{character    vector of    length=length(Indicators)    with the names of all indicators included in the calculation.}
 
-\item{FK_TrophicgroupID}{integer        length=length(Indicators)    vector of trophic group IDs that the corresponding indicator belongs to.}
+\item{FK_TrophicgroupID}{integer    vector of    length=length(Indicators) with trophic group IDs that the corresponding indicator belongs to.}
 
-\item{Key.indicators}{logical        length=length(Indicators)    vector indicating whether corresponding indicator is a key indicator or not.}
+\item{Key.indicators}{logical    vector of    length=length(Indicators), indicating whether the corresponding indicator is a key indicator or not.}
 
-\item{Fidelity}{double        length=length(Indicators)    vector of indicator fidelities to the major habitat in question.}
+\item{Fidelity}{numeric vector of length=length(Indicators)    with fidelities of each indicator to the major habitat in question.}
 
-\item{Areaind.Name}{integer        length=length(Areaind.Name)    vector of unique indicator area IDs.}
+\item{Areaind.Name}{integer    vector of    length=length(Areaind.Name)    with unique indicator area IDs.}
 
-\item{Areaind.Indicator}{character        length=length(Areaind.Name)    vector of indicator names corresponding to the entries in Areaind.Name.}
+\item{Areaind.Indicator}{character    vector of length=length(Areaind.Name)    with indicator names corresponding to the entries in Areaind.Name.}
 
-\item{Area.Name}{integer        length=length(Area.Name)    vector of indicator area IDs, where each indicator area ID is
+\item{Area.Name}{integer    vector of length=length(Area.Name)    with indicator area IDs, where each indicator area ID is
 repeated for each spatial unit it consist of.}
 
 \item{Area.Municipality}{character        length=length(Area.Name)    vector of names of basic spatial units corresponding to the entries in Area.Name.}
 }
 \value{
-Weights.trof double matrix	dim=length(Municipality) x length(Indicators) Wi * Wf.
+Weights.trof numeric matrix of	dim=length(Municipality) x length(Indicators) Wi * Wf.
 }
 \description{
 Calculates fidelity weights (Wi), trophic weights (Wf) and their product for each combination

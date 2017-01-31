@@ -23,11 +23,19 @@
 #' @param obs	double	length=3	observed mean and quantiles
 #' @param prob	double	length=2	"vector of confidence", i.e. proba=(p(rand.obs < q1),p(rand.obs < q2))
 #' @return All functions returns an unnamed object of length=1 with the residual sum of squares
-#'
-#'
-#' @rdname qdev
+#' @name qdev
 #' @examples
 #' qdev.TNO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.LOGNO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.WEI(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.ZEXP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.ZIP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.NBII(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.PO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#' qdev.GA(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
+#'
+NULL
+#' @rdname qdev
 #' @export
 qdev.TNO <- function(par,obs,prob) {
   q1<-qtnorm(p=prob[1], mean=par[1], sd=par[2], lower=0)
@@ -36,11 +44,7 @@ qdev.TNO <- function(par,obs,prob) {
   qqq<-c(q1,q2,q3)
   sum((qqq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.LOGNO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 qdev.LOGNO <- function(par,obs,prob) {
   q1<-qLOGNO(p=prob[1],mu=par[1],sigma=par[2])
@@ -49,11 +53,7 @@ qdev.LOGNO <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
-
 #' @rdname qdev
-#' @examples
-#' qdev.WEI(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 #'
 qdev.WEI <- function(par,obs,prob) {
@@ -66,13 +66,8 @@ qdev.WEI <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.ZEXP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
-#'
 qdev.ZEXP <- function(par,obs,prob) {
   if (par[1] == 1) {
     qmq <- c(0.0,0.0,0.0)
@@ -84,11 +79,7 @@ qdev.ZEXP <- function(par,obs,prob) {
   }
   sum((qmq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.GA(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 #'
 qdev.GA <- function(par,obs,prob) {
@@ -98,11 +89,7 @@ qdev.GA <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.PO(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 #'
 qdev.PO <- function(par,obs,prob) {
@@ -112,11 +99,7 @@ qdev.PO <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.NBII(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 #'
 qdev.NBII <- function(par,obs,prob) {
@@ -126,11 +109,7 @@ qdev.NBII <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
-#'
 #' @rdname qdev
-#' @examples
-#' qdev.ZIP(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 #' @export
 #'
 # 	Zero-inflated Poisson distribution

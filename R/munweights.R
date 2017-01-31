@@ -11,18 +11,18 @@
 #' non-key indicators are observed in the municipality, and 1 if only key indicators are observed.
 #' Weights.trof : Matrix Double (N.kom x N.ind) Wi * Wf
 #'
-#' @param Municipalities	character		length=length(Municipality)	vector of names of basic spatial units
-#' @param Indicators		character		length=length(Indicators)	vector of the names of all indicators included in the calculation
-#' @param FK_TrophicgroupID	integer		length=length(Indicators)	vector of trophic group IDs that the corresponding indicator belongs to.
-#' @param Key.indicators	logical		length=length(Indicators)	vector indicating whether corresponding indicator is a key indicator or not.
-#' @param Fidelity		double		length=length(Indicators)	vector of indicator fidelities to the major habitat in question.
-#' @param Areaind.Name	integer		length=length(Areaind.Name)	vector of unique indicator area IDs.
-#' @param Areaind.Indicator character		length=length(Areaind.Name)	vector of indicator names corresponding to the entries in Areaind.Name.
-#' @param Area.Name		integer		length=length(Area.Name)	vector of indicator area IDs, where each indicator area ID is
+#' @param Municipalities	character vector of length=length(Municipality) with names of basic spatial units.
+#' @param Indicators		character	vector of	length=length(Indicators)	with the names of all indicators included in the calculation.
+#' @param FK_TrophicgroupID	integer	vector of	length=length(Indicators) with trophic group IDs that the corresponding indicator belongs to.
+#' @param Key.indicators	logical	vector of	length=length(Indicators), indicating whether the corresponding indicator is a key indicator or not.
+#' @param Fidelity		numeric vector of length=length(Indicators)	with fidelities of each indicator to the major habitat in question.
+#' @param Areaind.Name	integer	vector of	length=length(Areaind.Name)	with unique indicator area IDs.
+#' @param Areaind.Indicator character	vector of length=length(Areaind.Name)	with indicator names corresponding to the entries in Areaind.Name.
+#' @param Area.Name		integer	vector of length=length(Area.Name)	with indicator area IDs, where each indicator area ID is
 #' repeated for each spatial unit it consist of.
 #' @param Area.Municipality character		length=length(Area.Name)	vector of names of basic spatial units corresponding to the entries in Area.Name.
 #'
-#' @return Weights.trof double matrix	dim=length(Municipality) x length(Indicators) Wi * Wf.
+#' @return Weights.trof numeric matrix of	dim=length(Municipality) x length(Indicators) Wi * Wf.
 #'
 #' @author Bård Pedersen
 #'
