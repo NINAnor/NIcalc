@@ -11,4 +11,4 @@
 #'   \item{Key.indicators}{Logical, indicating if indicators is key indicators}
 #'   \item{Fidelity}{Numerical values of indicator fidelities in the major ecosystem in the example}
 #'   }
-"BSunits"
+"Indic"
