@@ -3,7 +3,7 @@
 #' Calculates fidelity weights (Wi), trophic weights (Wf) and their product for each combination
 #' of municipality and indicator.
 #'
-#' Wi is the fidelity of each indicator to each ecosystem, divided by the summed fidelity
+#' Wi is the fidelity of indicator to ecosystem in questions divided by summed fidelity
 #' of indicators belonging to the same trophic group occuring in a municipality.
 #' Wf for non-key indicators equals 0.5/number of trophic groups observed in the municipality if also
 #' key indicators are observed in the municipality, and 1/number of trophic groups observed in the municipality

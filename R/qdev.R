@@ -11,12 +11,13 @@
 #' normal distribution is always zero, while the upper bound is infinity. With these restrictions all theoretical
 #' distributions have two parameters, except the Poisson with only one parameter.
 #'
+#' @name qdev
 #' @author All functions programmed by Nigel Yoccoz except qdev.ZEXP programmed by Bård Pedersen
+#'
 #' @import gamlss.dist
 #' @importFrom truncnorm etruncnorm
 #' @importFrom stats qexp quantile
 #' @importFrom msm qtnorm
-#'
 #'
 #' @param par	double	length=2	parameter values for theoretical distribution
 #' @param obs	double	length=3	observed mean and quantiles
@@ -54,6 +55,7 @@ qdev.LOGNO <- function(par,obs,prob) {
 }
 #' @rdname qdev
 #' @export
+#'
 qdev.WEI <- function(par,obs,prob) {
   op <- options("warn")
   options(warn = -1)
@@ -118,5 +120,4 @@ qdev.ZIP <- function(par,obs,prob) {
   qmq<-c(q1,m,q3)
   sum((qmq-obs)^2)
 }
-
 
