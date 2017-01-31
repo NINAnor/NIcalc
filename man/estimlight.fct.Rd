@@ -4,8 +4,7 @@
 \alias{estimlight.fct}
 \title{Fit Probability Distribution to one Indicator Observation, reduced Version}
 \usage{
-estimlight.fct(obsval = c(0.3, 0.6, 0.8), proba = c(0.25, 0.75),
-  type = "continuous")
+estimlight.fct(obsval = NULL, proba = c(0.25, 0.75), type = "continuous")
 }
 \arguments{
 \item{obsval}{double, length = 3, observed mean and quantiles in the sequence
@@ -36,7 +35,7 @@ distribution in the discrete case, using the least square criterion.
 \code{estimlight.fct} is a simplified alternative to \code{\link{estim.fct}}.
 }
 \examples{
-estimlight.fct(obsval = c(6,13,25),proba = c(0.25,0.75), type = "continuous")
+estimlight.fct(obsval = c(6,13,25))
 estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "continuous")
 estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "discrete")
 }

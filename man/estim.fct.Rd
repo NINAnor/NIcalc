@@ -4,8 +4,7 @@
 \alias{estim.fct}
 \title{Fit Probability Distribution to one Indicator Observation}
 \usage{
-estim.fct(obsval = c(0.3, 0.6, 0.8), proba = c(0.25, 0.75),
-  type = "continuous")
+estim.fct(obsval = NULL, proba = c(0.25, 0.75), type = "continuous")
 }
 \arguments{
 \item{obsval}{double, length = 3, observed mean and quantiles in the sequence
@@ -37,7 +36,7 @@ model distribution families that best fits to an expected value and two
 quantiles provided as arguments.
 }
 \examples{
-estim.fct(obsval = c(0.3,0.6,0.8),proba = c(0.25,0.75), type = "continuous")
+estim.fct(obsval = c(0.3,0.6,0.8))
 estim.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "continuous")
 estim.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "discrete")
 }

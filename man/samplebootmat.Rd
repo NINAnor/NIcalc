@@ -67,14 +67,15 @@ framework for calculating the nature index.
 \code{samplebootmat} calls \code{\link{sampleobs}} which does the random draws.
 }
 \examples{
-# Example data <-
+# Example data
 aa <- 1:2 # ValueID
 bb <- rep(1,2) # Value
 cc <- c(0,1) # RefobsID
 dd <- rep(c("LogNormal"), 2) # DistID
 mu <- rep(0,2) # mu
-sig = rep(1,2)  # sig
+sig <- rep(1,2)  # sig
 samplebootmat(aa,bb,cc,dd,mu,sig)
+#' samplebootmat(aa,bb,cc,dd,mu,sig,Type.of.uncertainty = "All")
 samplebootmat(aa,bb,RefobsID = c(0,0),dd,mu,sig)
 samplebootmat(aa,bb,cc,dd,mu,sig,ref.value.code = 1)
 samplebootmat(aa,bb,cc,dd,mu,sig,ref.value.code = 2)

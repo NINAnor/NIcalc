@@ -4,7 +4,7 @@
 \alias{elicitate}
 \title{Fit Probability Distributions to Indicator Observations}
 \usage{
-elicitate(expected.value = c(1), lower = c(0.75), upper = c(1.25),
+elicitate(expected.value = NULL, lower = NULL, upper = NULL,
   type.t = c("continuous"), prob.quant = c(0.25, 0.75))
 }
 \arguments{

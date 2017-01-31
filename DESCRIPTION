@@ -11,14 +11,15 @@ Description: Contains functions and sample data to calculate a Nature Index
 Depends:
     R (>= 3.1.0)
 Imports:
-  gamlss.dist,
-  truncnorm,
-  stats,
-  msm
+    gamlss.dist,
+    truncnorm,
+    stats,
+    msm
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.0
-Suggests: knitr,
+RoxygenNote: 5.0.1
+Suggests:
+    knitr,
     rmarkdown
 VignetteBuilder: knitr
