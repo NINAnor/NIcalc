@@ -22,12 +22,12 @@ observation. When \code{type = "discrete"}, a discrete model is fitted.}
 \value{
 \code{estim.fct} returns a data.frame with \code{dim = c(1,4)},
 consisting of the following vectors\cr \code{[[1]] $distrib} character,
-selected family for model distribution, i.e. one of \code{c("LogNormal",
-"TruncNormal", "ZIExponential", "Weibull", "Gamma","Poisson",
-"NegBinom", "ZIP")}. \cr \code{[[2]] $mu} double,
+selected family for model distribution, i.e. one of \code{c("Gamma",
+"LogNormal", "TruncNormal", "Weibull", "ZIExponential", "NegBinom",
+"Poisson", "ZIP")}. \cr \code{[[2]] $mu} double,
 first parameter of fitted model distribution\cr \code{[[3]] $sig}
 double, second parameter of fitted model distribution\cr
-\code{[[4]] $ssq} double, sum of squared deviations between observed
+\code{[[4]] $crit} double, sum of squared deviations between observed
 parameters and those of the fitted model distribution.
 }
 \description{

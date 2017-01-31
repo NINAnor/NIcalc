@@ -27,21 +27,21 @@
 #'
 #' @return \code{estim.fct} returns a data.frame with \code{dim = c(1,4)},
 #' consisting of the following vectors\cr \code{[[1]] $distrib} character,
-#' selected family for model distribution, i.e. one of \code{c("LogNormal",
-#' "TruncNormal", "ZIExponential", "Weibull", "Gamma","Poisson",
-#' "NegBinom", "ZIP")}. \cr \code{[[2]] $mu} double,
+#' selected family for model distribution, i.e. one of \code{c("Gamma",
+#' "LogNormal", "TruncNormal", "Weibull", "ZIExponential", "NegBinom",
+#' "Poisson", "ZIP")}. \cr \code{[[2]] $mu} double,
 #' first parameter of fitted model distribution\cr \code{[[3]] $sig}
 #' double, second parameter of fitted model distribution\cr
-#' \code{[[4]] $ssq} double, sum of squared deviations between observed
+#' \code{[[4]] $crit} double, sum of squared deviations between observed
 #' parameters and those of the fitted model distribution.
 #'
 #' @examples
-#' estim.fct(obsval = c(0.3,0.6,0.8),proba = c(0.25,0.75), type = "continuous")
+#' estim.fct(obsval = c(0.3,0.6,0.8))
 #' estim.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "continuous")
 #' estim.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "discrete")
 #' @export
 
-estim.fct <- function(obsval = c(0.3,0.6,0.8),proba = c(0.25,0.75),
+estim.fct <- function(obsval = NULL,proba = c(0.25,0.75),
                       type = "continuous") {
 
   if (type == "continuous"){
@@ -73,8 +73,6 @@ estim.fct <- function(obsval = c(0.3,0.6,0.8),proba = c(0.25,0.75),
     mini5 = nlminb(start = c(0.5, 1), objective = qdev.GA,
                    lower = c(0.001, 0.001), prob = proba, obs = obsval)
 
-    mini <- list(mini1, mini2, mini3, mini4, mini5)
-
     #
     #	Select and store model with the best fit to obsval
     #
@@ -105,7 +103,7 @@ estim.fct <- function(obsval = c(0.3,0.6,0.8),proba = c(0.25,0.75),
     mini3 = nlminb(start = c(0.5, 1), objective = qdev.ZIP,
                    lower = c(0.001, 0.001), upper = c(10000, 0.999),
                    prob = proba, obs = obsval)
-    mini <- list(mini1, mini2, mini3)
+
     #
     #	Select and store model with the best fit to obsval
     #

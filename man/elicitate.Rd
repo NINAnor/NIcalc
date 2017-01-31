@@ -72,6 +72,9 @@ all corresponding output elements are set to \code{NA}.
 \code{elicitation} first try to fit a model distribution with a call to
 function \code{\link{estim.fct}}. If this results in an error, it calls
 \code{\link{estimlight.fct}} instead.
+
+\code{elicitation} is a utility function adapted to the mathematical framework
+for calculating the nature index.
 }
 \author{
 Bård Pedersen

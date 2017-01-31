@@ -4,44 +4,61 @@
 \alias{sampleobs}
 \title{Random Draws}
 \usage{
-sampleobs(nsim = 99, distrib, mu, sig, obs)
+sampleobs(nsim = 99, distrib, mu, sig)
 }
 \arguments{
-\item{nsim}{double    length = 1, number of draws (simulations)}
+\item{nsim}{double,    length = 1, number of draws (simulations)}
 
-\item{distrib}{character    length = 1, distribution family ("Normal","TruncNormal","LogNormal","Gumbel","Weibull","ZIExponential","Gamma","Poisson","NegBinom","ZIP") or copy obs (when distrib == "NoBoot")}
+\item{distrib}{character, length = 1, distribution family, i.e. one of
+\code{c("Gamma", "LogNormal", "TruncNormal", "Weibull", "ZIExponential",
+"NegBinom", "Poisson", "ZIP")} or copy obs (when distrib == "NoBoot")}
 
-\item{mu}{double    length = 1, parameter 1 of model distribution}
+\item{mu}{double, length = 1, parameter 1 of model distribution}
 
-\item{sig}{double    length = 1, parameter 2 of model distribution}
-
-\item{obs}{double    length = 1, value (observed mean) to be copied if distrib == "NoBoot".}
+\item{sig}{double, length = 1, parameter 2 of model distribution}
 }
 \value{
-double vector length = \code{nsim}, \code{nsim} random draws from
-specified (by distrib, mu and sig) model or \code{nsim} copies of \code{obs}.
+double vector, length = \code{nsim}, \code{nsim} random draws from
+model specified by \code{distrib}, \code{mu}, and \code{sig}.
 }
 \description{
-\code{sampleobs} either returns \code{nsim} random draws from a two-parameter
-probability distribution specified by the function's arguments, or \code{nsim}
-copies of the argument \code{obs}, depending on the argument \code{distrib}.
+\code{sampleobs} returns \code{nsim} random draws from a two-parameter
+probability distribution specified by the function's arguments.
 }
 \details{
 \code{sampleobs} samples from a single distribution among a predetermined set
-of distribution families. The predetermined set consists of the truncated
-normal-, lognormal-, Weibull-, gamma-, zero-inflated exponential-, Poisson-,
-negative binomial-, and zero-inflated Poisson distribution families. The lower
-bound in the truncated normal distribution is always zero, while the upper
-bound is infinity. With these restrictions all distributions in the set have
-two parameters, except the Poisson with only one parameter.
-Alternatively, if \code{distrib == "NoBoot"}, the function returns \code{nsim}
-copies of \code{obs}.
+of distribution families. The predetermined set consists of the gamma-,
+lognormal-, truncated normal-, Weibull-, zero-inflated exponential-,
+negative binomial-, Poisson-, and zero-inflated Poisson distribution families.
+The lower bound in the truncated normal distribution is always zero, while the
+upper bound is infinity. With these restrictions all distributions in the set
+have two parameters, except the Poisson with only one parameter.
 
-Functions called:
-rNO, rtnorm, rLOGNO, rWEI, rGU, qGA, rPO, rNBII, rZIP
-random generation functions in the gamlss package
+\code{sampleobs} is a utility function adapted to the mathematical framework
+for calculating the nature index.
+
+\code{sampleobs} calls random generation functions rLOGNO, rWEI, qGA, rPO,
+rNBII, rZIP in the gamlss package, rtnorm in the msm package, runif and rexp
+in the stats package.
+
+f(y|mu,sigma)=Gamma(y+(mu/sigma))*sigma^y/(Gamma(mu/sigma)*Gamma(y+1)*(1+sigma)^(y+(mu/sigma)))
+}
+\examples{
+nn <- 100000
+hist(sampleobs(nsim = nn, distrib="Gamma", mu = 1, sig = 0.5), breaks=50)
+hist(sampleobs(nsim = nn, distrib="LogNormal", mu = -2, sig = 0.5), breaks=50)
+hist(sampleobs(nsim = nn, distrib="TruncNormal", mu -2, sig = 0.5), breaks=50)
+hist(sampleobs(nsim = nn, distrib="Weibull", mu = 2, sig = 7), breaks=50)
+hist(sampleobs(nsim = nn, distrib="ZIExponential", mu = 0.2, sig = 0.5),
+     breaks=50)
+hist(sampleobs(nsim = nn, distrib="NegBinom", mu = 4, sig = 1))
+hist(sampleobs(nsim = nn, distrib="Poisson", mu = 4, sig = NA))
+hist(sampleobs(nsim = nn, distrib="ZIP", mu = 10, sig = 0.25))
 }
 \author{
 Nigel Yoccoz and Bård Pedersen
+}
+\seealso{
+\code{\link{samplebootmat}},
 }
 
