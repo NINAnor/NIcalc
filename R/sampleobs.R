@@ -73,6 +73,7 @@ sampleobs <- function(nsim = 99, distrib, mu, sig) {
   if (distrib == "Poisson")      {vec <- rPO(nsim, mu = mu)}
   if (distrib == "NegBinom")     {vec <- rNBII(nsim, mu = mu, sigma = sig)}
   if (distrib == "ZIP")          {vec <- rZIP(nsim, mu = mu, sigma = sig)}
+  if (distrib == "NoBoot")       {vec <- mu}
 
   return(vec)
 

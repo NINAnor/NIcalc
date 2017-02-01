@@ -48,7 +48,7 @@
 #' @export
 #'
 
-munweights.fct <- function(
+munweights <- function(
   Municipalities=paste("Mun", 1:36, sep=""),
   Indicators=c("Ind1","Ind2","Ind3","Ind4","Ind5","Ind6"),
   FK_TrophicgroupID=c(1,1,2,2,0,0),
