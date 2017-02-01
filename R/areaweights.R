@@ -39,7 +39,7 @@
 #' @export
 #'
 
-areaweights.fct <- function(Municipalities=as.character(1:10),
+areaweights <- function(Municipalities=as.character(1:10),
                             Regions=as.character(rep(1:5,2)),
                             Area.municipality=runif(10),
                             Indicators=c("ind1","ind2")) {

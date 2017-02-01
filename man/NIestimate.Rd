@@ -30,4 +30,7 @@ NIestimate(NI=matrix(1,nrow=1,ncol=100),kvantiler=c(0.025,0.5,0.975))
 \author{
 Bård Pedersen
 }
+\seealso{
+\code{\link{NIcalculate}}
+}
 

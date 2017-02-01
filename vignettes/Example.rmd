@@ -1,0 +1,1064 @@
+---
+title: "Functions for calculating the Nature Index"
+subtitle: "Note to participants in output 4 of PDP1 under BG03 - IBBIS"
+author: "Bård Pedersen"
+date: "Norwegian Institute for Nature Research, May 26, 2016"
+output:
+  rmarkdown::html_vignette: default
+  rmarkdown::pdf_document:
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy=T)
+require(xtable)
+options("xtable.comment"=F)
+```
+
+This document explains how to calculate the Nature index (NI) using the functions found in the r-script file *Simplified functions for calculating the Nature Index.R*. The document begins with describing the calculation of the index before explaining the structure of objects containing the necessary input data. Thereafter each function is given a short description. Finally, the calculation of NI is described and illustrated with examples.
+
+# Introduction: Mathematical framework
+
+## Definition
+
+The nature index is a weighted average of scaled indicator observations 
+
+\begin{equation}{NI}_{jkt} = \displaystyle\sum_{i=1}^nw_{ijk}S_{ikt}\end{equation}
+
+where $S_{ikt}, i=1,...,n$ is the $n$ scaled indicator states included in the calculation. The weights $(w_{ijk})$ must conform to $\sum_{i=1}^nw_{ijk} = 1$.
+
+## Spatial units
+
+The Nature Index is calculated for a specified major habitat $(j)$ in a defined area $(k$, here referred to as an NI-area$)$ and for a particular year $(t)$ from a set of indicator-observations. 
+
+Indicator observations are however collected from indicator-specific spatial units (here referred to as indicator-areas) that may have a different spatial extent than the NI-area. The spatial delineation of indicator areas may also vary among indicators. 
+
+That is, for each indicator there is a set of non-overlapping spatial units from which indicator observations are collected. However, each indicator-area and NI-area must consist of one or more basic spatial units. In the Norwegian implementation of the Nature index this basic spatial unit is the municipality.
+
+Thus, in order to calculate the index, the delineation of each indicator-area and each NI-area must be provided. That is, each indicator- and NI-area must be specified in terms of the basic spatial units they consist of. Further, all indicator observations must be linked to the correct indicator area. See section Input data below.
+
+## Indicator observations
+
+Indicator observations may be associated with errors and are therefore uncertain. Thus, in the context of the Nature Index, the indicator observations are specified as probability distributions where the dispersion of the distribution represents this uncertainty, and the central tendency of the distribution represents the size of the indicator value. Thus, each observation is regarded as a stochastic variable. This presupposes that all input values used to calculate the index are provided with an estimate of how uncertain the values are. This estimate is provided by each expert in terms of the interquartile distance in the distribution, while the central tendency is given as an expected value.
+
+Elicitation is the term for the process that generates probability distributions for uncertain quantities based on experts' knowledge and beliefs about them. In the context of the Nature Index, this is a two-step process. For all indicator values, experts estimate the distribution's expected value and its lower and upper quartiles. The R-scripts for calculating NI presupposes that these three parameters are provided for all indicator observations included in the calculation of the nature index. 
+
+During the calculation of the index, a probability distribution is fitted from a number of model distributions for each indicator value. The fitting is based on a least squares criterion. All the indicators are supposed to be nonnegative variables with zero as the minimum value. Hence, the model distributions are non-negative, univariate distributions. These are truncated normal-, lognormal-, Weibull-, “zeroinflated” exponential -, and gamma distributions. The truncated normal distribution is left-truncated at zero. All model distributions thus have two parameters.
+
+## Scaling
+
+Scaling the indicator values to a common scale is done using nonlinear scaling functions (Figure 5.1). The scaling functions contain only one parameter, the socalled reference value $(Ref)$. Reference values are specified for each indicator area in which an indicator is observed. The scaling functions' values are over the interval [0,1].
+
+```{r, out.width='.49\\linewidth',echo=FALSE}
+Uref <- 10
+
+plot(	c(0,Uref,2*Uref,2.2*Uref),
+	c(0,1,1,1),
+	type="l",
+	xlim=c(0,22),
+	xaxp=c(0,40,1),
+	ylim=c(0,1),
+	ylab = expression(paste(italic("Scaled value (S)"))),
+	xlab = expression(paste(italic("Unscaled value"))),
+	lwd=3,
+	col=2)
+axis(1, at = c(0,10,20), labels = c("",expression(italic("Ref")),expression(paste("2*",italic("Ref")))))
+lines(c(2*Uref,2*Uref), c(0,1),col=1,lty=2,lwd=1)
+lines(c(Uref,Uref), c(0,1),col=1,lty=2,lwd=1)
+text(2.5,0.75,"LOW",cex = 1.75)
+
+plot(	c(0,Uref,2*Uref,2.2*Uref),
+	c(1,1,0,0),
+	type="l",
+	xlim=c(0,22),
+	xaxp=c(0,40,1),
+	ylim=c(0,1),
+	ylab = expression(paste(italic("Scaled value (S)"))),
+	xlab = expression(paste(italic("Unscaled value"))),
+	lwd=3,
+	col=2)
+axis(1, at = c(0,10,20), labels = c("",expression(italic("Ref")),expression(paste("2*",italic("Ref")))))
+lines(c(2*Uref,2*Uref), c(0,1),col=1,lty=2,lwd=1)
+lines(c(Uref,Uref), c(0,1),col=1,lty=2,lwd=1)
+text(2.5,0.75,"MAX",cex = 1.75)
+
+rm(Uref)
+
+```
+**Figure 1:** *The scaling models LOW and MAX*
+
+
+There are two types of scaling functions, LOW and MAX (Figure 1). The choice of scaling function is determined by whether the indicator correlates positively or negatively with the aspect of biodiversity that the indicator represents. The LOW model is used when there is a positive correlation between the indicator and biodiversity. This holds true for most indicators. The MAX model is used when there is a negative correlation between the indicator and biodiversity. This applies only to certain indirect indicators that represent a negative effect that the measured indicator has on other components of biodiversity.
+
+## Weights
+
+The nature index is a weighted average. In a weighted average, the state values used to calculate the average are weighted in relation to each other. Some indicator observations are given more weight than others. There are two motives for doing this in the context of the Nature Index. One motive is to correct for biases in the data from which the index is calculated. The second motive relates to the meaning of the index.
+
+The current R-scripts calculate weights according to the Norwegian implementation of the Nature Index. However, the weighting system might be modified to better accord with the Bulgarian dataset and the purposes of the Bulgarian implementation. The Norwegian weighting system is described below. 
+
+The weights assigned to individual indicator values for the calculation of the Norwegian Nature Index for a basic spatial unit (i.e. a municipality) take into account the indicators’ specificity / fidelity to the respective major ecosystem and the indicators' ecological function. The weights can be written as a product of two factors, a trophic weight $(w^{trophic})$ and a fidelity weight $(w^{fidelity})$.
+
+The indicators’ **fidelities** $(\varphi_{ij})$ to the various major habitats are determined by the individual expert based on the degree to which the underlying data for the indicator reflect the state of one or more major ecosystems. An indicator’s total fidelity is $100\%$, i.e. $\sum_{j=1}^p\varphi_{ij} = 100\%$. Many indicators belong to only one of the major ecosystems; for example, mussels are only an indicator for the coast bottom major ecosystem and have a fidelity of 100% to the coast bottom, with a fidelity of 0% to the other major ecosystems. Conversely, marine fish species will often belong to two or more of the marine major ecosystems, ocean pelagic and ocean bottom, coast pelagic and coast bottom. In these situations (unless ecosystem-specific data are available), the fidelity is divided over several major ecosystems based on the extent to which the data for the indicators are affected by conditions in the different systems. The effect of this is that indicators that belong to several major ecosystems will be included in the calculation of the Nature Index for all of these systems. But their weight is then reduced in each of these calculations compared with indicators that have a 100% fidelity to one system. In some cases, ecosystem-specific data is available for a species, and then separate indicators with 100% fidelity can be used. The **fidelity weight** of an indicator belonging to trophic group $g$ is given by
+
+\begin{equation}w_{ijk}^{fidelity} = \frac{\varphi_{ij}} {\displaystyle\sum_{m \in g}\varphi_{mj}}\end{equation}
+
+where the sum in the denominator is over all indicators within the trophic group observed in the geographical unit. The same holds for key indicators that are treated as a separate group in this context.
+
+**Trophic weight**, $(w^{trophic})$, is equal to $\frac{1}{2}$ for the key indicators and equal to $\frac{1}{2r_{jk}}$ for other indicators, when observations of key indicators from municipality $k$ is included in the calculation. When key indicators are lacking in $k$, the trophic weight for other indicators are $\frac{1}{r_{jk}}$. $r_{jk}$ is the number of functional groups represented by indicator observations in the municipality $k$.
+
+The product of an indicator observation's fidelity weight and trophic weight is the **total weight** given to the observation in a calculation of the nature index for a municipality $k$,
+
+\begin{equation}w_{ijk}^{p} = w_{ijk}^{fidelity}*w_{ijk}^{trophic}\end{equation}
+
+and the nature index for major habitat $j$ in the municipality at time $t$ is
+
+\begin{equation}{NI}_{jkt} = \displaystyle\sum_{i=1}^nw_{ijk}^{p}S_{ikt}\end{equation}
+
+where the sum is over all indicators recorded in the municipality with $\varphi_{ij} > 0$ and $\displaystyle\sum_{i=1}^nw_{ijk}^{p}=1$.
+
+The consequences of these allocations are first, that the sum of the weights $w_{ijk}^{p}$ for key indicators is $\frac{1}{2}$. So key indicators weigh 50% in the Nature Index for a municipality where observations of key indicators have been included in the calculation. Second, the different trophic groups represented in the municipality are weighted equally, regardless of the number of indicators represented within each group.
+
+Municipalities are the basic spatial units for terrestrial major habitats and freshwater in the Norwegian implementation the Nature Index. However, in practice, aggregated indices for larger NI-areas $(K)$ are calculated as weighted averages of municipal index values, e.g. for country parts or the whole country:
+
+\begin{equation}{NI}_{jKt} = \displaystyle\sum_{k \in K}w_{jk}^{area}{NI}_{jkt} = \displaystyle\sum_{k \in K}\displaystyle\sum_{i=1}^nw_{jk}^{area}w_{ijk}^{p}S_{ikt}\end{equation}
+
+where $w_{jk}^{area}$ are the **area weights**, $w_{jk}^{area} = \frac{a_{jk}} {\displaystyle\sum_{q \in K}a_{jq}}$, $a_{jk}$ is the area that major ecosystem $j$ covers in municipality $k$, and $\displaystyle\sum_{k \in K}w_{jk}^{area} = 1$.
+
+## Calculating the Nature Index
+
+Since the Nature Index is calculated from indicator observations that are considered stochastic variables, the index itself is also a stochastic variable with an associated probability distribution. Parametric bootstrapping is used to simulate this distribution from the distributions of indicator values. An observation from the index’s distribution is generated by randomly drawing one observation from each of the distributions of indicator observations used in the calculation. The Nature Index value is then calculated based on this. The index’s distribution is simulated by repeating this procedure 1000 times, for example. Normally, the median of the simulated distribution is given as a point estimate for the Nature Index, while the 95% confidence interval given by the 2.5% and 97.5% quantiles of the distribution is used as a measure of uncertainty for the index value.
+
+There are different opinions on whether uncertainties in reference values should be accounted for in the calculation of the nature index. On one hand reference values may be considered as fixed parameters that have been decided on the basis of the ecological framework described in Pedersen *et al.* (2016)[^1] rather than estimated from the framework. On the other hand, reference values could be viewed as uncertain estimates derived from or modelled on the basis of the framework. In the Norwegian implementation uncertainties in reference values are not accounted for in the calculations. This is because uncertainties in many reference values have not been estimated.
+
+[^1]: Pedersen, B., Nybø, S., Sæther, S. A. (eds.) 2016. Nature Index for Norway 2015. Ecological framework, computational methods, database and information systems – NINA Report 1226. 84 pp.
+
+## Functions
+
+*Simplified functions for calculating the Nature Index.R* contains the following functions:
+
+Function name  | Operation
+:------------- | :---------------------------------------------------
+elicitate.fct  | Fits probability distributions to indicator observations
+sampleobs.fct  | Samples from the indicator observation distributions
+scaleobs.fct | Scales samples from indicator observations according to chosen scaling model
+munweights.fct | Calculates the product: trophic weights * fidelity weights
+areaweights.fct | Calculates area weights
+NIcalculation.fct | Calculates a sample of the Nature Index from samples of scaled indicator observations and area-, trophic-, and fidelity weights
+NIestimation.fct | Provides point estimates of the Nature Index together with 95% confidence intervals
+
+Several of these functions call other functions that are also included in the file.
+
+
+\pagebreak
+
+# Input data
+
+In order to use the above functions to calculate NI for a set of $N.reg$ NI-areas, from a set of in total $N.obs$ indicator observations and reference values, over $N.years$ years, for $N.ind$ indicators from altogether $N.omr = N.obs/(N.years+1)$ indicator areas involving $N.kom$ basic spatial units, the following input data should be provided:
+
+1. A data frame with indicator observations **together** with reference values
+2. A data frame with indicator data
+3. A data frame with basic spatial unit data
+4. A data frame relating indicator areas to indicators
+5. A data frame descrbing indicator areas in terms of basic spatial units
+
+## Indicator observations and reference values
+
+The data frame should contain at least the following variables (variable names may be different)
+
+Variable | Type | Explanation
+:----------------- | :-------------: | :---------------------------------------------
+ValueID | integer | vector of indicator observation- and reference value IDs
+Expected.value | double | vector of the indicator observations' and reference values' expected values
+Lower	 | double  | vector of the observations' 0.25 (lower) quartiles
+Upper	 | double | vector of the observations' 0.75 (upper) quartiles
+IndicatorID | integer | vector of corresponding indicator IDs
+IndicatorareaID | integer | vector of corresponding indicator area IDs
+ReferenceYearID | integer | vector of corresponding IDs for observation years / reference values
+
+Thus each indicator observation consists of the expected value together with the upper and lower quartiles. Each observation should have a unique ID and be linked to the correct indicator and indicator area through their IDs.
+
+The last variable should signal whether the entry is a reference value or indicator observation. If it is an indicator observation the year or a yearID should be entered. If it is a reference value, an integer code, e.g. $0$, should be entered.
+
+## Indicators
+
+The data frame should contain at least the following variables (variable names may be changed)
+
+Variable | Type | Explanation
+:----------------- | :-------------: | :---------------------------------------------
+IndicatorID | integer | vector of indicator IDs
+Indicator_name | character | vector of the names of indicators
+Scalingmodel | integer | vector of scaling model IDs, 1 = LOW and 2 = MAX
+TrophicgroupID | integer | vector of trophic group IDs that the corresponding indicator belongs to
+Key.indicators | logical | vector indicating whether corresponding indicator is a key indicator or not
+Fidelity | double | vector of indicator fidelities to the major habitat in question
+
+The data frame should contain complete data for all indicators included in the calculation.
+The code for scaling models should be 1 for LOW and 2 for MAX.
+Key indicators should be signalled with TRUE, non-key indicators with FALSE.
+Fidelity should be gven as a number between 0 and 1.
+
+## Basic spatial units and NI-areas
+
+The data frame should contain at least the following variables (variable names may be changed)
+
+Variable | Type | Explanation
+:----------------- | :-------------: | :---------------------------------------------
+Basicsunit | character | vector of names of basic spatial units
+NIarea | character | vector of NI area names that the corresponding basic spatial units are part of
+Area | double | vector containing the areas of basic spatial units
+
+An NI-area consists of those basic spatial units that share the same name in the variable NIarea.
+Basic spatial units may be grouped into NI-areas in several different ways by adding new "NIarea"-variables to the data frame
+
+## To relate indicator areas to indicators
+
+The data frame should contain the following variables (variable names may be changed)
+
+Variable | Type | Explanation
+:----------------- | :-------------: | :---------------------------------------------
+IndicatorareaID | integer | vector of unique indicator area IDs
+Indicator_name | character | vector of indicator names
+
+All indicator areas that are defined for the same indicator should have identical entries in Indicator_name.
+
+## To describe indicator areas in terms of basic spatial units
+
+The data frame should contain at least the following variables (variable names may be changed)
+
+Variable | Type | Explanation
+:----------------- | :-------------: | :---------------------------------------------
+IndicatorareaID | integer | vector of indicator area IDs
+Basicsunit | character | vector of names of basic spatial units
+
+The ID of an indicator area consisting of $n$ basic spatial units should be entered $n$ times in IndicatorareaID, while the names of the $n$ basic spatial units should be entered in the corresponding entries of Basicsunit.
+
+\pagebreak
+
+# Test data set
+
+An example data set is found in the package NIcalc:
+
+```{r, eval=F, include=F, comment=NA}
+file.path.name <- "M:/My Documents/Naturindeks/Bulgaria/Scripts to Bulgarian experts/"
+load(file=paste(file.path.name,"TestdataNI.RData",sep=""))
+rm(file.path.name)
+ls()
+```
+
+```{r load_data}
+require(NIcalc)
+
+data(BSunits, Indic, Indicator.area, Indicator.area.ind, Observations)
+ls()
+```
+
+
+The test data consist of 236 observations for $N.ind=33$ indicators in $N.omr=59$ indicator areas over $N.years=4$ years, together with reference values for each of the indicator areas. So $N.obs=295$. Years are coded $2,3,4,8$, and reference values $0$. The following table contains the first and last six entries of the data.frame Observations:
+
+```{r, echo=TRUE, comment=NA, results='asis'}
+print(xtable(rbind(head(Observations),tail(Observations))))
+```
+
+All indicators are scaled with the LOW model. They are all indicators for the same major habitat (which is unspecified), but with varying fidelity. Non-key indicators are grouped in $5$ functional groups coded $1,2,5,8,9$. 
+
+```{r, echo=TRUE, comment=NA, results='asis'}
+print(xtable(rbind(head(Indic),tail(Indic))))
+```
+
+There are only $N.kom=4$ basic spatial units, "Mun1" to "Mun4", and most, but not all indicator areas consist of a single basic spatial unit. There are $2$ different predefined sets of NI-areas with $N.reg = 1, 2$ respectively, in addition to the set of basic spatial units.
+
+```{r, echo=TRUE, comment=NA, results='asis'}
+print(xtable(BSunits))
+```
+```{r, results='asis'}
+
+print(xtable(rbind(head(Indicator.area.ind),tail(Indicator.area.ind))))
+
+```
+```{r, results='asis'}
+
+print(xtable(rbind(head(Indicator.area),tail(Indicator.area))))
+```
+
+\pagebreak
+
+# Required libraries
+
+The functions elicitation.fct() and sampleobs.fct() requires the R-libraries
+
+```{r, echo=TRUE}
+library(MASS)
+library(gamlss.dist)
+library(truncnorm)
+require(msm)
+```
+
+# Set of functions
+
+The set of functions are incorporated in the NIcalc package.
+
+```{r, eval=F, include=F}
+path <- "~/Prosjekter/NI R-pakke/Funksjoner sendt til Bulgaria/"
+source(paste(path,"Simplified functions for calculating the Nature Index.R",sep=""), encoding = "Windows-1252")
+rm(path)
+```
+
+## elicitate.fct
+
+elicitate.fct fits probability distributions to a set of indicator observations by selecting for each observation the distribution among a predetermined set of model distribution families that best fits the observation. The function presumes that indicator observations are each given as three parameters of a continuous probability distribution: expected value and the lower- and upper quartiles. The predetermined set of continuous distributions is {Truncated Normal, Lognormal, Weibull, Gamma, zero-inflated exponential}
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Expected.value | vector | double | $N.obs$ | indicator observations' expected values
+Lower | vector | double | $N.obs$ | indicator observations' 0.25-quantiles (lower quartiles)
+Upper | vector | double | $N.obs$ | indicator observations' 0.75-quantiles (upper quartiles)
+
+
+Expected.value, Lower and Upper should be of equal length.  
+For indicator observations and reference values with no uncertainty, Expected.value, Lower, and Upper should be equal.  
+Expected.value, Lower and Upper should be nonnegative. Negative values in an element of any of the these vectors are interpreted as missing value and the corresponding output elements are set to NA. Also, if one of Expected.value, Lower and Upper is NA, all corresponding output elements are set to NA.
+
+\pagebreak
+
+Output:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+elicitation.results | data.frame | | *N.obs x 4* | consisting of the following vectors
+[[1]]	$FK_DistID| vector | character | $N.obs$ | names of fitted model distributions
+[[2]]	$mu	 | vector | double | $N.obs$ | first parameter of fitted model distributions
+[[3]]	$sig | vector | double | $N.obs$ | second parameter of fitted model distributions
+[[4]]	$ssq | vector | double | $N.obs$ | sum of squared deviations between observed parameters and those of the fitted model distributions.
+
+Functions called:
+
+estim.fct() local function in present collection  
+estimlight.fct()  local function in present collection
+
+elicitation.fct first try to fit a model distribution with a call to the function estim.fct. If this results in an error, it calls estimlight.fct instead. These functions again each calls a series of other local functions included in *Simplified functions for calculating the Nature Index.R*, which again make use of routines in the MASS, gamlss.dist and truncnorm packages. Descriptions of all local functions are found in the file.
+
+### Examples:
+
+```{r, echo=TRUE, prompt=FALSE}
+elicitate(
+		expected.value=Observations$Expected.value[1:10],
+		lower=Observations$Lower[1:10],
+		upper = Observations$Upper[1:10])
+```
+
+```{r echo=TRUE, prompt=FALSE}
+Observations2 <- data.frame(
+	Observations,
+	elicitate(
+		expected.value=Observations$Expected.value,
+		lower=Observations$Lower,
+		upper = Observations$Upper)[,1:3])
+head(Observations2)
+```
+
+\pagebreak
+
+## sampleobs.fct
+
+sampleobs.fct returns nsim random draws from a set of distributions given by the vector DistID and the parameter vectors mu and sig. The function presumes that the set only includes the truncated normal-, lognormal-, weibull-, gamma-, zero-inflated exponential, poisson-, negative binomial-, and zero-inflated poisson distributions. The lower bound in the truncated normal distribution is always zero, while the upper bound is infinity. With these restrictions all theoretical distributions have two parameters, except the poisson with only one parameter.
+Alternatively, if distrib == "NoBoot", the function returns nsim copies of the observation's expected value. The function does not handle missing values (NAs).
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+ValueID | vector | integer | $N.obs$ | indicator observation IDs
+DistID | vector | character | $N.obs$ | distribution families names or "NoBoot" (when copy obs)
+mu | vector | double | $N.obs$ | vector of parameter 1 of model distributions
+sig | vector | double | $N.obs$ | vector of parameter 2 of model distributions
+Value | vector | double | $N.obs$ | vector of observed expected value to be copied if distrib == "NoBoot".
+nsim | vector | integer | $1$ | number of draws (simulations)
+
+Allowed names of distribution families are "TruncNormal", "LogNormal", "Weibull", "ZIExponential", "Gamma", "Poisson", "NegBinom", "ZIP", "NoBoot"
+
+Output:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+bootmat | matrix | double | *N.obs x nsim* | random draws from specified (by DistID, mu and sig) models or $nsim$ copies of Value
+
+Functions called:
+
+rtnorm - random generation function in the truncnorm package.  
+rLOGNO, rWEI, rGA, rPO, rNBII, rZIP - random generation functions in the gamlss.dist package.  
+runif and rexp - random generation functions from the stats package.
+
+### Examples:
+
+```{r, echo=TRUE, prompt=FALSE}
+samplebootmat(
+	ValueID=Observations2$ValueID,
+	Value=Observations2$Expected.value, 
+	RefobsID = Observations2$ReferenceYearID,
+	DistID=Observations2$FK_DistID,
+	mu=Observations2$mu,
+	sig=Observations2$sig,
+	nsim=5)[1:10,]
+
+```
+
+\
+In order to base the calculation of NI on fixed reference values (i.e. to ignore uncertainties in them), the corresponding DistIDs should be set to "NoBoot"
+\
+
+```{r echo=TRUE, prompt=FALSE}
+Alt_DistID <- Observations2$FK_DistID
+Alt_DistID[Observations2$ReferenceYearID==0] <- "NoBoot"
+
+samplebootmat(
+	ValueID=Observations2$ValueID,
+	Value=Observations2$Expected.value, 
+	RefobsID = Observations2$ReferenceYearID,
+	DistID=Alt_DistID,
+	mu=Observations2$mu,
+	sig=Observations2$sig,
+	nsim=5)[1:10,]
+```
+
+
+NI is calculated for one year at a time. To include observations from year 2 only:
+\
+
+```{r echo=TRUE, prompt=FALSE}
+Observationsyear2 <- Observations2[Observations2$ReferenceYearID %in% c(0,2),]
+Alt_DistIDyear2 <- Alt_DistID[Observations2$ReferenceYearID %in% c(0,2)]
+
+bootmatyear2 <- samplebootmat(
+	ValueID=Observationsyear2$ValueID,
+	Value=Observationsyear2$Expected.value, 
+	RefobsID = Observationsyear2$ReferenceYearID,
+	DistID=Alt_DistIDyear2,
+	mu=Observationsyear2$mu,
+	sig=Observationsyear2$sig,
+	nsim=1000)
+bootmatyear2[1:10,1:5]
+```
+
+\pagebreak
+
+## scaleobs.fct
+
+scaleobs.fct scales a set of indicator observations according to chosen scaling model (LOW or MAX) and  associated reference values. Each indicator observation should be entered either as nsim random draws from distributions fitted to the original observations (that were provided as expected values and upper and lower quartiles), or as nsim repetitions of the original expected values provided by experts. In the same way, reference values should be entered either as nsim random draws from distributions fitted to the original reference values, or as nsim repetitions of the original expected values.
+
+Reference values and indicator observations should be entered together in the same matrix bootmat. Furter a vector with codes identifying reference values from indicator observations and of length equal to the number of indicator observations and reference values should be entered. Vectors of the same length containing the observations/reference values area IDs and indicator IDs should also be entered.
+
+Scaling models are specific for each indicator. They should be entered as a vector of scaling model codes where $1 = LOW$ and $2 = MAX$, together with a vector of associated indicator IDs of the same length.
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+ValueID | vector | integer | $N.obs$ | indicator observation IDs
+FK_OmraadeID | vector | integer | $N.obs$ | indicator area IDs
+FK_IndicatorID | vector | integer | $N.obs$ | indicator IDs
+FK_RefAarID | vector | integer | $N.obs$ | IDs for observation years / reference values
+nsim | vector | integer | $1$ | number of draws (simulations) in the estimation of NI
+bootmat	| matrix | double | *N.obs x nsim* | random draws from fitted distributions and/or copies of expected values
+ref.value.code | vector | integer | $1$ | code for reference values used in FK_RefAarID, default $= 0$
+IndicatorID | vector | integer | $N.ind$ | unique indicator IDs
+FK_Scalingmodel | vector | integer | $N.ind$ | scaling model IDs, $1 = LOW$ and $2 = MAX$
+
+Output:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+scaled.bootmat	| matrix | double | *N.obs x nsim* | scaled draws from fitted distributions and/or scaled copies of expected values
+
+Note that scaleobs.fct scaled.bootmat is of the same dimension as bootmat. This means that scaled.bootmat contains nsim draws of scaled reference values which all are equal to 1. These must be removed from scaled.bootmat before using NIcalculation.fct to calculate random draws of the nature index.
+
+Further, if the input bootmat matrix contains indicator observations for several years, so will the scaled.bootmat. However, the index is calculated for one year, so the output matrix scaled.bootmat must be split accordingly into a set of matrices, where each matrix contains draws of scaled indicator observations for one single year only.
+
+### Example:
+
+```{r echo=TRUE, prompt=FALSE}
+scaled.bootmatyear2 <- scaleobs(
+	ValueID=Observationsyear2$ValueID,
+	FK_OmraadeID=Observationsyear2$IndicatorareaID,
+	FK_IndicatorID=Observationsyear2$IndicatorID,
+	FK_RefAarID=Observationsyear2$ReferenceYearID,
+	nsim=1000,
+	bootmat=bootmatyear2,
+	ref.value.code=0,
+	IndicatorID=Indic$IndicatorID,
+	FK_Scalingmodel=Indic$Scalingmodel)
+scaled.bootmatyear2[1:9,1:5]
+```
+
+To remove reference values from the output matrix scaled.bootmatyear2
+\
+
+```{r echo=TRUE, prompt=FALSE}
+scaled.bootmatyear2only <- scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,]
+scaled.bootmatyear2only[1:9,1:5]
+```
+
+Now scaled.bootmatyear2only includes one observation per indicator area.
+\
+
+```{r echo=TRUE, prompt=FALSE}
+dim(scaled.bootmatyear2only)
+```
+
+However, to keep track of which observation in scaled.bootmatyear2 corresponds to the various indicator areas we may want to create a new data frame with indicator observations corresponding to scaled.bootmatyear2
+\
+
+
+```{r echo=TRUE, prompt=FALSE}
+Observationsyear2only <- Observationsyear2[Observationsyear2$ReferenceYearID != 0,]
+dim(Observationsyear2only)
+```
+
+## areaweights.fct
+
+areaweights.fct calculates relevant area weights $w_{jk}^{area}$ for chosen spatial resolution of the NI output. I.e. areaweights.fct calculates $w_{jk}^{area}$ for a set of aggregated, nonoverlapping, spatial units each consisting of one to many basic spatial units (municipalities). In the Norwegian implementation $w^{area}$ are weights based on the area the major habitat in question covers in each basic spatial unit. An alternative is to use the total area of the spatial unit, etc.
+
+$w^{area}$ is the relevant municipality area divided by the corresponding total area of the aggregate. Municipalities outside the aggregate receive weights equal zero
+
+Area weights are relevant when NI is calculated for aggregates of basic spatial units.
+
+Note that the weights are stored in a three-dimensional array to be included in the calculation of the nature index in a subsequent call to NIcalculation.fct. In the array weights are repeated for each indicator included in the current calculation of NI. This in order to simplify the coding of NIcalculation.fct.
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Municipalities | vector | character | $N.kom$ | names of all basic spatial units included in the calculation
+Regions | vector | character | $N.kom$ | names of aggregated spatial units that the corresponding municipality is a part of.
+Area.municipality | vector | double | $N.kom$ | relevant basic spatial unit areas
+Indicators | vector | character | $N.ind$ | names of all indicators included in the calculation
+
+Output:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Weights.reg.area | array | double | *N.kom x N.ind x N.reg* | $N.ind$ copies of area weights for each NI area. 
+
+### Examples:
+
+To calculate area weights for "All area"
+
+```{r echo=TRUE, prompt=FALSE}
+areaweights1 <- areaweights(
+	Municipalities=BSunits$Basicunit,
+	Regions=BSunits$NIarea1,
+	Area.municipality=BSunits$Area,
+	Indicators=Indic$Indicator_name)
+areaweights1[,1:6,]
+```
+
+\pagebreak
+
+To calculate area weights for "Part 1" and "Part2"
+\
+
+```{r echo=TRUE, prompt=FALSE}
+areaweights2 <- areaweights(
+	Municipalities=BSunits$Basicunit,
+	Regions=BSunits$NIarea2,
+	Area.municipality=BSunits$Area,
+	Indicators=Indic$Indicator_name)
+areaweights2[,1:6,]
+```
+
+To check if weights sum to 1
+\
+
+```{r echo=TRUE, prompt=FALSE}
+colSums(areaweights2) [1:6,]
+```
+
+If you want to give equal weights to all basic spatial units in the calculation of NI, one could do as follows:
+\
+
+```{r echo=TRUE, prompt=FALSE}
+areaweights(
+	Municipalities=BSunits$Basicunit,
+	Regions=BSunits$NIarea2,
+	Area.municipality=BSunits$Area/BSunits$Area,
+	Indicators=Indic$Indicator_name) [,1:6,]
+```
+
+
+## munweights.fct
+
+munweights.fct calculates fidelity weights $(w^{fidelity})$, trophic weights $(w^{trophic})$ and their product $w^{p}$ for each combination of municipality and indicator. $w^{p}=0$ for indicators not observed in a municipality.
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Municipalities | vector | character | $N.kom$ | names of  all basic spatial units included in the calculation
+Indicators | vector | character | $N.ind$ | names of all indicators included in the calculation
+FK_TrophicgroupID | vector | integer | $N.ind$ | trophic group IDs that the corresponding indicator belongs to
+Key.indicators | vector | logical | $N.ind$ | key indicator or not
+Fidelity | vector | double | $N.ind$ | indicator fidelities to the major habitat in question
+Areaind.Name | vector | integer | $N.omr$ | unique indicator area IDs for **all** areas included in the calculation of NI.
+Areaind.Indicator | vector | character | $N.omr$ | indicator names corresponding to the entries in Areaind.Name
+Area.Name | vector | integer | length(Area.Name) | indicator area IDs, where each indicator area ID in Areaind.Name is repeated for each spatial unit it consists of
+Area.Municipality | vector | character | length(Area.Name) | names of basic spatial units corresponding to the entries in Area.Name
+
+Output
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Weights.trof | matrix | double | *N.kom x N.ind* | $w^{p}$. 
+
+### Examples:
+
+```{r echo=TRUE, prompt=FALSE}
+munweights <- munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=Indic$TrophicgroupID,
+	Key.indicators=Indic$Key.indicators,
+	Fidelity=Indic$Fidelity,
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit)
+
+munweights[,1:6]
+rowSums(munweights)
+```
+
+If you want to ignore trophic groups in the calculation of $w^{p}$, set all entries in FK_TrophicgroupID equal to each other. If you want to ignore the distinction between key- and non-key indicators, set Key.indicators to FALSE.
+If you want to ignore differences in fidelity, set all entries in Fidelity equal 1.0. If you want to give equal weights to all indicators observed in a communty, enter all three of these settings for FK_TrophicgroupID,  Key.indicators and Fidelity.
+\
+
+```{r echo=TRUE, prompt=FALSE}
+munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=rep(4,length(Indic$TrophicgroupID)),
+	Key.indicators=rep(F,length(Indic$Key.indicators)),
+	Fidelity=rep(1.0,length(Indic$Fidelity)),
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit) [,1:6]
+```
+
+\pagebreak
+
+## NIcalculation.fct
+
+Function for calculating nsim draws of NI from nsim sets of (N.omr) scaled observations for (N.ind) indicators and  corresponding areaweights, trophic weights and fidelity weights for a set of (N.kom) basic spatial units or a set of (N.reg) aggregated NI-areas each consisting of one or several basic spatial units. 
+
+Scaled indicatorobservations are calculated in scaleobs.fct, while area weights are calculated in areaweights.fct, and the product of trophic weights and fidelity weights in munweights.fct.
+
+NI is calculated for a set of NI-areas, while scaled indicator observations, on the other hand, refer to indicator
+specific areas that may vary in geographical extent among indicators, and will in general not correspond to the NI-areas. Thus, NIcalculation.fct needs input about the spatial extent of each indicator area and NI-area.
+
+Area weights should not be entered to NIcalculation.fct if NI is calculated for basic spatial units.
+
+NIcalculation returns a matrix of nsim draws of NI for each NI-area (or basic spatial unit).
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+Areaind.Name | vector | integer | $N.omr$ | unique indicator area IDs
+Areaind.Indicator | vector | character | $N.omr$ | indicator names corresponding to the entries in Areaind.Name
+Area.Name | vector | integer | length(Area.Name) | indicator area IDs, where each indicator area ID is repeated for each basic spatial unit it consists of
+Area.Municipality | vector | character | length(Area.Name) | vector of names of corresponding basic spatial units
+FK_OmraadeID | vector | integer | $N.omr$ | indicator area IDs corresponding to the sequence of indicator observations in scaled.bootmat
+nsim | vector | integer | $1$ | number of draws (simulations) in the estimation of NI
+scaled.bootmat | matrix | double | *N.omr x nsim* | nsim random draws of scaled indicator observations or nsim copies of scaled expected values
+Weights.trof | matrix | double | *N.kom x N.ind* | product of fidelity weights and trophic weights $w^{p}$
+Weights.reg.area | array | double | *N.kom x N.ind x N.reg* | area weights $w^{area}$
+
+Output: 
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+NI | matrix | double | *(N.kom or N.reg) x nsim* | matrix of NI draws 
+
+
+## NIestimation.fct
+
+NIestimation.fct provides point estimates of the Nature Index together with confidence intervals for a set of $N.reg$ basic spatial units or aggregated NI-areas from a $N.reg x nsim$ matrix of $nsim$ simulations of NI for each area.
+
+As default NIestimation returns the median simulated value as the point estimate and the 0.025- and 0.975-
+quantiles as limits for the confidence interval.
+
+Input arguments:
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+NI | matrix | double | *(N.kom or N.reg) x nsim* | NI draws
+kvantiler | vector | double | 3 | Quantiles used as basis for point estimate and limits of confidence interval.
+
+Output: 
+
+Name | Object type | Mode | Dim | Explanation
+:---------------- | :------------- | :------------- | :--------------- | :------------------------------
+NIest | matrix | double | *(N.kom or N.reg) x 3* | Estimates of NI
+
+### Examples
+
+To estimate the Nature Index for the area "All area", enter the areaweights stored in areaweights1 which was calculated above.\
+
+
+```{r echo=TRUE, prompt=FALSE}
+NIestimate(NIcalculate(
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit,
+	FK_OmraadeID=Observationsyear2$IndicatorareaID[Observationsyear2$ReferenceYearID != 0],
+	nsim=1000,
+	scaled.bootmat=scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,],
+	Weights.trof=munweights,
+	Weights.reg.area=areaweights1))
+```
+
+To estimate the Nature Index for the NI-areas "Part1" and "Part2", weights stored in areaweights2.\
+
+
+```{r echo=TRUE, prompt=FALSE}
+NIestimate(NIcalculate(
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit,
+	FK_OmraadeID=Observationsyear2$IndicatorareaID[Observationsyear2$ReferenceYearID != 0],
+	nsim=1000,
+	scaled.bootmat=scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,],
+	Weights.trof=munweights,
+	Weights.reg.area=areaweights2))
+```
+
+To estimate the Nature Index for basic spatial units, do not enter area weights.\
+
+
+```{r echo=TRUE, prompt=FALSE}
+NIestimate(NIcalculate(
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit,
+	FK_OmraadeID=Observationsyear2$IndicatorareaID[Observationsyear2$ReferenceYearID != 0],
+	nsim=1000,
+	scaled.bootmat=scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,],
+	Weights.trof=munweights))
+```
+
+To change to eg. a 90% confidence interval, specify nondefault values for kvantiler.\
+
+
+```{r echo=TRUE, prompt=FALSE}
+NIestimate(NIcalculate(
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit,
+	FK_OmraadeID=Observationsyear2$IndicatorareaID[Observationsyear2$ReferenceYearID != 0],
+	nsim=1000,
+	scaled.bootmat=scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,],
+	Weights.trof=munweights),
+	kvantiler=c(0.05,0.5,0.95))
+```
+
+\pagebreak
+
+# More examples of calculations based on the test data set
+
+## Calculate NI for basic spatial units for all four years.
+
+In the test data set there are no missing indicator observations, i.e. indicator observations have been recorded in all indicator areas in each of the four years included. This means that weights used in the calculation of NI will be the same for all years.
+
+In the example below, uncertainties in reference values are not accounted for. 
+
+```{r echo=TRUE, prompt=FALSE}
+Observations <- data.frame(
+	Observations,
+	elicitate(
+		expected.value=Observations$Expected.value,
+		lower=Observations$Lower,
+		upper = Observations$Upper)[,1:3])
+
+years <- unique(Observations$ReferenceYearID[Observations$ReferenceYearID!=0])
+Alt_DistID <- Observations$FK_DistID
+Alt_DistID[Observations$ReferenceYearID==0] <- "NoBoot"
+
+bootmatall <- samplebootmat(
+	ValueID=Observations$ValueID,
+	Value=Observations$Expected.value,
+	RefobsID = Observations$ReferenceYearID,
+	DistID=Alt_DistID,
+	mu=Observations$mu,
+	sig=Observations$sig,
+	nsim=1000)
+
+scaled.bootmatall <- scaleobs(
+	ValueID=Observations$ValueID,
+	FK_OmraadeID=Observations$IndicatorareaID,
+	FK_IndicatorID=Observations$IndicatorID,
+	FK_RefAarID=Observations$ReferenceYearID,
+	nsim=1000,
+	bootmat=bootmatall,
+	ref.value.code=0,
+	IndicatorID=Indic$IndicatorID,
+	FK_Scalingmodel=Indic$Scalingmodel)
+
+munweightsforall <- munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=Indic$TrophicgroupID,
+	Key.indicators=Indic$Key.indicators,
+	Fidelity=Indic$Fidelity,
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit)
+
+NIresult <- NULL
+
+for (i in years) {
+
+	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
+
+	NIi <- NIestimate(NIcalculate(
+		Areaind.Name=Indicator.area.ind$IndicatorareaID,
+		Areaind.Indicator=Indicator.area.ind$Indicator_name,
+		Area.Name=Indicator.area$IndicatorareaID,
+		Area.Municipality=Indicator.area$Basicunit,
+		FK_OmraadeID=Observations$IndicatorareaID[Observations$ReferenceYearID == i],
+		nsim=1000,
+		scaled.bootmat=scaled.bootmatyeari,
+		Weights.trof=munweightsforall))
+
+	year <- rep(i,dim(NIi) [1])
+	iresult <- cbind(year,NIi)
+	NIresult <- rbind(NIresult,iresult)
+
+}
+
+NIresult
+```
+
+## Calculate NI with uncertain reference values
+
+The same code as above, however without the assignment: Alt_DistID[Observations$ReferenceYearID==0] <- "NoBoot".
+The result is as follows:
+
+```{r echo=FALSE, prompt=FALSE}
+Alt_DistID <- Observations$FK_DistID
+
+bootmatall <- samplebootmat(
+	ValueID=Observations$ValueID,
+	Value=Observations$Expected.value, 
+	RefobsID = Observations2$ReferenceYearID,
+	DistID=Alt_DistID,
+	mu=Observations$mu,
+	sig=Observations$sig,
+	nsim=1000)
+
+scaled.bootmatall <- scaleobs(
+	ValueID=Observations$ValueID,
+	FK_OmraadeID=Observations$IndicatorareaID,
+	FK_IndicatorID=Observations$IndicatorID,
+	FK_RefAarID=Observations$ReferenceYearID,
+	nsim=1000,
+	bootmat=bootmatall,
+	ref.value.code=0,
+	IndicatorID=Indic$IndicatorID,
+	FK_Scalingmodel=Indic$Scalingmodel)
+
+munweightsforall <- munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=Indic$TrophicgroupID,
+	Key.indicators=Indic$Key.indicators,
+	Fidelity=Indic$Fidelity,
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit)
+
+NIresult1 <- NULL
+
+for (i in years) {
+
+	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
+
+	NIi <- NIestimate(NIcalculate(
+		Areaind.Name=Indicator.area.ind$IndicatorareaID,
+		Areaind.Indicator=Indicator.area.ind$Indicator_name,
+		Area.Name=Indicator.area$IndicatorareaID,
+		Area.Municipality=Indicator.area$Basicunit,
+		FK_OmraadeID=Observations$IndicatorareaID[Observations$ReferenceYearID == i],
+		nsim=1000,
+		scaled.bootmat=scaled.bootmatyeari,
+		Weights.trof=munweightsforall))
+
+	year <- rep(i,dim(NIi) [1])
+	iresult <- cbind(year,NIi)
+	NIresult1 <- rbind(NIresult1,iresult)
+
+}
+
+NIresult1
+```
+\
+Note, however, that several reference values in the test data set are entered with zreo uncertainty.
+
+
+## Estimate the effect of uncertainty in reference values
+
+One may want to estimate the uncertainty in the calculated NI values that results from uncertainty in the reference values only. 
+
+The code for doing this is again the same as above, however this time the assignment\
+
+Alt_DistID[Observations$ReferenceYearID==0] <- "NoBoot"\
+
+should be replaced with\
+
+Alt_DistID[Observations$ReferenceYearID!=0] <- "NoBoot"\
+
+```{r echo=FALSE, prompt=FALSE}
+Alt_DistID <- Observations$FK_DistID
+Alt_DistID[Observations$ReferenceYearID!=0] <- "NoBoot"
+
+bootmatall <- samplebootmat(
+	ValueID=Observations$ValueID,
+	Value=Observations$Expected.value,
+	RefobsID = Observations$ReferenceYearID,
+	DistID=Alt_DistID,
+	mu=Observations$mu,
+	sig=Observations$sig,
+	nsim=1000)
+
+scaled.bootmatall <- scaleobs(
+	ValueID=Observations$ValueID,
+	FK_OmraadeID=Observations$IndicatorareaID,
+	FK_IndicatorID=Observations$IndicatorID,
+	FK_RefAarID=Observations$ReferenceYearID,
+	nsim=1000,
+	bootmat=bootmatall,
+	ref.value.code=0,
+	IndicatorID=Indic$IndicatorID,
+	FK_Scalingmodel=Indic$Scalingmodel)
+
+munweightsforall <- munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=Indic$TrophicgroupID,
+	Key.indicators=Indic$Key.indicators,
+	Fidelity=Indic$Fidelity,
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit)
+
+NIresult1 <- NULL
+
+for (i in years) {
+
+	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
+
+	NIi <- NIestimate(NIcalculate(
+		Areaind.Name=Indicator.area.ind$IndicatorareaID,
+		Areaind.Indicator=Indicator.area.ind$Indicator_name,
+		Area.Name=Indicator.area$IndicatorareaID,
+		Area.Municipality=Indicator.area$Basicunit,
+		FK_OmraadeID=Observations$IndicatorareaID[Observations$ReferenceYearID == i],
+		nsim=1000,
+		scaled.bootmat=scaled.bootmatyeari,
+		Weights.trof=munweightsforall))
+
+	year <- rep(i,dim(NIi) [1])
+	iresult <- cbind(year,NIi)
+	NIresult1 <- rbind(NIresult1,iresult)
+
+}
+
+NIresult1
+```
+
+The result illustrates what was noted above, that many reference values in the test data set lack estimates of uncertainty.
+
+## Calculate NI without uncertainties
+
+Again, the same code as above, however this time all entries in Alt_DistID are set to "NoBoot".
+
+```{r echo=FALSE, prompt=FALSE}
+Alt_DistID <- Observations$FK_DistID
+Alt_DistID[Observations$ReferenceYearID > -1] <- "NoBoot"
+
+bootmatall <- samplebootmat(
+	ValueID=Observations$ValueID,
+	Value=Observations$Expected.value,
+	RefobsID = Observations$ReferenceYearID,
+	DistID=Alt_DistID,
+	mu=Observations$mu,
+	sig=Observations$sig,
+	nsim=1000)
+
+scaled.bootmatall <- scaleobs(
+	ValueID=Observations$ValueID,
+	FK_OmraadeID=Observations$IndicatorareaID,
+	FK_IndicatorID=Observations$IndicatorID,
+	FK_RefAarID=Observations$ReferenceYearID,
+	nsim=1000,
+	bootmat=bootmatall,
+	ref.value.code=0,
+	IndicatorID=Indic$IndicatorID,
+	FK_Scalingmodel=Indic$Scalingmodel)
+
+munweightsforall <- munweights(
+	Municipalities=BSunits$Basicunit,
+	Indicators=Indic$Indicator_name,
+	FK_TrophicgroupID=Indic$TrophicgroupID,
+	Key.indicators=Indic$Key.indicators,
+	Fidelity=Indic$Fidelity,
+	Areaind.Name=Indicator.area.ind$IndicatorareaID,
+	Areaind.Indicator=Indicator.area.ind$Indicator_name,
+	Area.Name=Indicator.area$IndicatorareaID,
+	Area.Municipality=Indicator.area$Basicunit)
+
+NIresult1 <- NULL
+
+for (i in years) {
+
+	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
+
+	NIi <- NIestimate(NIcalculate(
+		Areaind.Name=Indicator.area.ind$IndicatorareaID,
+		Areaind.Indicator=Indicator.area.ind$Indicator_name,
+		Area.Name=Indicator.area$IndicatorareaID,
+		Area.Municipality=Indicator.area$Basicunit,
+		FK_OmraadeID=Observations$IndicatorareaID[Observations$ReferenceYearID == i],
+		nsim=1000,
+		scaled.bootmat=scaled.bootmatyeari,
+		Weights.trof=munweightsforall))
+
+	year <- rep(i,dim(NIi) [1])
+	iresult <- cbind(year,NIi)
+	NIresult1 <- rbind(NIresult1,iresult)
+
+}
+
+NIresult1
+```
+
+The difference between NI calculated with uncertainities and NI calculated without, is an estimate of the socalled location displacement mentioned on page 37 in Pedersen *et al.* (2016)[^2] and discussed in debth in Pedersen and Skarpaas (2012)[^3].
+
+[^2]: Pedersen, B., Nybø, S., Sæther, S. A. (eds.) 2016. Nature Index for Norway 2015. Ecological framework, computational methods, database and information systems – NINA Report 1226. 84 pp.
+
+[^3]: Pedersen, B., Skarpaas, O. 2012. Statistiske egenskaper til Naturindeks for Norge. Usikkerhet i datagrunnlaget og sensitivitet. - NINA Rapport 797, Trondheim. 55 pp. (In Norwegian)
+
+```{r echo=FALSE, prompt=FALSE}
+NIresult - NIresult1
+```
