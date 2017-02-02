@@ -148,7 +148,7 @@ scaleobs.fct | Scales samples from indicator observations according to chosen sc
 munweights.fct | Calculates the product: trophic weights * fidelity weights
 areaweights.fct | Calculates area weights
 NIcalculation.fct | Calculates a sample of the Nature Index from samples of scaled indicator observations and area-, trophic-, and fidelity weights
-NIestimation.fct | Provides point estimates of the Nature Index together with 95% confidence intervals
+summary.NIresults | Provides point estimates of the Nature Index together with 95% confidence intervals
 
 Several of these functions call other functions that are also included in the file.
 
@@ -662,7 +662,7 @@ specific areas that may vary in geographical extent among indicators, and will i
 
 Area weights should not be entered to NIcalculation.fct if NI is calculated for basic spatial units.
 
-NIcalculation returns a matrix of nsim draws of NI for each NI-area (or basic spatial unit).
+NIcalculate returns a matrix of nsim draws of NI for each NI-area (or basic spatial unit), of class NIresults.
 
 Input arguments:
 
@@ -682,21 +682,21 @@ Output:
 
 Name | Object type | Mode | Dim | Explanation
 :---------------- | :------------- | :------------- | :--------------- | :------------------------------
-NI | matrix | double | *(N.kom or N.reg) x nsim* | matrix of NI draws 
+NI | NIresult, matrix | double | *(N.kom or N.reg) x nsim* | matrix of NI draws 
 
 
-## NIestimation.fct
+## summary.NIresults
 
-NIestimation.fct provides point estimates of the Nature Index together with confidence intervals for a set of $N.reg$ basic spatial units or aggregated NI-areas from a $N.reg x nsim$ matrix of $nsim$ simulations of NI for each area.
+The summary function for NIresults provides point estimates of the Nature Index together with confidence intervals for a set of $N.reg$ basic spatial units or aggregated NI-areas from a $N.reg x nsim$ matrix of $nsim$ simulations of NI for each area.
 
-As default NIestimation returns the median simulated value as the point estimate and the 0.025- and 0.975-
+As default parameters returns the median simulated value as the point estimate and the 0.025- and 0.975-
 quantiles as limits for the confidence interval.
 
 Input arguments:
 
 Name | Object type | Mode | Dim | Explanation
 :---------------- | :------------- | :------------- | :--------------- | :------------------------------
-NI | matrix | double | *(N.kom or N.reg) x nsim* | NI draws
+NI | NIsummary | double | *(N.kom or N.reg) x nsim* | NI draws
 kvantiler | vector | double | 3 | Quantiles used as basis for point estimate and limits of confidence interval.
 
 Output: 
@@ -711,7 +711,7 @@ To estimate the Nature Index for the area "All area", enter the areaweights stor
 
 
 ```{r echo=TRUE, prompt=FALSE}
-NIestimate(NIcalculate(
+summary(NIcalculate(
 	Areaind.Name=Indicator.area.ind$IndicatorareaID,
 	Areaind.Indicator=Indicator.area.ind$Indicator_name,
 	Area.Name=Indicator.area$IndicatorareaID,
@@ -727,7 +727,7 @@ To estimate the Nature Index for the NI-areas "Part1" and "Part2", weights store
 
 
 ```{r echo=TRUE, prompt=FALSE}
-NIestimate(NIcalculate(
+summary(NIcalculate(
 	Areaind.Name=Indicator.area.ind$IndicatorareaID,
 	Areaind.Indicator=Indicator.area.ind$Indicator_name,
 	Area.Name=Indicator.area$IndicatorareaID,
@@ -743,7 +743,7 @@ To estimate the Nature Index for basic spatial units, do not enter area weights.
 
 
 ```{r echo=TRUE, prompt=FALSE}
-NIestimate(NIcalculate(
+summary(NIcalculate(
 	Areaind.Name=Indicator.area.ind$IndicatorareaID,
 	Areaind.Indicator=Indicator.area.ind$Indicator_name,
 	Area.Name=Indicator.area$IndicatorareaID,
@@ -758,7 +758,7 @@ To change to eg. a 90% confidence interval, specify nondefault values for kvanti
 
 
 ```{r echo=TRUE, prompt=FALSE}
-NIestimate(NIcalculate(
+summary(NIcalculate(
 	Areaind.Name=Indicator.area.ind$IndicatorareaID,
 	Areaind.Indicator=Indicator.area.ind$Indicator_name,
 	Area.Name=Indicator.area$IndicatorareaID,
@@ -829,7 +829,7 @@ for (i in years) {
 
 	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
 
-	NIi <- NIestimate(NIcalculate(
+	NIi <- summary(NIcalculate(
 		Areaind.Name=Indicator.area.ind$IndicatorareaID,
 		Areaind.Indicator=Indicator.area.ind$Indicator_name,
 		Area.Name=Indicator.area$IndicatorareaID,
@@ -893,7 +893,7 @@ for (i in years) {
 
 	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
 
-	NIi <- NIestimate(NIcalculate(
+	NIi <- summary(NIcalculate(
 		Areaind.Name=Indicator.area.ind$IndicatorareaID,
 		Areaind.Indicator=Indicator.area.ind$Indicator_name,
 		Area.Name=Indicator.area$IndicatorareaID,
@@ -968,7 +968,7 @@ for (i in years) {
 
 	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
 
-	NIi <- NIestimate(NIcalculate(
+	NIi <- summary(NIcalculate(
 		Areaind.Name=Indicator.area.ind$IndicatorareaID,
 		Areaind.Indicator=Indicator.area.ind$Indicator_name,
 		Area.Name=Indicator.area$IndicatorareaID,
@@ -1034,7 +1034,7 @@ for (i in years) {
 
 	scaled.bootmatyeari <- scaled.bootmatall[Observations$ReferenceYearID == i,]
 
-	NIi <- NIestimate(NIcalculate(
+	NIi <- summary(NIcalculate(
 		Areaind.Name=Indicator.area.ind$IndicatorareaID,
 		Areaind.Indicator=Indicator.area.ind$Indicator_name,
 		Area.Name=Indicator.area$IndicatorareaID,

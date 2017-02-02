@@ -100,5 +100,6 @@ NIcalculate <- function(
     }
   }
 
+  class(NI) <- c("NIresult", "matrix")
   return(NI)
 }

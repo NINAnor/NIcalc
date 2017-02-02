@@ -99,7 +99,7 @@ samplebootmat <- function(ValueID = NULL,
   }
   for (i in which(!Notboot.values)) {
     bootmat[i, ] <- sampleobs(nsim = nsim,
-                              distrib = DistID[i], mu = mu[i], sig = sig[i])
+                              distrib = DistID[i], mu = mu[i], sig = sig[i], obs = Value[i])
   }
 
   return(bootmat)

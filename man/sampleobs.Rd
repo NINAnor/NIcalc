@@ -4,7 +4,7 @@
 \alias{sampleobs}
 \title{Random Draws}
 \usage{
-sampleobs(nsim = 99, distrib, mu, sig)
+sampleobs(nsim = 99, distrib, mu, sig, obs)
 }
 \arguments{
 \item{nsim}{double,    length = 1, number of draws (simulations)}
