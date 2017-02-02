@@ -2,6 +2,7 @@
 
 S3method(mean,testObject)
 S3method(plot,testObject)
+S3method(summary,NIresult)
 export(NIcalculate)
 export(NIestimate)
 export(add)
