@@ -51,7 +51,7 @@
 #' hist(sampleobs(nsim = nn, distrib="ZIP", mu = 10, sig = 0.25))
 #' @export
 
-sampleobs <- function(nsim = 99, distrib, mu, sig) {
+sampleobs <- function(nsim = 99, distrib, mu, sig, obs) {
 
   if (distrib == "Gamma"){
     vec <- rGA(nsim, mu = mu, sigma = sig)
@@ -73,7 +73,7 @@ sampleobs <- function(nsim = 99, distrib, mu, sig) {
   if (distrib == "Poisson")      {vec <- rPO(nsim, mu = mu)}
   if (distrib == "NegBinom")     {vec <- rNBII(nsim, mu = mu, sigma = sig)}
   if (distrib == "ZIP")          {vec <- rZIP(nsim, mu = mu, sigma = sig)}
-  if (distrib == "NoBoot")       {vec <- mu}
+  if (distrib == "NoBoot")       {vec <- obs}
 
   return(vec)
 
