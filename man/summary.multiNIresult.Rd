@@ -23,11 +23,6 @@ N.reg basic spatial units or aggregated NI-areas from a N.reg x nsim matrix of n
 quantiles as limits for the confidence interval.
 }
 \examples{
-NIoutput <- NIcalculate(Areaind.Name = Indicator.area.ind$IndicatorareaID,
-Areaind.Indicator = Indicator.area.ind$Indicator_name, Area.Name = Indicator.area$IndicatorareaID,
-Area.Municipality = Indicator.area$Basicunit, FK_OmraadeID = Observations$IndicatorareaID[Observations$ReferenceYearID ==i],
-nsim = 1000, scaled.bootmat = scaled.bootmatyeari, Weights.trof = munweightsforall)
-NIestimate(NI=matrix(1,nrow=1,ncol=100),kvantiler=c(0.025,0.5,0.975))
 
 }
 \author{
