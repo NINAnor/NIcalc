@@ -69,10 +69,8 @@
 #'                      Weights.trof = weightsTrof)
 #'
 #' summary(tt)
-
-
-
-
+#' @export
+#'
 multiNIcalculate <- function (Observations, scaled.bootmat, ...){
 
   out<-list()
