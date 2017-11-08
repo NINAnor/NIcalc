@@ -17,4 +17,3 @@ Indicator.area
 A dataset of 67 indicator areas to be used in the example calculations
 }
 \keyword{datasets}
-

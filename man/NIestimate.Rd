@@ -23,14 +23,14 @@ N.reg basic spatial units or aggregated NI-areas from a N.reg x nsim matrix of n
  As default, \code{NIestimate} returns the median simulated value as the point estimate and the 0.025- and 0.975-
 quantiles as limits for the confidence interval.
 }
+
 \examples{
 NIestimate(NI=matrix(1,nrow=1,ncol=100),kvantiler=c(0.025,0.5,0.975))
 
 }
-\author{
-Bård Pedersen
-}
 \seealso{
 \code{\link{NIcalculate}}
 }
-
+\author{
+Bård Pedersen
+}

@@ -1,0 +1,180 @@
+---
+title: "Managing custom distributions in NI"
+author: "Jens Åström"
+date: "`r Sys.Date()`"
+output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+require(knitr)
+knitr::opts_chunk$set(echo = TRUE, tidy = T)
+require(distr)
+```
+
+Implementing custom distributions
+=================
+The ultimate goal is to specify a distribution, from which we can draw samples to input into the NI calculation. We can then sidestep the elicitation step and directly sample (bootstrap) from the given distributions. 
+
+To make life easier, we can make use of the `distr` package to generate various types of distributions. We foresee (at least) three types of distributions:
+
+1. Known distributions (Normal, Poisson, etc.)
+2. Empirical distributions (Sample draws, e.g. CODA output from Bayesian modelling)
+3. Discrete distributions (Allowes for a fixed number of possible values, with individual probabilities specified)
+
+The first option already have sampling functions in R, so we could use these directly. The last two can be handled similarly by the `distr` package.
+
+
+Example of known distributions
+============
+
+```{r, echo = F}
+
+nMean <- 0.5
+nSd <- 0.1
+```
+
+Let's say we have an indicator with a point estimate of `r nMean`. The uncertainty is specified (in this case) as a normal distribution with standard error of `r nSd`. We can make a sampling function of this distribution quite simply.
+
+
+```{r}
+require(distr)
+nMean <- 0.5
+nSd <- 0.1
+
+N <- Norm(mean = nMean, sd = nSd)
+
+```
+
+To sample from the distribution, you use the function `distr::r`, but we can wrap this in a convenience function.
+
+```{r}
+NIsample <- function(dist, nSamples = 10){
+  distr::r(dist)(nSamples)
+}
+```
+
+```{r}
+NIsample(N, 5)
+```
+
+
+The `N` object can then be stored in the database together with the indicator value and later be used to sample directly from. Empirical and discrete distributions can be handled similarly. Suppose we have output from a Bayesian MCMC model run for a parameter and we wish to use this to sample from. We could of course just do a `sample(codaObject)`. But we can use the `distr` package to do that, and keep us in a unified framework. The two methods are statistically equivalent.
+
+
+```{r}
+
+nSamples <- 100000
+indicatorPosterior <- rnorm(nSamples, mean = 0.5, sd = 0.1)
+
+EmpiricalPointEstimate <- mean(indicatorPosterior)
+ 
+E <- EmpiricalDistribution(indicatorPosterior)
+
+NIsample(E)
+```
+
+In this case, we simply store the `rE` object with the point estimate. The size of such an empirical distribution of `r nSamples` samples, is `r  round(as.numeric(object.size(E))/1000000, digits = 2)` Mb.  A discrete function is handled much the same way.
+
+```{r}
+allowedIndicatorValues <- c(0.1, 0.2, 0.3, 0.4)
+indicatorValueProbabilities <- c(0.1, 0.4, 0.4, 0.1)   
+
+discretePointEstimate <- mean(allowedIndicatorValues)
+
+D <- DiscreteDistribution(allowedIndicatorValues, indicatorValueProbabilities)
+
+NIsample(D)
+
+```
+
+Like before, we then store the `rD` object together with the point estimate.
+
+\clearpage
+
+Implementation in package `NIcalc`
+================
+So far we have just looked at the principles. The job for the NIcalc package is to create functions that utilizes these methods and wraps them such that we ensure the right internal structure and facilitetes the communication with the database. 
+
+We want to allow users to come to the table with varying distributions, and use our functions to end up with similar objects, which then can be uploaded to the NI database. The communication with the database is carried out through a web-based API.
+
+This is not implemented yet, but here is a suggested roadmap:
+
+
+1. Create function to retrieve the user's indicators as they are currently stored in the database
+2. Create functions to create distributions and store the new values in a dataframe (?) or list.
+3. Create function to check that new data fits with database structure for the particular user.
+4. Create insert function to Database.
+
+
+
+
+In principle it should be possible to store the custom distributions in R as binary objects, but they need to be stored for example in a list, as they cannot be stored in a "cell" in a `data.frame`. This is an outline of an approach.
+
+```{r}
+require(uuid)
+
+#get unique identifier for the indicator distribution(s)
+distributionUUID <- UUIDgenerate() 
+
+#Put these in a list
+serializedN <-list()
+serializedN[[distributionUUID]]<- serialize(N, NULL)
+
+#The other values can be put in a data.frame, but we need to store the UUID for the distribution
+newIndicators <- data.frame("indicator" = UUIDgenerate(), 
+                   "pointEstimate" = nMean, 
+                   "lower_quartile" = NA, 
+                   "upper_quartile" = NA,
+                   "have_custom_distribution" = T,
+                   "custom_distribution" = distributionUUID
+                   )
+
+indicatorData <- list("IndicatorValues" = newIndicators, "Distributions" = serializedN) 
+class(indicatorData) <- "indicatorData" 
+
+```
+
+We then have a "composite" object with all the data relevant for the indicator. We have defined a new class for this type of object, so we can produce custom methods later. We might for example create an export function as a method for this type of object instead of writing it as a normal function.
+
+
+Anyway, the binary data could (?) be inserted in the database as a `VARBINARY` type.
+
+
+On the way back, we can recieve serialized objects from the database and unserialize them to get the original format back.
+
+```{r}
+recreatedN <- unserialize(indicatorData$Distributions[[1]])
+
+NIsample(recreatedN)
+```
+
+
+Kobling til databasen via API
+=============
+Foreløpig litt kode fra Øystein.
+
+```{r, eval = F}
+               library(httr)
+               library(jsonlite)
+               url  <- "http://ninweb17.nina.no"
+               path <- "NaturindeksAPI/api/todo"
+
+#Vi kan poste data til API-et:
+              body <- list(name = "Feed the cat", isComplete = "false")
+               raw.result_post <- POST(url = url, path = path, body = body, encode = "json")
+
+#Vi kan vi kjøre en GET, parse responsen og vise resultatet:
+               raw.result <- GET(url = url, path = path)
+
+               myjson <- content(raw.result)
+               myjson2 <- jsonlite::fromJSON(toJSON(myjson))
+              # View(myjson2)
+
+```
+
+
+

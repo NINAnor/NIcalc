@@ -21,4 +21,3 @@ Add together two numbers.
 add(1, 1)
 add(13, 1)
 }
-
