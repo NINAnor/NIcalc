@@ -78,3 +78,4 @@ tt<-multiNIcalculate(Indicator.area.ind = Indicator.area.ind,
 
 summary(tt)
 }
+

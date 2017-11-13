@@ -55,9 +55,10 @@ hist(sampleobs(nsim = nn, distrib="NegBinom", mu = 4, sig = 1))
 hist(sampleobs(nsim = nn, distrib="Poisson", mu = 4, sig = NA))
 hist(sampleobs(nsim = nn, distrib="ZIP", mu = 10, sig = 0.25))
 }
-\seealso{
-\code{\link{samplebootmat}},
-}
 \author{
 Nigel Yoccoz and Bård Pedersen
 }
+\seealso{
+\code{\link{samplebootmat}},
+}
+

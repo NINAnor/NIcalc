@@ -53,7 +53,6 @@ Weights.trof : Matrix Double (N.kom x N.ind) Wi * Wf
 \section{Notes}{
 
 }
-
 \examples{
 \dontrun{
 ##Add example, here, possibly as a don't run
@@ -74,3 +73,4 @@ Area.Municipality=paste("Mun", 1:36, sep="")[c(sample(1:36,30), sample(1:36,30),
 \author{
 Bård Pedersen
 }
+

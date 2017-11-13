@@ -39,12 +39,13 @@ estimlight.fct(obsval = c(6,13,25))
 estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "continuous")
 estimlight.fct(obsval = c(6,13,25),proba = c(0.025,0.975), type = "discrete")
 }
+\author{
+Nigel Yoccoz and Bård Pedersen
+}
 \seealso{
 \code{\link{estim.fct}},\cr \code{\link{elicitate}} for fitting
 probability distributions to multiple indicator observations and for list of
 model distributions included,\cr \code{\link{qdev}} for calculating sum of
 squares between \code{obsval} and model.
 }
-\author{
-Nigel Yoccoz and Bård Pedersen
-}
+

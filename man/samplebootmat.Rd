@@ -81,9 +81,10 @@ samplebootmat(aa,bb,cc,dd,mu,sig,ref.value.code = 1)
 samplebootmat(aa,bb,cc,dd,mu,sig,ref.value.code = 2)
 
 }
-\seealso{
-\code{\link{sampleobs}},
-}
 \author{
 Bård Pedersen
 }
+\seealso{
+\code{\link{sampleobs}},
+}
+

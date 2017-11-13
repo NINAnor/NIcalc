@@ -12,3 +12,4 @@ Example method to see how it works
 \details{
 Some details
 }
+

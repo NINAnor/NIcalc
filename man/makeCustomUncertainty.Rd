@@ -4,7 +4,7 @@
 \alias{makeCustomUncertainty}
 \title{Create a distribution function to describe the uncertainty for an indicator}
 \usage{
-makeCustomUncertainty(input = NULL, functionParams = NULL)
+makeCustomUncertainty(input = NULL, distParams = NULL)
 }
 \arguments{
 \item{input}{Either a name of a known distribution, a vector of values, or a data frame of possibleValues and valueProbabilities}
@@ -18,13 +18,26 @@ an object of class `NIdistribution`
 This functions formats various representations of indicator uncertainty into a common structure for further processing
 }
 \examples{
+myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+sampleNIDistribution(myDist, 10)
 
- makeCustomUncertainty(dnorm)
+myDist <- makeCustomUncertainty(input = "Poisson", distParams = list("lambda" = 3))
+sampleNIDistribution(myDist, 10)
 
-}
-\seealso{
-\code{\link{sample.NIdistribution}}
+myProbs <- data.frame("est" = c(0.2, 0.23, 0.34, 0.4), "probs" = c(0.1, 0.4, 0.4, 0.1 ))
+myDist <- makeCustomUncertainty(myProbs)
+sampleNIDistribution(myDist, 10)
+
+codaSamples <- rnorm(1000, mean = 0.87, sd = 0.3)
+myDist <- makeCustomUncertainty(codaSamples)
+sampleNIDistribution(myDist, 10)
+
+
 }
 \author{
 Jens Åström
 }
+\seealso{
+\code{\link{sample.NIdistribution}}
+}
+

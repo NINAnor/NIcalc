@@ -76,11 +76,12 @@ function \code{\link{estim.fct}}. If this results in an error, it calls
 \code{elicitation} is a utility function adapted to the mathematical framework
 for calculating the nature index.
 }
+\author{
+Bård Pedersen
+}
 \seealso{
 \code{\link{estim.fct}}, \code{\link{estimlight.fct}},\cr
 \code{\link{qdev}} for the calculation of sum of squares between
 the parameters of the indicator observation and model distributions.
 }
-\author{
-Bård Pedersen
-}
+

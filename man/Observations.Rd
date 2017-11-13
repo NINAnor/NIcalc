@@ -21,3 +21,4 @@ Observations
 A dataset of 259 observations to be used in the examples
 }
 \keyword{datasets}
+

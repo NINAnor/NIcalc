@@ -12,3 +12,4 @@ I think this is the wrong way to go about it.
 \details{
 I don't know what more to say.
 }
+

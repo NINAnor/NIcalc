@@ -17,3 +17,4 @@ Indicator.area.ind
 A dataset of 59 indicator areas to be used in the examples
 }
 \keyword{datasets}
+
