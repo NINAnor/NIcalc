@@ -16,9 +16,17 @@
 #' @seealso \code{\link{makeCustomDistribution}}
 
 
-print.indicatorData <- function(input){
-  table <- input[["IndicatorValues"]]
-  table$DistributionType <- input[["DistributionType"]]
+print.niIndicatorData <- function(input){
+  table = input
+  # table <- input[["IndicatorValues"]]
+  #
+  # getDistType <- function(x){
+  #   out <- paste(capture.output(print(x)), collapse = "")
+  #   return(out)
+  # }
+  #
+  # table$DistributionType <- lapply(input$customDistributions, function(x) getDistType(x))
+  # table$DistributionType <- input[["DistributionType"]]
 
   print(table)
 }

@@ -3,10 +3,10 @@
 #' This functions formats various representations of indicator uncertainty into a common structure for further processing
 #'
 #'
-#' @name makeCustomUncertainty
+#' @name makeDistribution
 #' @author Jens Åström
 #' @param input Either a name of a known distribution, a vector of values, or a data frame of possibleValues and valueProbabilities
-#' @param functionParams (optional) Parameters for the distribution function, if such is provided in `input`
+#' @param distParams (optional) Parameters for the distribution function, if such is provided in `input`
 #' @return an object of class `NIdistribution`
 #' @export
 #' @examples
@@ -28,7 +28,7 @@
 #' @seealso \code{\link{sample.NIdistribution}}
 
 
-makeCustomUncertainty <- function(input = NULL, distParams = NULL){
+makeDistribution <- function(input = NULL, distParams = NULL){
 
 allowedDistributions <- c("Normal", "Poisson")
 

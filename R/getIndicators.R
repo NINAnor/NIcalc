@@ -1,19 +1,40 @@
+#' List the indicators that the user is permitted to alter
+#'
+#' Based on the token in `niToken`, this function lists the indicators (ID and names) that the user
+#' is responsible for
+#'
+#'
+#' @param token	character		A character string containing the database API token. Typically created by the function \link{getToken}.
+#' @return A data frame containing indicator IDs and names. The indicator names is used in other database functions.
+#'
+#' @author Jens Åström
+#'
+#' @section Notes:
+#'
+#'
+#' @examples
+#' \dontrun{
+#' getIndicators()
+#' }
+#'
+#' @export
+#'
+
+
 getIndicators <- function(token = niToken){
   url <- "http://ninweb17.nina.no"
   indicator_path <- "NaturindeksAPI/api/indicators"
 
   auth_string <- paste("bearer", token, sep = " ")
 
-  myIndicators <- GET(url = url,
+  myIndicators <- httr::GET(url = url,
                       path = indicator_path,
                       encode = "json",
-                      add_headers(Authorization = auth_string))
+                      httr::add_headers(Authorization = auth_string))
 
-  rawContent <- httr::content(myIndicators)
+  rawContent <- httr::content(myIndicators, as = "parsed")
 
-  indicators <- plyr::ldply(rawContent, data.frame)
-
-  #indicators <- do.call(rbind, lapply(rawContent, data.frame, stringsAsFactors=FALSE))
+  indicators <- plyr::ldply(rawContent, data.frame, stringsAsFactors = F)
 
   return(indicators)
 }

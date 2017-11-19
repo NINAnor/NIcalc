@@ -24,6 +24,7 @@
 #' @return Vector of samples
 #' @export
 #' @examples
+#' getToken("testUser", "testPassword")
 #' indicatorData <- getIndicators()
 #' setIndicator(indicatorID = 1,
 #' est = 0.5,
@@ -38,39 +39,47 @@
 #')
 #'
 #'
-#' @seealso \code{\link{makeCustomDistribution}}
+#' @seealso \code{\link{makeDistribution}}
 
 
-setIndicatorValues <- function(indicatorData = indicatorData,
-                         indicatorID,
-                         est = NULL,
-                         lower = NULL,
-                         upper = NULL,
-                         distribution = NULL,
-                         distParams = NULL){
+setIndicatorValues <- function(indicatorData = NULL,
+                               areaId = NULL,
+                               year = NULL,
+                               est = NULL,
+                               lower = NULL,
+                               upper = NULL,
+                               distribution = NULL,
+                               distParams = NULL){
 
-  if(class(indicatorData) != "indicatorData") stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
+  if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
 
   if(!is.null(distribution)){
-    distID <- UUIDgenerate()
-    dist <- makeCustomUncertainty(input = distribution, distParams = distParams)
-    est <- mean(dist)
+    distID <- uuid::UUIDgenerate()
+    dist <- makeDistribution(input = distribution, distParams = distParams)
 
-    indicatorData$IndicatorValues[indicatorID, "est"] <- est
-    indicatorData$IndicatorValues[indicatorID, "have_custom_distribution"] <- T
-    indicatorData$IndicatorValues[indicatorID, "custom_distribution"] <- distID
+    if(class(dist) == "Norm"){
+      est <- distr::mean(dist)
+    } else  est <- dist@q(0.5)
 
-    indicatorData$Distributions[distID] <- serialize(dist, NULL)
 
-    indicatorData$DistributionType[distID] <- paste(capture.output(print(dist)), collapse = "")
+    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
+                                    indicatorData$indicatorValues$yearName %in% year, "verdi"] <- est
+
+    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
+                                    indicatorData$indicatorValues$yearName %in% year, "customDistributionUUID"] <- distID
+
+    indicatorData$customDistributions[[distID]] <- dist
 
     return(indicatorData)
   } else {
 
-    indicatorData[indicatorData$indicatorID == indicatorID, "est"] <- est
-    indicatorData[indicatorData$indicatorID == indicatorID, "lower"] <- lower
-    indicatorData[indicatorData$indicatorID == indicatorID, "upper"] <- upper
-    indicatorData[indicatorData$indicatorID == indicatorID, "have_custom_distribution"] <- F
+    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
+                                    indicatorData$indicatorValues$yearName %in% year, "verdi"] <- est
+    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
+                                    indicatorData$indicatorValues$yearName %in% year, "nedre_Kvartil"] <- lower
+    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
+                                    indicatorData$indicatorValues$yearName %in% year, "ovre_Kvartil"] <- upper
+
     return(indicatorData)
   }
 

@@ -2,9 +2,10 @@
 % Please edit documentation in R/printIndicatorData.R
 \name{print.indicatorData}
 \alias{print.indicatorData}
+\alias{print.niIndicatorData}
 \title{Print function for class indicatorData objects}
 \usage{
-\method{print}{indicatorData}(input)
+\method{print}{niIndicatorData}(input)
 }
 \arguments{
 \item{input}{object of class `indicatorData`}

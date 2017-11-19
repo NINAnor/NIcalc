@@ -2,7 +2,7 @@
 #'
 #' This is a simple convenience function to draw samples from object made from NIdistributions
 #'
-#' @name sample.Distribution
+#' @name sampleDistribution
 #' @author  Jens Åström
 #' @param dist object of class `NIdistribution` created by \code{makeCustomDistribution}
 #' @param nSamples Number of samples to draw. Integer.
@@ -17,7 +17,7 @@
 #' @seealso \code{\link{makeCustomDistribution}}
 
 
-sampleNIDistribution <- function(dist, nSamples = 10){
+sampleDistribution <- function(dist, nSamples = 10){
   out <- distr::r(dist)(nSamples)
   return(out)
 }
