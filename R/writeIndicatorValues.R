@@ -1,0 +1,62 @@
+#' Get the present indicator values from the Nature Index database
+#'
+#' This function retreives the current values for a given indicator. It is used both to check the current
+#' information, and as a starting point for updating the data. In case of updates, individual rows are altered
+#' by the function setIndicatorValue.
+#'
+#' @param indicatorData	Data frame of indicator values. Usually format retrieved from \link{getIndicatorValues} and updated through \link{setIndicatorValues}.
+#' @param token A connection token aquired by \link{getToken}. Simply leave as is if you use `getToken`
+#' @return A message from the database API of the turn out of the action.
+#'
+#' @author Jens Åström
+#'
+#' @section Notes:
+#'
+#'
+#' @examples
+#' \dontrun{
+#' getToken()
+#' myIndicators <- getIndicators()
+#' myValues <- getIndicatorValues(IndicatorID = 1)
+#' updatedValues <- setIndicatorValues(myValues, year = 2018, est = 0.3)
+#' writeIndicatorValues(updatedValues)
+#' }
+#'
+#' @export
+#'
+
+
+
+
+writeIndicatorValues <- function(indicatorData = NULL,
+                                 token = niToken){
+  auth_string <- paste("bearer", token, sep = " ")
+  url <- "http://ninweb17.nina.no"
+  api_path <- "NaturindeksAPI/api/indicator/UpdateValues"
+
+
+  distToRaw <- function(x){
+    rawToChar(serialize(x, NULL, ascii = T))
+  }
+
+  indicatorData$indicatorValues$customDistributionObject <- NA
+  rawDist <- lapply(indicatorData$customDistributions, distToRaw)
+  indicatorData$indicatorValues$customDistributionObject[indicatorData$indicatorValues$customDistributionUUID %in% names(rawDist)] <- unlist(rawDist)
+
+  toNestedList <- function(x){
+    as.list(apply(x, 1, as.list))
+  }
+
+  body <- toNestedList(indicatorData$indicatorValues)
+
+  body <- toJSON(body)
+
+  postdata <- POST(url = url,
+                   path = api_path,
+                   body = list(body),
+                   encode = "json",
+                   add_headers(Authorization = auth_string))
+
+
+  cat(content(postdata)[[1]])
+}

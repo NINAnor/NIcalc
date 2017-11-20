@@ -4,10 +4,12 @@
 \alias{getIndicatorValues}
 \title{Get the present indicator values from the Nature Index database}
 \usage{
-getIndicatorValues(indicatorID = NULL, token = niToken)
+getIndicatorValues(indicatorID = NULL, year = NULL, token = niToken)
 }
 \arguments{
 \item{indicatorID}{numerical    a numerical value identifying the indicator. Usually this is first retreived by the \link{getIndicators} function}
+
+\item{year}{numerica the year of the values to retrieve. Default = NULL, which means you get all values.}
 }
 \value{
 A list containing 1) a data frame of the values of the indicator and 2) a list of distribution objects identifying the uncertainties of the estimates (optional)

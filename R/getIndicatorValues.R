@@ -5,6 +5,7 @@
 #' by the function setIndicatorValue.
 #'
 #' @param indicatorID	numerical	a numerical value identifying the indicator. Usually this is first retreived by the \link{getIndicators} function
+#' @param year numerica the year of the values to retrieve. Default = NULL, which means you get all values.
 #' @return A list containing 1) a data frame of the values of the indicator and 2) a list of distribution objects identifying the uncertainties of the estimates (optional)
 #'
 #' @author Jens Åström
@@ -22,10 +23,13 @@
 
 
 
-getIndicatorValues <- function(indicatorID = NULL, token = niToken){
+getIndicatorValues <- function(indicatorID = NULL, year = NULL, token = niToken){
 
   url <- "http://ninweb17.nina.no"
-  value_path <- paste0("NaturindeksAPI/api/indicator/", indicatorID, "/values")
+
+  if(!is.null(year)){
+    value_path <- paste0("NaturindeksAPI/api/indicator/", indicatorID, "/year/", year)
+  } else  value_path <- paste0("NaturindeksAPI/api/indicator/", indicatorID, "/values")
 
   auth_string <- paste("bearer", token, sep = " ")
 
