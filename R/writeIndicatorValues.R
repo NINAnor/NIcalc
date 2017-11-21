@@ -47,16 +47,16 @@ writeIndicatorValues <- function(indicatorData = NULL,
     as.list(apply(x, 1, as.list))
   }
 
-  body <- toNestedList(indicatorData$indicatorValues)
+  body <- toNestedList(indicatorData$indicatorValues) #Alternatively, skip the to.list
 
-  body <- toJSON(body)
+  body <- jsonlite::toJSON(body)
 
-  postdata <- POST(url = url,
+  postdata <- httr::POST(url = url,
                    path = api_path,
                    body = list(body),
                    encode = "json",
-                   add_headers(Authorization = auth_string))
+                   httr::add_headers(Authorization = auth_string))
 
 
-  cat(content(postdata)[[1]])
+  cat(httr::content(postdata)[[1]])
 }

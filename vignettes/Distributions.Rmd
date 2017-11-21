@@ -1,31 +1,31 @@
 ---
-title: "Managing custom distributions in NI"
+title: "Interacting with the Nature index database and using custom uncertainty distributions"
 author: "Jens Åström"
 date: "`r Sys.Date()`"
 output: pdf_document
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 require(knitr)
 knitr::opts_chunk$set(echo = TRUE, tidy = T)
 require(distr)
+require(httr)
+require(jsonlite)
 ```
 
 Implementing custom distributions
 =================
-The ultimate goal is to specify a distribution, from which we can draw samples to input into the NI calculation. We can then sidestep the elicitation step and directly sample (bootstrap) from the given distributions. 
+Earlier, uncertainty of an indicator value could only be expressed by providing values for the lower and upper quartiles. This, together with the point estimate was then used to find a distribution that fitted reasonably well. While this works well for several cases, it was desireable to be able to explictly specify the uncertainty distribution attached to an indicator value. There are user cases where this would be done as a known distribution, or as an empirical set of values, for example from a simulation or MCMC run.
 
-To make life easier, we can make use of the `distr` package to generate various types of distributions. We foresee (at least) three types of distributions:
+In terms of the workings of the NIcalc package, the ultimate goal of the uncertaintly of any indicator is to specify a distribution, from which we can draw samples to input into the NI calculations. For the indicators where the user directly specifies the uncertainty distribution, we can sidestep the elicitation step and directly sample (bootstrap) from these given distributions. 
 
-1. Known distributions (Normal, Poisson, etc.)
+To make life easier, we make of the `distr` package to generate various types of distributions. At this point, we allow for three types of distributions:
+
+1. Known distributions (Normal, Poisson currently supported.)
 2. Empirical distributions (Sample draws, e.g. CODA output from Bayesian modelling)
 3. Discrete distributions (Allowes for a fixed number of possible values, with individual probabilities specified)
 
-The first option already have sampling functions in R, so we could use these directly. The last two can be handled similarly by the `distr` package.
+The first option already have sampling functions in R. However, to streamline the process, we handle all cases similarly, by the `distr` package.
 
 
 Example of known distributions
@@ -37,47 +37,85 @@ nMean <- 0.5
 nSd <- 0.1
 ```
 
-Let's say we have an indicator with a point estimate of `r nMean`. The uncertainty is specified (in this case) as a normal distribution with standard error of `r nSd`. We can make a sampling function of this distribution quite simply.
+Let's say we have an indicator with a point estimate of `r nMean`. The uncertainty is specified (in this example) as a normal distribution with standard error of `r nSd`. A user case might be if the value of an indicator is simulated or estimated as a normally distributed variable with a standard error. We can make a sampling function of this distribution quite easily using the `distr` package. 
 
 
 ```{r}
-require(distr)
+
 nMean <- 0.5
 nSd <- 0.1
 
-N <- Norm(mean = nMean, sd = nSd)
+N <- distr::Norm(mean = nMean, sd = nSd)
 
 ```
-
-To sample from the distribution, you use the function `distr::r`, but we can wrap this in a convenience function.
-
-```{r}
-NIsample <- function(dist, nSamples = 10){
-  distr::r(dist)(nSamples)
-}
-```
+This has been implemented in the function `makeDistribution` in the `NIcalc` package.
 
 ```{r}
-NIsample(N, 5)
+N <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
 ```
 
 
-The `N` object can then be stored in the database together with the indicator value and later be used to sample directly from. Empirical and discrete distributions can be handled similarly. Suppose we have output from a Bayesian MCMC model run for a parameter and we wish to use this to sample from. We could of course just do a `sample(codaObject)`. But we can use the `distr` package to do that, and keep us in a unified framework. The two methods are statistically equivalent.
-
+To sample from the distribution, you could use the function `distr::r`. For convenience, however, we wrap this in a `NIcalc` function that we can use for any distribution.
 
 ```{r}
+sampleDistribution
+```
 
+```{r}
+sampleDistribution(N, 5)
+```
+
+Another probable user case is an indicator value that is expressed as a Poisson variable. Examples might be simulations of a population count. In this case, the distribution can be expressed using only the \lambda variable.
+
+```{r}
+P <- makeDistribution("Poisson", distParams = list("lambda" = 5))
+```
+
+```{r}
+sampleDistribution(P, 10)
+```
+
+
+The distribution object (`N` or `P`) can be stored in the Nature index database together with the indicator value and later be sampled directly from. (More on the database interaction below.)
+
+Empirical and discrete distributions can be handled similarly. Suppose we have output from a Bayesian MCMC model for a parameter, and we wish to use this to sample from. We could of course just do a `sample(codaObject)`, but we can use the `distr` package instead, and keep us in a unified framework. The result is the same.
+
+```{r}
+#Simulate an output from a MCMC run.
 nSamples <- 100000
 indicatorPosterior <- rnorm(nSamples, mean = 0.5, sd = 0.1)
-
 EmpiricalPointEstimate <- mean(indicatorPosterior)
+EmpiricalPointEstimate #mean of these particular draws
  
-E <- EmpiricalDistribution(indicatorPosterior)
+E <- distr::EmpiricalDistribution(indicatorPosterior)
 
-NIsample(E)
+sampleDistribution(E)
 ```
 
-In this case, we simply store the `rE` object with the point estimate. The size of such an empirical distribution of `r nSamples` samples, is `r  round(as.numeric(object.size(E))/1000000, digits = 2)` Mb.  A discrete function is handled much the same way.
+The same done with `makeDistribution`
+
+```{r}
+E <- makeDistribution(indicatorPosterior)
+sampleDistribution(E)
+E@q(0.5) ##mean of the distribution, used internally to set the point estimate
+```
+
+
+And just to confirm that the two approaches yields the (approximate) same answer.
+
+```{r}
+nSamples <- 1e5
+sampleMethod <- indicatorPosterior[x = sample(1:length(indicatorPosterior), size = nSamples, replace = T)]
+
+NImethod <- sampleDistribution(E, nSamples)
+plot(density(sampleMethod), col = 1, main = "Comparison of distribution object \ndraws to default samples")
+points(density(NImethod), col = 2, type = "l")
+legend("topright", legend = c("Default", "NI smethod"), fill = 1:2)
+
+```
+
+
+In this case, we simply store the `E` object and retrive the point estimate from this distribution as shown above. The size of such an empirical distribution of `r nSamples` samples, is `r  round(as.numeric(object.size(E))/1000000, digits = 2)` Mb. This is manageable for the database. A discrete function is handled much the same way.
 
 ```{r}
 allowedIndicatorValues <- c(0.1, 0.2, 0.3, 0.4)
@@ -85,96 +123,123 @@ indicatorValueProbabilities <- c(0.1, 0.4, 0.4, 0.1)
 
 discretePointEstimate <- mean(allowedIndicatorValues)
 
-D <- DiscreteDistribution(allowedIndicatorValues, indicatorValueProbabilities)
+D <- distr::DiscreteDistribution(allowedIndicatorValues, indicatorValueProbabilities)
 
-NIsample(D)
+sampleDistribution(D)
 
 ```
 
-Like before, we then store the `rD` object together with the point estimate.
-
-\clearpage
-
-Implementation in package `NIcalc`
-================
-So far we have just looked at the principles. The job for the NIcalc package is to create functions that utilizes these methods and wraps them such that we ensure the right internal structure and facilitetes the communication with the database. 
-
-We want to allow users to come to the table with varying distributions, and use our functions to end up with similar objects, which then can be uploaded to the NI database. The communication with the database is carried out through a web-based API.
-
-This is not implemented yet, but here is a suggested roadmap:
-
-
-1. Create function to retrieve the user's indicators as they are currently stored in the database
-2. Create functions to create distributions and store the new values in a dataframe (?) or list.
-3. Create function to check that new data fits with database structure for the particular user.
-4. Create insert function to Database.
-
-
-
-
-In principle it should be possible to store the custom distributions in R as binary objects, but they need to be stored for example in a list, as they cannot be stored in a "cell" in a `data.frame`. This is an outline of an approach.
+With the `makeDistribution`
 
 ```{r}
-require(uuid)
+allowedIndicatorValues <- c(0.1, 0.2, 0.3, 0.4)
+indicatorValueProbabilities <- c(0.1, 0.4, 0.4, 0.1)   
 
-#get unique identifier for the indicator distribution(s)
-distributionUUID <- UUIDgenerate() 
+myProbs <- cbind(allowedIndicatorValues, indicatorValueProbabilities)
 
-#Put these in a list
-serializedN <-list()
-serializedN[[distributionUUID]]<- serialize(N, NULL)
+D <- makeDistribution(myProbs)
 
-#The other values can be put in a data.frame, but we need to store the UUID for the distribution
-newIndicators <- data.frame("indicator" = UUIDgenerate(), 
-                   "pointEstimate" = nMean, 
-                   "lower_quartile" = NA, 
-                   "upper_quartile" = NA,
-                   "have_custom_distribution" = T,
-                   "custom_distribution" = distributionUUID
-                   )
-
-indicatorData <- list("IndicatorValues" = newIndicators, "Distributions" = serializedN) 
-class(indicatorData) <- "indicatorData" 
-
+sampleDistribution(D, 10)
 ```
-
-We then have a "composite" object with all the data relevant for the indicator. We have defined a new class for this type of object, so we can produce custom methods later. We might for example create an export function as a method for this type of object instead of writing it as a normal function.
-
-
-Anyway, the binary data could (?) be inserted in the database as a `VARBINARY` type.
+Like before, we then store the `D` object together with the point estimate.
 
 
-On the way back, we can recieve serialized objects from the database and unserialize them to get the original format back.
+Storing the values and the `indicatorData`-class. 
+===============
+R objects cannot be stored directly in the database as they are. They can, however, be transformed into a raw data string and then stored. An object cannot be stored in an R data frame either. This means we have to handle these custom distribution objects a little differently than when we use only point estimates and lower and upper quartiles.
 
-```{r}
-recreatedN <- unserialize(indicatorData$Distributions[[1]])
+We use the `indicatorData` class to store the information in R of the indiciator values. It is simply a list in two parts. The first is a dataframe mimicking the information in a database table containing the individual indicator values. The last column in this dataframe contains a unique identifier, refering to a custom distribution, for the indicator values where this is used. The second part of the list is another list containing the custom distributions related to the data frame in the first element. A user should interact with these types of objects mainly through dedicated functions in the package. This is exemplified below.
 
-NIsample(recreatedN)
-```
-
-
-Kobling til databasen via API
-=============
-Foreløpig litt kode fra Øystein.
 
 ```{r, eval = F}
-               library(httr)
-               library(jsonlite)
-               url  <- "http://ninweb17.nina.no"
-               path <- "NaturindeksAPI/api/todo"
+#display an example data set here
+str(indicatorData)
+```
 
-#Vi kan poste data til API-et:
-              body <- list(name = "Feed the cat", isComplete = "false")
-               raw.result_post <- POST(url = url, path = path, body = body, encode = "json")
 
-#Vi kan vi kjøre en GET, parse responsen og vise resultatet:
-               raw.result <- GET(url = url, path = path)
 
-               myjson <- content(raw.result)
-               myjson2 <- jsonlite::fromJSON(toJSON(myjson))
-              # View(myjson2)
+
+Working with the Nature Index database
+=============
+We can communicate with the Nature index database through a web based API. R has nice functionality for this through the `httr` and `jsonlite`-packages. The `NIcalc` package contains functions for communicating with the database where the heavy lifting is done by these packages.
+
+We currently support the main task of updating/setting indicator values via a series of steps:
+1. connect to the database (using `getToken`)
+2. identify which indicators the user can alter (using `getIndicators`)
+3. retrieve current indicator values for a given indicator (using `getIndicatorValues`)
+4. setting new indicator values (using `setIndicatorValues`)
+5. writing new indicator values to the database (using `writeIndicatorValues`)
+
+The procedure is designed to work with one indicator at a time. Although it is not recommended, it should be possible to also alter several indicators in the same function calls. 
+
+
+Example of updating values
+---------------------
+We connect to the database using a "token" which is issued individually and temporarily for a connection. This is retrieved by providing a username and password to the database. Use the same credentials as for the web-page http:\\naturindeks.nina.no. See further information on that page regarding the username and passwords. The `getToken` function retrieves a token and assigns it the name "niToken" which is used in further functions. Typically, the user only runs `getToken` in the beginning of a session and need not specify the token later on.
+
+
+```{r, eval = F}
+exists(niToken)
+```
+```{r, echo = F}
+load("../temp/credentials.Rdata")
+getToken(username, password)
+```
+
+```{r}
+getToken("your.username", "secretPassword")
+
+niToken
+```
+The user can the retrive a list of the indicator values he/she is responsible for, or is allowed to alter. This is done by the `getIndicators` function. The `id` variable is later used to identify the indicator we wish to work with.
+
+```{r}
+myIndicators <- getIndicators()
+myIndicators
+```
+
+The next typical step is to retrieve the current values for a given indicator. This can be done for all historical values in the database simply.
+
+```{r}
+indicatorData <- getIndicatorValues(indicatorID = 351)
+```
+
+Usually, the user is only interested in the latest values and do not need to change values for earlier years. We can then specify the current year for which we want to set values (at the time of writing, 2018). In case the indicator ID's change, we can refer to the names of the indicators this way.
+
+```{r}
+indicatorData <- getIndicatorValues(indicatorID = myIndicators$id[myIndicators$name == "Dagsommerfugler i skog"], year = 2018)
+indicatorData
+```
+
+
+We can set an indicator value using the `setIndivatorValue` function. 
+
+```{r}
+setIndicatorValues(indicatorData, areaId = 7040, year = 2018, est = 0.9, lower = 0.7, upper = 1)
+
+updatedIndicatorData <- setIndicatorValues(indicatorData, areaId = 7040, year = 2018, est = 0.9, lower = 0.7, upper = 1)
+
+updatedIndicatorData
 
 ```
+We can also specify the values as inputs to the custom distribution function. Here, the point estimate is retrieved from the created distribution.
+
+```{r}
+updatedIndicatorData <- setIndicatorValues(updatedIndicatorData, areaId = 7041, year = 2018, distribution = cbind(c(0.1, 0.3, 0.4), c(0.33, 0.33, 0.34)))
+
+updatedIndicatorData <- setIndicatorValues(updatedIndicatorData, areaId = 7042, year = 2018, distribution = cbind(c(0.2, 0.4, 0.5), c(0.33, 0.33, 0.34)))
+
+
+updatedIndicatorData
+```
+
+```{r}
+writeIndicatorValues(updatedIndicatorData)
+```
+```{r}
+newValues <- getIndicatorValues(351)
+```
+
 
 
 

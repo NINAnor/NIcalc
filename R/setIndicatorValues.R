@@ -61,24 +61,28 @@ setIndicatorValues <- function(indicatorData = NULL,
       est <- distr::mean(dist)
     } else  est <- dist@q(0.5)
 
+    rows <- 1:nrow(indicatorData$indicatorValues)
+    if(!is.null(areaId)){
+      rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
+    }
 
-    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
-                                    indicatorData$indicatorValues$yearName %in% year, "verdi"] <- est
+    if(!is.null(years)){
+      rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
+    }
 
-    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
-                                    indicatorData$indicatorValues$yearName %in% year, "customDistributionUUID"] <- distID
+
+    indicatorData$indicatorValues[rows, "verdi"] <- est
+
+    indicatorData$indicatorValues[rows, "customDistributionUUID"] <- distID
 
     indicatorData$customDistributions[[distID]] <- dist
 
     return(indicatorData)
   } else {
 
-    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
-                                    indicatorData$indicatorValues$yearName %in% year, "verdi"] <- est
-    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
-                                    indicatorData$indicatorValues$yearName %in% year, "nedre_Kvartil"] <- lower
-    indicatorData$indicatorValues[indicatorData$indicatorValues$areaId %in% areaId &
-                                    indicatorData$indicatorValues$yearName %in% year, "ovre_Kvartil"] <- upper
+    indicatorData$indicatorValues[rows, "verdi"] <- est
+    indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
+    indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
 
     return(indicatorData)
   }
