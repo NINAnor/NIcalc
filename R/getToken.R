@@ -25,7 +25,6 @@
 getToken <- function(username = NULL, password = NULL){
   url <- "http://ninweb17.nina.no"
   token_path <- paste0("NaturindeksAPI/token?username=", username,"&password=", password)
-  api_path <- "NaturindeksAPI/api/indicator"
 
   gettoken <- httr::POST(url = url, path = token_path, encode = "json")
   token <- httr::content(gettoken)

@@ -32,7 +32,7 @@ writeIndicatorValues <- function(indicatorData = NULL,
                                  token = niToken){
   auth_string <- paste("bearer", token, sep = " ")
   url <- "http://ninweb17.nina.no"
-  api_path <- "NaturindeksAPI/api/indicator/UpdateValues"
+  api_path <- "NaturindeksAPI/indicator/UpdateValues"
 
 
   distToRaw <- function(x){

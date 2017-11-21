@@ -23,7 +23,7 @@
 
 getIndicators <- function(token = niToken){
   url <- "http://ninweb17.nina.no"
-  indicator_path <- "NaturindeksAPI/api/indicators"
+  indicator_path <- "NaturindeksAPI/indicators"
 
   auth_string <- paste("bearer", token, sep = " ")
 

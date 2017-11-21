@@ -9,8 +9,7 @@ output: pdf_document
 require(knitr)
 knitr::opts_chunk$set(echo = TRUE, tidy = T)
 require(distr)
-require(httr)
-require(jsonlite)
+require(NIcalc)
 ```
 
 Implementing custom distributions
@@ -179,14 +178,15 @@ We connect to the database using a "token" which is issued individually and temp
 
 
 ```{r, eval = F}
-exists(niToken)
+exists("niToken")
 ```
 ```{r, echo = F}
 load("../temp/credentials.Rdata")
 getToken(username, password)
+niToken
 ```
 
-```{r}
+```{r, eval = F}
 getToken("your.username", "secretPassword")
 
 niToken
@@ -239,7 +239,6 @@ writeIndicatorValues(updatedIndicatorData)
 ```{r}
 newValues <- getIndicatorValues(351)
 ```
-
 
 
 
