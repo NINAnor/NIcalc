@@ -4,7 +4,7 @@
 \alias{setIndicatorValues}
 \title{Set indicator values in IndicatorData object}
 \usage{
-setIndicatorValues(indicatorData = NULL, areaId = NULL, year = NULL,
+setIndicatorValues(indicatorData = NULL, areaId = NULL, years = NULL,
   est = NULL, lower = NULL, upper = NULL, distribution = NULL,
   distParams = NULL)
 }

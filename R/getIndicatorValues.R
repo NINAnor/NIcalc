@@ -23,13 +23,13 @@
 
 
 
-getIndicatorValues <- function(indicatorID = NULL, year = NULL, token = niToken){
+getIndicatorValues <- function(indicatorID = NULL, years = NULL, token = niToken){
 
   url <- "http://ninweb17.nina.no"
 
-  if(!is.null(year)){
-    value_path <- paste0("NaturindeksAPI/indicator/", indicatorID, "/year/", year)
-  } else  value_path <- paste0("NaturindeksAPI/indicator/", indicatorID, "/values")
+  if(!is.null(years)){
+    value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values/years/", years)
+  } else  value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values")
 
   auth_string <- paste("bearer", token, sep = " ")
 

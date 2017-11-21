@@ -1,8 +1,13 @@
 ---
 title: "Interacting with the Nature index database and using custom uncertainty distributions"
 author: "Jens Åström"
-date: "`r Sys.Date()`"
-output: pdf_document
+date: '`r Sys.Date()`'
+output:
+  rmarkdown::pdf_document:
+    toc: yes
+  rmarkdown::html_vignette: default
+vignette: |
+  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -64,7 +69,7 @@ sampleDistribution
 sampleDistribution(N, 5)
 ```
 
-Another probable user case is an indicator value that is expressed as a Poisson variable. Examples might be simulations of a population count. In this case, the distribution can be expressed using only the \lambda variable.
+Another probable user case is an indicator value that is expressed as a Poisson variable. Examples might be simulations of a population count. In this case, the distribution can be expressed using only the $\lambda$ variable.
 
 ```{r}
 P <- makeDistribution("Poisson", distParams = list("lambda" = 5))
@@ -200,7 +205,7 @@ myIndicators
 
 The next typical step is to retrieve the current values for a given indicator. This can be done for all historical values in the database simply.
 
-```{r}
+```{r, evalF}
 indicatorData <- getIndicatorValues(indicatorID = 351)
 ```
 
@@ -215,7 +220,7 @@ indicatorData
 We can set an indicator value using the `setIndivatorValue` function. 
 
 ```{r}
-setIndicatorValues(indicatorData, areaId = 7040, year = 2018, est = 0.9, lower = 0.7, upper = 1)
+#setIndicatorValues(indicatorData, areaId = 7040, year = 2018, est = 0.9, lower = 0.7, upper = 1)
 
 updatedIndicatorData <- setIndicatorValues(indicatorData, areaId = 7040, year = 2018, est = 0.9, lower = 0.7, upper = 1)
 
@@ -233,11 +238,18 @@ updatedIndicatorData <- setIndicatorValues(updatedIndicatorData, areaId = 7042, 
 updatedIndicatorData
 ```
 
+When you are satisfied with the new data, the next step is to write the new data to the database. For this, we use the `writeIndicatorValues` function.
+
+
 ```{r}
 writeIndicatorValues(updatedIndicatorData)
 ```
+
+We can double check that the new values stuck by downloading them again. As we can se, we now get the updated values.
+
 ```{r}
-newValues <- getIndicatorValues(351)
+newValues <- getIndicatorValues(351, year = 2018)
+newValues
 ```
 
 

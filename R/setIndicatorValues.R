@@ -44,7 +44,7 @@
 
 setIndicatorValues <- function(indicatorData = NULL,
                                areaId = NULL,
-                               year = NULL,
+                               years = NULL,
                                est = NULL,
                                lower = NULL,
                                upper = NULL,
@@ -53,6 +53,16 @@ setIndicatorValues <- function(indicatorData = NULL,
 
   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
 
+  rows <- 1:nrow(indicatorData$indicatorValues)
+  if(!is.null(areaId)){
+    rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
+  }
+
+  if(!is.null(years)){
+    rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
+  }
+
+
   if(!is.null(distribution)){
     distID <- uuid::UUIDgenerate()
     dist <- makeDistribution(input = distribution, distParams = distParams)
@@ -60,15 +70,6 @@ setIndicatorValues <- function(indicatorData = NULL,
     if(class(dist) == "Norm"){
       est <- distr::mean(dist)
     } else  est <- dist@q(0.5)
-
-    rows <- 1:nrow(indicatorData$indicatorValues)
-    if(!is.null(areaId)){
-      rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
-    }
-
-    if(!is.null(years)){
-      rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
-    }
 
 
     indicatorData$indicatorValues[rows, "verdi"] <- est

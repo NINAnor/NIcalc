@@ -32,7 +32,7 @@ writeIndicatorValues <- function(indicatorData = NULL,
                                  token = niToken){
   auth_string <- paste("bearer", token, sep = " ")
   url <- "http://ninweb17.nina.no"
-  api_path <- "NaturindeksAPI/indicator/UpdateValues"
+  api_path <- "NaturindeksAPI/indicators/values"
 
 
   distToRaw <- function(x){
@@ -41,19 +41,14 @@ writeIndicatorValues <- function(indicatorData = NULL,
 
   indicatorData$indicatorValues$customDistributionObject <- NA
   rawDist <- lapply(indicatorData$customDistributions, distToRaw)
-  indicatorData$indicatorValues$customDistributionObject[indicatorData$indicatorValues$customDistributionUUID %in% names(rawDist)] <- unlist(rawDist)
+  indicatorData$indicatorValues$customDistributionObject[indicatorData$indicatorValues$customDistributionUUID %in% names(rawDist)] <- unlist(rawDist[names(rawDist) %in% indicatorData$indicatorValues$customDistributionUUID])
 
-  toNestedList <- function(x){
-    as.list(apply(x, 1, as.list))
-  }
 
-  body <- toNestedList(indicatorData$indicatorValues) #Alternatively, skip the to.list
-
-  body <- jsonlite::toJSON(body)
+  body <- indicatorData$indicatorValues
 
   postdata <- httr::POST(url = url,
                    path = api_path,
-                   body = list(body),
+                   body = body,
                    encode = "json",
                    httr::add_headers(Authorization = auth_string))
 
