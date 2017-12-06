@@ -3,7 +3,6 @@ title: "Nature Index calculation workflow"
 author: "Bård Pedersen"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette: default
   rmarkdown::pdf_document:
     toc: yes
 vignette: >

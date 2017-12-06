@@ -5,9 +5,10 @@ date: '`r Sys.Date()`'
 output:
   rmarkdown::pdf_document:
     toc: yes
-  rmarkdown::html_vignette: default
-vignette: |
-  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

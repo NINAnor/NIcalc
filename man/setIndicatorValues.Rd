@@ -43,13 +43,13 @@ in distParams as a named list. See \link{makeCustomUncertainty} for further deta
 \examples{
 getToken("testUser", "testPassword")
 indicatorData <- getIndicators()
-setIndicator(indicatorID = 1,
+setIndicatorValues(indicatorID = 1,
 est = 0.5,
 lower = 0.2
 upper = 0.7
 )
 
-setIndicators(indicatorID = 2
+setIndicatorValues(indicatorID = 2
 distribution = "Normal",
 distParams = list("mean" = 0.5,
                   "sd" = 0.1)

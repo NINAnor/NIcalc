@@ -4,7 +4,6 @@ subtitle: "Note to participants in output 4 of PDP1 under BG03 - IBBIS"
 author: "Bård Pedersen"
 date: "Norwegian Institute for Nature Research, May 26, 2016"
 output:
-  rmarkdown::html_vignette: default
   rmarkdown::pdf_document:
     toc: yes
 vignette: >
@@ -766,8 +765,8 @@ summary(NIcalculate(
 	FK_OmraadeID=Observationsyear2$IndicatorareaID[Observationsyear2$ReferenceYearID != 0],
 	nsim=1000,
 	scaled.bootmat=scaled.bootmatyear2[Observationsyear2$ReferenceYearID != 0,],
-	Weights.trof=munweights),
-	kvantiler=c(0.05,0.5,0.95))
+	Weights.trof=munweights)
+	)
 ```
 
 \pagebreak
