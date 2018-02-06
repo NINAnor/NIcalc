@@ -19,7 +19,7 @@
 #' @param lower lower quartile of estimate. Required when supplying point estimate.
 #' @param upper upper quartile of estimate. Required when supplying point estimate.
 #' @param distribution distribution type or empirical values to be passed to \code{makeCustomUncertainty}.
-#' @param distrParams distribution parameters to be passed to \code{makeCustomUncertainty}. Required then
+#' @param distrParams distribution parameters to be passed to \code{makeDistribution}. Required when
 #' using a named distribution
 #' @return Vector of samples
 #' @export
