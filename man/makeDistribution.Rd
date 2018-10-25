@@ -34,10 +34,9 @@ sampleNIDistribution(myDist, 10)
 
 
 }
-\author{
-Jens Åström
-}
 \seealso{
 \code{\link{sample.NIdistribution}}
 }
-
+\author{
+Jens Åström
+}

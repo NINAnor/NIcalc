@@ -20,4 +20,3 @@ Indic
 A dataset of 33 indicators to be used in the example calculations
 }
 \keyword{datasets}
-

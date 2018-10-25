@@ -21,7 +21,7 @@ setIndicatorValues(indicatorData = NULL, areaId = NULL, years = NULL,
 
 \item{indicatorID}{Identifier of the indicator to be altered}
 
-\item{distrParams}{distribution parameters to be passed to \code{makeCustomUncertainty}. Required then
+\item{distrParams}{distribution parameters to be passed to \code{makeDistribution}. Required when
 using a named distribution}
 }
 \value{
@@ -57,10 +57,9 @@ distParams = list("mean" = 0.5,
 
 
 }
-\author{
-Jens Åström
-}
 \seealso{
 \code{\link{makeDistribution}}
 }
-
+\author{
+Jens Åström
+}

@@ -19,4 +19,3 @@ BSunits
 A dataset of four basic spatial units to be used in the examples
 }
 \keyword{datasets}
-

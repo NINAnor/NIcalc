@@ -21,6 +21,7 @@ communicate with the database.
 \section{Notes}{
 
 }
+
 \examples{
 \dontrun{
 getToken("test.user", "test.password")
@@ -30,4 +31,3 @@ getToken("test.user", "test.password")
 \author{
 Jens Åström
 }
-

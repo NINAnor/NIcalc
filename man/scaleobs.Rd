@@ -64,6 +64,7 @@ scaled.bootmat. However, the index is calculated for one year, so the output mat
 split accordingly into a set of matrices, where each matrix contains draws of scaled indicator observations
 for one single year only.
 }
+
 \examples{
 \dontrun{
 ##Add example, here, possibly as a don't run
@@ -73,4 +74,3 @@ for one single year only.
 \author{
 programmed by Bard Pedersen
 }
-

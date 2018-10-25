@@ -22,6 +22,7 @@ by the function setIndicatorValue.
 \section{Notes}{
 
 }
+
 \examples{
 \dontrun{
 myValues <- getIndicatorValues(IndicatorID = 1)
@@ -31,4 +32,3 @@ myValues <- getIndicatorValues(IndicatorID = 1)
 \author{
 Jens Åström
 }
-
