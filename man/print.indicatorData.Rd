@@ -23,10 +23,9 @@ sampleNIDistribution(myDist, 10)
 
 
 }
-\author{
-Jens Åström
-}
 \seealso{
 \code{\link{makeCustomDistribution}}
 }
-
+\author{
+Jens Åström
+}

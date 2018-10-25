@@ -39,6 +39,7 @@ In the array weights are repeated for each indicator included in the current cal
 \section{Notes}{
 
 }
+
 \examples{
 \dontrun{
 ##Add example, here, possibly as a don't run
@@ -52,4 +53,3 @@ Indicators=c("ind1","ind2"))
 \author{
 Bård Pedersen
 }
-

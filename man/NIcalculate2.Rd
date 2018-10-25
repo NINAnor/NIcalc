@@ -78,6 +78,7 @@ NI-area (or basic spatial unit).
  Area weights should not be entered to \code{NIcalculate} if
   NI is calculated for basic spatial units.
 }
+
 \examples{
 \dontrun{
  data(Observations)
@@ -197,11 +198,10 @@ NI-area (or basic spatial unit).
 
 }
 }
-\author{
-Bård Pedersen
-}
 \seealso{
 \code{\link{NIestimate}}
   NIcalculation()
 }
-
+\author{
+Bård Pedersen
+}

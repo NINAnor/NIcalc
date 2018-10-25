@@ -2,13 +2,13 @@
 % Please edit documentation in R/qdev.R
 \name{qdev}
 \alias{qdev}
-\alias{qdev.GA}
-\alias{qdev.LOGNO}
-\alias{qdev.NBII}
-\alias{qdev.PO}
 \alias{qdev.TNO}
+\alias{qdev.LOGNO}
 \alias{qdev.WEI}
 \alias{qdev.ZEXP}
+\alias{qdev.GA}
+\alias{qdev.PO}
+\alias{qdev.NBII}
 \alias{qdev.ZIP}
 \title{Sum of squared Differences between Distribution Parameters}
 \usage{
@@ -65,4 +65,3 @@ qdev.GA(par = c(1,1), obs = c(1.3, 0.1, 2), prob = c(0.025, 0.975))
 \author{
 All functions programmed by Nigel Yoccoz except qdev.ZEXP programmed by Bård Pedersen
 }
-

@@ -22,6 +22,7 @@ by the function setIndicatorValue.
 \section{Notes}{
 
 }
+
 \examples{
 \dontrun{
 getToken()
@@ -35,4 +36,3 @@ writeIndicatorValues(updatedValues)
 \author{
 Jens Åström
 }
-

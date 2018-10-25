@@ -19,6 +19,7 @@ is responsible for
 \section{Notes}{
 
 }
+
 \examples{
 \dontrun{
 getIndicators()
@@ -28,4 +29,3 @@ getIndicators()
 \author{
 Jens Åström
 }
-
