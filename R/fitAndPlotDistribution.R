@@ -16,22 +16,20 @@
 #'
 #'
 #' @export
+fitAndPlotDistribution <- function(obsval_mu = 2,
+                       obsval_lower = -2,
+                       obsval_upper = 5,
+                       refValue = 4,
+                       probQuant_lower = 0.25,
+                       probQuant_upper = 0.75,
+                       type = "continuous",
+                       ...){
 
-
-fitAndPlotDistibution <- function(obsval = c("mu" = NULL,
-                                             "lower" = NULL,
-                                             "upper" = NULL),
-                                  refValue = 1,
-                                  probQuant = c("lower" = 0.25,
-                                            "upper" = 0.75),
-                                  ...) {
-
-
-  obsval1 <- obsval[c("lower", "mu", "upper")] # NB! Functions assume the order: lower quartile, expected value, upper quartile,
+  obsval1 <- c(obsval_lower, obsval_mu, obsval_upper) # NB! Functions assume the order: lower quartile, expected value, upper quartile,
   # while the order in the input web-page is expected value, lower quartile, upper quartile.
 
-  a <- try(estim.fct(obsval = obsval1, proba = probQuant[c("lower", "upper")], ...), silent = T)
-  if (length(a) == 1){a <- estimlight.fct(obsval = obsval1, proba = probQuant[c("lower", "upper")], ...)}
+  a <- try(estim.fct(obsval = obsval1, proba = c(probQuant_lower, probQuant_upper) , ...), silent = T)
+  if (length(a) == 1){a <- estimlight.fct(obsval = obsval1, proba = c(probQuant_lower, probQuant_upper), ...)}
 
   plotDistribution(distrib = as.character(a$distrib[1]),
                    mu = a$mu[1],
