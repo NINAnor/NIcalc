@@ -10,7 +10,7 @@
 #' @return an object of class `NIdistribution`
 #' @export
 #' @examples
-#' myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+#' myDist <- makeCustomUncertainty(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
 #' sampleNIDistribution(myDist, 10)
 #'
 #' myDist <- makeCustomUncertainty(input = "Poisson", distParams = list("lambda" = 3))
@@ -30,7 +30,7 @@
 
 makeDistribution <- function(input = NULL, distParams = NULL){
 
-allowedDistributions <- c("Normal", "Poisson")
+allowedDistributions <- c("logNormal", "Poisson")
 
 errorMSG <- paste("Input needs to be either",
       allowedDistributions[1], "or",
@@ -47,7 +47,7 @@ if (class(input) == "character"){
   namedDist = match.arg(input, allowedDistributions)
 
   dist <- switch(namedDist,
-                 Normal = distr::Norm(distParams$mean, distParams$sd),
+                 logNormal = distr::Lnorm(distParams$mean, distParams$sd),
                  Poisson = distr::Pois(distParams$lambda)
     )
 } else

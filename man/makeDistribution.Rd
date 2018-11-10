@@ -18,7 +18,7 @@ an object of class `NIdistribution`
 This functions formats various representations of indicator uncertainty into a common structure for further processing
 }
 \examples{
-myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+myDist <- makeCustomUncertainty(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
 sampleNIDistribution(myDist, 10)
 
 myDist <- makeCustomUncertainty(input = "Poisson", distParams = list("lambda" = 3))

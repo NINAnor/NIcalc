@@ -67,8 +67,8 @@ setIndicatorValues <- function(indicatorData = NULL,
     distID <- uuid::UUIDgenerate()
     dist <- makeDistribution(input = distribution, distParams = distParams)
 
-    if(class(dist) == "Norm"){
-      est <- distr::mean(dist)
+    if(class(dist) == "logNormal"){
+      est <- distr::meanlog(dist)
     } else  est <- dist@q(0.5)
 
 
