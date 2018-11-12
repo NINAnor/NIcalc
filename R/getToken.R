@@ -23,8 +23,8 @@
 
 
 getToken <- function(username = NULL, password = NULL){
-  url <- "http://ninweb17.nina.no"
-  token_path <- paste0("NaturindeksAPI/token?username=", username,"&password=", password)
+  url <- "https://ninweb17.nina.no"
+  token_path <- paste0("/NaturindeksAPI/token?username=", username,"&password=", password)
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 

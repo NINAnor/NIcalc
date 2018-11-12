@@ -31,9 +31,10 @@
 writeIndicatorValues <- function(indicatorData = NULL,
                                  token = niToken){
   auth_string <- paste("bearer", token, sep = " ")
-  url <- "http://ninweb17.nina.no"
-  api_path <- "NaturindeksAPI/indicators/values"
+  url <- "https://ninweb17.nina.no"
+  api_path <- "/NaturindeksAPI/indicators/values"
 
+  httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
   distToRaw <- function(x){
     rawToChar(serialize(x, NULL, ascii = T))

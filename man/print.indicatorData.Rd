@@ -5,7 +5,7 @@
 \alias{print.niIndicatorData}
 \title{Print function for class indicatorData objects}
 \usage{
-print.niIndicatorData(input)
+\method{print}{niIndicatorData}(input)
 }
 \arguments{
 \item{input}{object of class `indicatorData`}

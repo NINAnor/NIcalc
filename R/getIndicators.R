@@ -22,7 +22,7 @@
 
 
 getIndicators <- function(token = niToken){
-  url <- "http://ninweb17.nina.no"
+  url <- "https://ninweb17.nina.no"
   indicator_path <- "/NaturindeksAPI/Indicators"
 
   #indicator_path <- "/NaturindeksAPI/api/Ecosystems/Areas"
@@ -36,8 +36,8 @@ getIndicators <- function(token = niToken){
   myIndicators <- httr::GET(url = url,
                       path = indicator_path,
                       encode = "json",
-                      httr::add_headers(Authorization = auth_string),
-                      httr::verbose())
+                      httr::add_headers(Authorization = auth_string)
+                      )
 
   rawContent <- httr::content(myIndicators, as = "parsed")
 

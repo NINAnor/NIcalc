@@ -33,6 +33,8 @@ getIndicatorValues <- function(indicatorID = NULL, years = NULL, token = niToken
 
   auth_string <- paste("bearer", token, sep = " ")
 
+  httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
+
   rawResult <- httr::GET(url = url,
                    path = value_path,
                    encode = "json",

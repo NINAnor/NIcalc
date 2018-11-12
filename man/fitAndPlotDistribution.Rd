@@ -4,9 +4,9 @@
 \alias{fitAndPlotDistribution}
 \title{fitAndPlotDistribution}
 \usage{
-fitAndPlotDistribution(obsval_mu = 2, obsval_lower = -2, obsval_upper = 5,
-  refValue = 4, probQuant_lower = 0.25, probQuant_upper = 0.75,
-  type = "continuous", ...)
+fitAndPlotDistribution(obsval_mu = NULL, obsval_lower = NULL,
+  obsval_upper = NULL, refValue = NULL, probQuant_lower = 0.25,
+  probQuant_upper = 0.75, type = "continuous", ...)
 }
 \arguments{
 \item{refValue}{the reference value to be drawn in the  plot}
