@@ -23,16 +23,21 @@
 
 getIndicators <- function(token = niToken){
   url <- "http://ninweb17.nina.no"
-  indicator_path <- "NaturindeksAPI/indicators"
+  indicator_path <- "/NaturindeksAPI/Indicators"
 
-  httr::set_config(config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
+  #indicator_path <- "/NaturindeksAPI/api/Ecosystems/Areas"
+
+  httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
   auth_string <- paste("bearer", token, sep = " ")
+
+  #auth_string <- paste("Bearer ", paste(token, collapse = ""))
 
   myIndicators <- httr::GET(url = url,
                       path = indicator_path,
                       encode = "json",
-                      httr::add_headers(Authorization = auth_string))
+                      httr::add_headers(Authorization = auth_string),
+                      httr::verbose())
 
   rawContent <- httr::content(myIndicators, as = "parsed")
 
