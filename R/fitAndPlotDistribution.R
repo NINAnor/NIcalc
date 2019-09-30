@@ -36,7 +36,7 @@ fitAndPlotDistribution <- function(obsval_mu = NULL,
   plotDistribution(distrib = as.character(a$distrib[1]),
                    mu = a$mu[1],
                    sig = a$sig[1],
-                   refValue = refValue,
+                   refvalue = refValue,
                    obsval = obsval1,
                    ...)
 
