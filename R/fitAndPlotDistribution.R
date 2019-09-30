@@ -17,17 +17,17 @@
 #'
 #' @export
 fitAndPlotDistribution <- function(obsval_mu = NULL,
-                       obsval_lower = NULL,
-                       obsval_upper = NULL,
-                       refValue = NULL,
-                       probQuant_lower = 0.25,
-                       probQuant_upper = 0.75,
-                       type = "continuous",
-                       ...){
+                                   obsval_lower = NULL,
+                                   obsval_upper = NULL,
+                                   refValue = NULL,
+                                   probQuant_lower = 0.25,
+                                   probQuant_upper = 0.75,
+                                   type = "continuous",
+                                   ...){
   obsval1 <- c("lower" = obsval_lower,
-    "mu" = obsval_mu,
-    "upper" = obsval_upper)
-#  obsval1 <- c(obsval_lower, obsval_mu, obsval_upper) # NB! Functions assume the order: lower quartile, expected value, upper quartile,
+               "mu" = obsval_mu,
+               "upper" = obsval_upper)
+  #  obsval1 <- c(obsval_lower, obsval_mu, obsval_upper) # NB! Functions assume the order: lower quartile, expected value, upper quartile,
   # while the order in the input web-page is expected value, lower quartile, upper quartile.
 
   a <- try(estim.fct(obsval = obsval1, proba = c(probQuant_lower, probQuant_upper), ...), silent = T)

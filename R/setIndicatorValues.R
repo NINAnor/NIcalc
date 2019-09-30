@@ -89,3 +89,61 @@ setIndicatorValues <- function(indicatorData = NULL,
   }
 
 }
+
+# Need to set the other params to NA possibly something like this
+
+# setIndicatorValues
+# function(indicatorData = NULL,
+#          areaId = NULL,
+#          years = NULL,
+#          est = NULL,
+#          lower = NULL,
+#          upper = NULL,
+#          distribution = NULL,
+#          distParams = NULL){
+#
+#   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
+#
+#   rows <- 1:nrow(indicatorData$indicatorValues)
+#   if(!is.null(areaId)){
+#     rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
+#   }
+#
+#   if(!is.null(years)){
+#     rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
+#   }
+#
+#
+#   if(!is.null(distribution)){
+#     distID <- uuid::UUIDgenerate()
+#     dist <- makeDistribution(input = distribution, distParams = distParams)
+#
+#     if(class(dist) == "logNormal"){
+#       est <- distr::meanlog(dist)
+#     } else  est <- dist@q(0.5)
+#
+#
+#
+#     indicatorData$indicatorValues[rows, "verdi"] <- est
+#
+#     indicatorData$indicatorValues[rows, "customDistributionUUID"] <- distID
+#
+#     indicatorData$customDistributions[[distID]] <- dist
+#
+#     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- NA
+#     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- NA
+#     indicatorData$indicatorValues[rows, "distributionId"] <- NA
+#     indicatorData$indicatorValues[rows, "distParam1"] <- NA
+#     indicatorData$indicatorValues[rows, "distParam2"] <- NA
+#
+#     return(indicatorData)
+#   } else {
+#
+#     indicatorData$indicatorValues[rows, "verdi"] <- est
+#     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
+#     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
+#
+#     return(indicatorData)
+#   }
+#
+# }
