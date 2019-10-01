@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Workflow example}
+%\VignettePackage{NIcalc}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{Workflow.pdf}
+\end{document}

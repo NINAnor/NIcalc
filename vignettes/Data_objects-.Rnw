@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{NI data objects}
+%\VignettePackage{NIcalc}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{Data_objects.pdf}
+\end{document}

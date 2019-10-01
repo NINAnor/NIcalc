@@ -17,14 +17,14 @@ Vector of samples
 Simple print function that displays also the custom distributions.
 }
 \examples{
-myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+myDist <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
 sampleNIDistribution(myDist, 10)
 
 
 
 }
 \seealso{
-\code{\link{makeCustomDistribution}}
+\code{\link{makeDistribution}}
 }
 \author{
 Jens Åström

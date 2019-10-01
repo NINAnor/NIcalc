@@ -1,6 +1,6 @@
 Package: NIcalc
 Title: Functions to Calculate a Nature Index
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: c(
   person("Bard", "Pedersen", email = "Bard.Pedersen@nina.no", role = c("aut")),
   person("Jens", "Astrom", email = "Jens.Astrom@nina.no", role = c("cre")),
@@ -24,4 +24,3 @@ Suggests:
     rmarkdown,
     distr,
     httr
-VignetteBuilder: knitr

@@ -7,7 +7,7 @@
 sampleDistribution(dist, nSamples = 10)
 }
 \arguments{
-\item{dist}{object of class `NIdistribution` created by \code{makeCustomDistribution}}
+\item{dist}{object of class `NIdistribution` created by \code{makeDistribution}}
 
 \item{nSamples}{Number of samples to draw. Integer.}
 }
@@ -18,14 +18,14 @@ Vector of samples
 This is a simple convenience function to draw samples from object made from NIdistributions
 }
 \examples{
-myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+myDist <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
 sampleNIDistribution(myDist, 10)
 
 
 
 }
 \seealso{
-\code{\link{makeCustomDistribution}}
+\code{\link{makeDistribution}}
 }
 \author{
 Jens Åström

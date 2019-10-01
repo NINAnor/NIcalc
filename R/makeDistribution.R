@@ -27,7 +27,7 @@
 #' sampleDistribution(myDist, 10)
 #'
 #'
-#' @seealso \code{\link{sample.NIdistribution}}
+#' @seealso \code{\link{sampleDistribution}}
 
 
 makeDistribution <- function(input = NULL, distParams = NULL){

@@ -4,12 +4,12 @@
 #' Usually, this object is first retreived from the database through the function \code{getIndicatorData}.
 #' This object will list all indicators that a user is privileged to alter. Data for a particular indicator
 #' is accepted either in the form of an estimate together with an lower and upper quartile of uncertainty,
-#' or as an input to the function \code{makeCustomUncertainty}.
+#' or as an input to the function \code{makeDistribution}.
 #'
 #' In this case, data can be supplied either in the form of a vector of possible values (e.g. posterior samples),
 #' a matrix or dataframe of possible values together with probabilities for each value, or as a named
 #' known distribution. In case of named known distributions, parameter for these distributions is supplied
-#' in distParams as a named list. See \link{makeCustomUncertainty} for further details.
+#' in distParams as a named list. See \link{makeDistribution} for further details.
 #'
 #' @name setIndicatorValues
 #' @author  Jens Åström
@@ -18,7 +18,7 @@
 #' @param est Point estimate for the indicator. Optional.
 #' @param lower lower quartile of estimate. Required when supplying point estimate.
 #' @param upper upper quartile of estimate. Required when supplying point estimate.
-#' @param distribution distribution type or empirical values to be passed to \code{makeCustomUncertainty}.
+#' @param distribution distribution type or empirical values to be passed to \code{makeDistribution}.
 #' @param distrParams distribution parameters to be passed to \code{makeDistribution}. Required when
 #' using a named distribution
 #' @return Vector of samples

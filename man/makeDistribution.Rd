@@ -19,23 +19,23 @@ This functions formats various representations of indicator uncertainty into a c
 }
 \examples{
 myDist <- makeDistribution(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
-sampleNIDistribution(myDist, 10)
+sampleDistribution(myDist, 10)
 
 myDist <- makeDistribution(input = "Poisson", distParams = list("lambda" = 3))
-sampleNIDistribution(myDist, 10)
+sampleDistribution(myDist, 10)
 
 myProbs <- data.frame("est" = c(0.2, 0.23, 0.34, 0.4), "probs" = c(0.1, 0.4, 0.4, 0.1 ))
 myDist <- makeDistribution(myProbs)
-sampleNIDistribution(myDist, 10)
+sampleDistribution(myDist, 10)
 
 codaSamples <- rnorm(1000, mean = 0.87, sd = 0.3)
 myDist <- makeDistribution(codaSamples)
-sampleNIDistribution(myDist, 10)
+sampleDistribution(myDist, 10)
 
 
 }
 \seealso{
-\code{\link{sample.NIdistribution}}
+\code{\link{sampleDistribution}}
 }
 \author{
 Jens Åström

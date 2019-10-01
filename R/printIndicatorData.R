@@ -8,12 +8,12 @@
 #' @return Vector of samples
 #' @export
 #' @examples
-#' myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+#' myDist <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
 #' sampleNIDistribution(myDist, 10)
 #'
 #'
 #'
-#' @seealso \code{\link{makeCustomDistribution}}
+#' @seealso \code{\link{makeDistribution}}
 
 
 print.niIndicatorData <- function(input){
