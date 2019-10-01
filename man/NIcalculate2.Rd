@@ -6,8 +6,9 @@
 \usage{
 NIcalculate2(Indicator.area.ind = NULL, Indicator.area = NULL,
   Observations = NULL, nsim, scaled.bootmat, Weights.trof,
-  Weights.reg.area = NULL, IndicatorareaID = NULL, Indicator_name = NULL,
-  Area.Name = NULL, Area.Municipality = NULL, FK_OmraadeID = NULL)
+  Weights.reg.area = NULL, IndicatorareaID = NULL,
+  Indicator_name = NULL, Area.Name = NULL, Area.Municipality = NULL,
+  FK_OmraadeID = NULL)
 }
 \arguments{
 \item{Indicator.area.ind}{(optional) data frame containing named columns IndicatorareaID and Indicator_name, detailing vector of unique

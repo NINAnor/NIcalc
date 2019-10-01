@@ -5,9 +5,9 @@
 \title{plotDistribution}
 \usage{
 plotDistribution(distrib = c("Gamma", "ZIExponential", "LogNormal",
-  "TruncNormal", "Normal", "Weibull", "Poisson", "NegBinom", "ZIP", "NoBoot"),
-  mu = NULL, sig = NULL, refValue = 1, obsval = c(lower = NULL, mu =
-  NULL, upper = NULL), type = "continuous")
+  "TruncNormal", "Normal", "Weibull", "Poisson", "NegBinom", "ZIP",
+  "NoBoot"), mu = NULL, sig = NULL, refvalue = 1, obsval = c(lower
+  = NULL, mu = NULL, upper = NULL), type = "continuous")
 }
 \arguments{
 \item{distrib}{Type of distribution. Must match allowed values.}
@@ -16,9 +16,9 @@ plotDistribution(distrib = c("Gamma", "ZIExponential", "LogNormal",
 
 \item{sig}{sigma parameter of distribution}
 
-\item{refValue}{reference value to be plotted along with the distribution}
-
 \item{obsval}{}
+
+\item{refValue}{reference value to be plotted along with the distribution}
 }
 \description{
 Plot function for known distributions, defined by input parameters

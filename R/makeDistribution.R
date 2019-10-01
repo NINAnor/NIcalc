@@ -8,21 +8,23 @@
 #' @param input Either a name of a known distribution, a vector of values, or a data frame of possibleValues and valueProbabilities
 #' @param distParams (optional) Parameters for the distribution function, if such is provided in `input`
 #' @return an object of class `NIdistribution`
+#'
+#'
 #' @export
 #' @examples
-#' myDist <- makeCustomUncertainty(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
-#' sampleNIDistribution(myDist, 10)
+#' myDist <- makeDistribution(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
+#' sampleDistribution(myDist, 10)
 #'
-#' myDist <- makeCustomUncertainty(input = "Poisson", distParams = list("lambda" = 3))
-#' sampleNIDistribution(myDist, 10)
+#' myDist <- makeDistribution(input = "Poisson", distParams = list("lambda" = 3))
+#' sampleDistribution(myDist, 10)
 #'
 #' myProbs <- data.frame("est" = c(0.2, 0.23, 0.34, 0.4), "probs" = c(0.1, 0.4, 0.4, 0.1 ))
-#' myDist <- makeCustomUncertainty(myProbs)
-#' sampleNIDistribution(myDist, 10)
+#' myDist <- makeDistribution(myProbs)
+#' sampleDistribution(myDist, 10)
 #'
 #' codaSamples <- rnorm(1000, mean = 0.87, sd = 0.3)
-#' myDist <- makeCustomUncertainty(codaSamples)
-#' sampleNIDistribution(myDist, 10)
+#' myDist <- makeDistribution(codaSamples)
+#' sampleDistribution(myDist, 10)
 #'
 #'
 #' @seealso \code{\link{sample.NIdistribution}}

@@ -3,13 +3,15 @@ title: "Interacting with the Nature index database and using custom uncertainty 
 author: "Jens Åström"
 date: '`r Sys.Date()`'
 output:
-  rmarkdown::pdf_document:
+  pdf_document:
     toc: yes
+    keep_tex: false
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r setup, include=FALSE}
 require(knitr)
@@ -19,6 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, tidy = T)
 options(width = 60)
 ```
 
+
 Implementing custom distributions
 =================
 Until now, uncertainty of an indicator value could only be expressed in the Nature Index by its lower and upper quartiles. Together with the point estimate, these quartiles was then used to find a distribution that that was the best fit. This works well for many cases, and not so well for other cases. Preferably, we should be able to specify the uncertainty distribution attached to an indicator value, if such information exists. There are cases where this would be done as a known distribution, or as an empirical set of values, for example from a simulation or MCMC run.
@@ -26,8 +29,8 @@ Until now, uncertainty of an indicator value could only be expressed in the Natu
 In terms of the workings of the NIcalc package, the purpose of the uncertaintly of any indicator is to specify a distribution, from which we can draw samples to input into the NI calculations. The step of finding this distribution has been called the "elicitation" in the NI procedure. For the indicators where the user directly specifies the uncertainty distribution, we can sidestep the elicitation and instead sample directly from these given distributions. 
 
 To implement this in the `NIcalc` package, we make use of the `distr` package to generate various types of distributions. At this point, we allow for three types of distributions:
-
-1. Named known distributions (Normal, Poisson currently supported.)
+  
+1. Named known distributions (Log-Normal and Poisson currently supported.)
 2. Empirical distributions (Sample draws, e.g. CODA output from Bayesian modelling)
 3. Discrete distributions (Allows for a fixed number of possible values, with individual probabilities specified)
 
@@ -38,16 +41,16 @@ Example of  using known distributions
 ============
 
 
-Normal distribution
+Log-Normal distribution
 -----------------------
-
+  
 ```{r, echo = F}
 
 nMean <- 0.5
 nSd <- 0.1
 ```
 
-Let's say we have an indicator with a point estimate of `r nMean`. The uncertainty is specified (in this example) as a normal distribution with standard error of `r nSd`. A user case might be if the value of an indicator is simulated or estimated as a normally distributed variable with a standard error. We can make a sampling function of this distribution quite easily using the `distr` package. 
+Let's say we have an indicator with a log point estimate of `r nMean`. The uncertainty is specified (in this example) as a lognormal distribution with standard error of `r nSd`. A user case might be if the value of an indicator is simulated or estimated as a lognormally distributed variable with a standard error. We can make a sampling function of this distribution quite easily using the `distr` package. 
 
 
 ```{r}
@@ -55,14 +58,14 @@ Let's say we have an indicator with a point estimate of `r nMean`. The uncertain
 nMean <- 0.5
 nSd <- 0.1
 
-N <- distr::Norm(mean = nMean, sd = nSd)
+N <- distr::Lnorm(mean = nMean, sd = nSd)
 
 ```
 
 For convenience, this has been implemented in the function `makeDistribution` in the `NIcalc` package. This function is used to create all types of custom uncertainties.
 
 ```{r}
-N <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+N <- makeDistribution(input = "logNormal", distParams = list("mean" = 1, "sd" = 0.2))
 ```
 
 
@@ -135,9 +138,11 @@ legend("topright", legend = c("Default", "NI smethod"), fill = 1:2)
 In this case, we simply store the `E` object and retrive the point estimate from this distribution as shown above. The size of such an empirical distribution of `r nSamples` samples, is `r  round(as.numeric(object.size(E))/1000000, digits = 2)` Mb. This is manageable for the database.
 
 
+
+
 Discrete distributions
 ==================
-
+  
 A discrete distribution is handled much the same way. This is just a set of possible values, with associated probabilities for each value (For the empirical distribution, each individual value have the same probability of being drawn.)
 
 ```{r}
@@ -174,11 +179,11 @@ R objects cannot be stored directly in the database as they are. They can, howev
 We use the `indicatorData` class to store the information in R of the indicator values. This object type is used to retrieve and send indicator values to the NI database. It is simply a list in two parts. The first is a dataframe mimicking the information in a database table containing the individual indicator values. The last column in this dataframe contains a unique identifier, refering to a custom distribution, for the indicator values where this is used. The second part of the list is another list containing the custom distributions related to the data frame in the first element. A user should interact with these types of objects mainly through dedicated functions in the package. This is exemplified below.
 
 
-```{r, eval = T}
+```{r, eval = F}
 #display an example data set here
+##Doesn't go well with Rmarkdown!
 str(indicatorData)
 ```
-
 
 
 
@@ -226,7 +231,7 @@ myIndicators
 
 The next typical step is to retrieve the current values for a given indicator. This can be done for all historical values in the database by simply:
 
-```{r, evalF}
+```{r, eval=F}
 indicatorData <- getIndicatorValues(indicatorID = 351)
 ```
 
@@ -236,6 +241,7 @@ Usually, the user is only interested in the latest values and do not need to cha
 indicatorData <- getIndicatorValues(indicatorID = myIndicators$id[myIndicators$name == "Dagsommerfugler i skog"], year = 2018)
 indicatorData
 ```
+
 
 
 We can set an indicator value using the `setIndivatorValue` function. Here, we use the standard upper and lower quartiles.
@@ -261,9 +267,9 @@ updatedIndicatorData
 ```
 
 If we where to specify a Poisson distribution, the call would look something like this:
-
+  
 ```{r eval = F}
-updatedIndicatorData <- setIndicatorValues(updatedIndicatorData, areaId = 7041, year = 2018, distribution = "Normal", distParams = list("mean" = 0.7, "sd" = 0.15))
+updatedIndicatorData <- setIndicatorValues(updatedIndicatorData, areaId = 7041, year = 2018, distribution = "logNormal", distParams = list("mean" = 0.7, "sd" = 0.15))
 
 ```
 
@@ -292,6 +298,3 @@ We can double check that the new values stuck by downloading them again. As we c
 newValues <- getIndicatorValues(351, year = 2018)
 newValues
 ```
-
-
-

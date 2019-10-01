@@ -6,10 +6,10 @@
 \usage{
 munweights(Municipalities = paste("Mun", 1:36, sep = ""),
   Indicators = c("Ind1", "Ind2", "Ind3", "Ind4", "Ind5", "Ind6"),
-  FK_TrophicgroupID = c(1, 1, 2, 2, 0, 0), Key.indicators = c(F, F, F, F, T,
-  T), Fidelity = rep(1, 6), Areaind.Name = 1:36,
-  Areaind.Indicator = rep(c("Ind1", "Ind2", "Ind3", "Ind4", "Ind5", "Ind6"),
-  each = 6), Area.Name = rep(1:36, each = 5),
+  FK_TrophicgroupID = c(1, 1, 2, 2, 0, 0), Key.indicators = c(F, F, F,
+  F, T, T), Fidelity = rep(1, 6), Areaind.Name = 1:36,
+  Areaind.Indicator = rep(c("Ind1", "Ind2", "Ind3", "Ind4", "Ind5",
+  "Ind6"), each = 6), Area.Name = rep(1:36, each = 5),
   Area.Municipality = paste("Mun", 1:36, sep = "")[c(sample(1:36, 30),
   sample(1:36, 30), sample(1:36, 30), sample(1:36, 30), sample(1:36, 30),
   sample(1:36, 30))])

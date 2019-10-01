@@ -4,7 +4,8 @@
 \alias{summary.multiNIresult}
 \title{Summary function for multiNIresult class}
 \usage{
-\method{summary}{multiNIresult}(multiNI, quantiles = c(0.025, 0.5, 0.975))
+\method{summary}{multiNIresult}(multiNI, quantiles = c(0.025, 0.5,
+  0.975))
 }
 \arguments{
 \item{quantiles}{double, length = 3, Quantiles used as basis for point estimate and limits of confidence interval. Default is c(0.025,0.5,0.975)}

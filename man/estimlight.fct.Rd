@@ -4,7 +4,8 @@
 \alias{estimlight.fct}
 \title{Fit Probability Distribution to one Indicator Observation, reduced Version}
 \usage{
-estimlight.fct(obsval = NULL, proba = c(0.25, 0.75), type = "continuous")
+estimlight.fct(obsval = NULL, proba = c(0.25, 0.75),
+  type = "continuous")
 }
 \arguments{
 \item{obsval}{double, length = 3, observed mean and quantiles in the sequence

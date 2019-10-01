@@ -67,16 +67,18 @@ setIndicatorValues <- function(indicatorData = NULL,
     distID <- uuid::UUIDgenerate()
     dist <- makeDistribution(input = distribution, distParams = distParams)
 
-    if(class(dist) == "logNormal"){
+    if(class(dist) == "Lnorm"){
       est <- distr::meanlog(dist)
     } else  est <- dist@q(0.5)
 
 
     indicatorData$indicatorValues[rows, "verdi"] <- est
-
     indicatorData$indicatorValues[rows, "customDistributionUUID"] <- distID
-
     indicatorData$customDistributions[[distID]] <- dist
+
+    ##Remove custom distributions not referenced in table
+    presentIDs <- indicatorData$indicatorValues[, "customDistributionUUID"]
+    indicatorData$customDistributions <- indicatorData$customDistributions[names(indicatorData$customDistributions) %in% presentIDs]
 
     return(indicatorData)
   } else {

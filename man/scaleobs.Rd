@@ -4,9 +4,10 @@
 \alias{scaleobs}
 \title{Scaling of observations}
 \usage{
-scaleobs(ValueID = 1:2, FK_OmraadeID = rep(1, 2), FK_IndicatorID = rep(1,
-  2), FK_RefAarID = c(0, 1), nsim = 100, bootmat = matrix(1, nrow = 2,
-  ncol = nsim), ref.value.code = 0, IndicatorID = 1, FK_Scalingmodel = 1)
+scaleobs(ValueID = 1:2, FK_OmraadeID = rep(1, 2),
+  FK_IndicatorID = rep(1, 2), FK_RefAarID = c(0, 1), nsim = 100,
+  bootmat = matrix(1, nrow = 2, ncol = nsim), ref.value.code = 0,
+  IndicatorID = 1, FK_Scalingmodel = 1)
 }
 \arguments{
 \item{ValueID}{integer        length=length(ValueID)        vector of indicator observation IDs}

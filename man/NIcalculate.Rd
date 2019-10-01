@@ -7,10 +7,11 @@
 NIcalculate(Areaind.Name = c(1, 2), Areaind.Indicator = rep("Ind1", 2),
   Area.Name = rep(1:2, each = 5), Area.Municipality = c("Mun1", "Mun2",
   "Mun3", "Mun4", "Mun5", "Mun6", "Mun7", "Mun8", "Mun9", "Mun10"),
-  FK_OmraadeID = c(1, 2), nsim = 100, scaled.bootmat = matrix(1, nrow = 2,
-  ncol = nsim, dimnames = list(c(1, 2))), Weights.trof = matrix(1, nrow = 10,
-  ncol = 1, dimnames = list(c("Mun1", "Mun2", "Mun3", "Mun4", "Mun5", "Mun6",
-  "Mun7", "Mun8", "Mun9", "Mun10"), c("Ind1"))), Weights.reg.area = NULL)
+  FK_OmraadeID = c(1, 2), nsim = 100, scaled.bootmat = matrix(1, nrow
+  = 2, ncol = nsim, dimnames = list(c(1, 2))), Weights.trof = matrix(1,
+  nrow = 10, ncol = 1, dimnames = list(c("Mun1", "Mun2", "Mun3", "Mun4",
+  "Mun5", "Mun6", "Mun7", "Mun8", "Mun9", "Mun10"), c("Ind1"))),
+  Weights.reg.area = NULL)
 }
 \arguments{
 \item{Areaind.Name}{integer,    length = \code{N.omr},            vector of unique

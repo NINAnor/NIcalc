@@ -4,8 +4,8 @@
 \alias{NIestimate}
 \title{Point Estimates and Confidence Intervals of NI}
 \usage{
-NIestimate(NI = matrix(1, nrow = 1, ncol = 100), kvantiler = c(0.025, 0.5,
-  0.975))
+NIestimate(NI = matrix(1, nrow = 1, ncol = 100), kvantiler = c(0.025,
+  0.5, 0.975))
 }
 \arguments{
 \item{NI}{double matrix,    dim = (N.kom or N.reg) x \code{nsim} matrix of NI draws calculated by \code{NIcalculate}}
