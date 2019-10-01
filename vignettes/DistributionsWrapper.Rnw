@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Distributions}
+%\VignettePackage{NIcalc}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{Distributions.pdf}
+\end{document}

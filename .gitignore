@@ -3,6 +3,6 @@
 .RData
 .Ruserdata
 .Rd2*
-#inst/doc
+inst/doc
 temp
 docs/
