@@ -2,6 +2,7 @@
 \usepackage{pdfpages}
 %\VignetteIndexEntry{Distributions}
 %\VignettePackage{NIcalc}
+%\VignetteKeywords{Distributions}
 
 \begin{document}
 \includepdf[pages=-, fitpaper=true]{Distributions.pdf}

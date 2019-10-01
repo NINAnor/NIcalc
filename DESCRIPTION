@@ -24,4 +24,3 @@ Suggests:
     rmarkdown,
     distr,
     httr
-VignetteBuilder: knitr
