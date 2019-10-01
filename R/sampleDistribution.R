@@ -4,17 +4,17 @@
 #'
 #' @name sampleDistribution
 #' @author  Jens Åström
-#' @param dist object of class `NIdistribution` created by \code{makeCustomDistribution}
+#' @param dist object of class `NIdistribution` created by \code{makeDistribution}
 #' @param nSamples Number of samples to draw. Integer.
 #' @return Vector of samples
 #' @export
 #' @examples
-#' myDist <- makeCustomUncertainty(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
+#' myDist <- makeDistribution(input = "Normal", distParams = list("mean" = 1, "sd" = 0.2))
 #' sampleNIDistribution(myDist, 10)
 #'
 #'
 #'
-#' @seealso \code{\link{makeCustomDistribution}}
+#' @seealso \code{\link{makeDistribution}}
 
 
 sampleDistribution <- function(dist, nSamples = 10){

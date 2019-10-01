@@ -35,7 +35,7 @@ sampleDistribution(myDist, 10)
 
 }
 \seealso{
-\code{\link{sample.NIdistribution}}
+\code{\link{sampleDistribution}}
 }
 \author{
 Jens Åström
