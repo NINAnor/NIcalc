@@ -22,16 +22,27 @@
 #'
 
 
-getToken <- function(username = NULL, password = NULL){
-  url <- "https://ninweb17.nina.no"
+getToken <- function(username = NULL,
+                     password = NULL,
+                     url = "https://ninweb17.nina.no"){
+
+
   token_path <- paste0("/NaturindeksAPI/token?username=", username,"&password=", password)
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
+
   gettoken <- httr::POST(url = url, path = token_path, encode = "json")
   token <- httr::content(gettoken)
 
+
+
   #return(token)
   #in package, do something like assign(token, niToken, envir = NIcalc)
-  assign("niToken", token, .GlobalEnv)
+  assign(".niToken", token, envir = passEnv)
+  assign(".url", url, envir = passEnv)
+
+  message(paste0("Token successfully retrieved from ", url))
+
+
   }

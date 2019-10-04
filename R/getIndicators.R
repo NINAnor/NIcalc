@@ -21,17 +21,17 @@
 #'
 
 
-getIndicators <- function(token = niToken){
-  url <- "https://ninweb17.nina.no"
+getIndicators <- function(){
+
+  url = NIcalc:::.getUrl()
+  token = NIcalc:::.getToken()
+
+  if(!exists("token")) stop("No connection. Connect to database using 'getToken()' first.")
+
   indicator_path <- "/NaturindeksAPI/Indicators"
-
-  #indicator_path <- "/NaturindeksAPI/api/Ecosystems/Areas"
-
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
-
   auth_string <- paste("bearer", token, sep = " ")
 
-  #auth_string <- paste("Bearer ", paste(token, collapse = ""))
 
   myIndicators <- httr::GET(url = url,
                       path = indicator_path,

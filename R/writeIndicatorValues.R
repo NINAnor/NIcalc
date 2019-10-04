@@ -26,12 +26,16 @@
 #'
 
 
-
-
 writeIndicatorValues <- function(indicatorData = NULL,
                                  token = niToken){
+
+  url = NIcalc:::.getUrl()
+  token = NIcalc:::.getToken()
+
+  if(!exists("token")) stop("No connection. Connect to database using 'getToken()' first.")
+
+
   auth_string <- paste("bearer", token, sep = " ")
-  url <- "https://ninweb17.nina.no"
   api_path <- "/NaturindeksAPI/indicators/values"
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"

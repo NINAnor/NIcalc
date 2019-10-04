@@ -27,8 +27,7 @@ fitAndPlotDistribution <- function(obsval_mu = NULL,
   obsval1 <- c("lower" = obsval_lower,
                "mu" = obsval_mu,
                "upper" = obsval_upper)
-  #  obsval1 <- c(obsval_lower, obsval_mu, obsval_upper) # NB! Functions assume the order: lower quartile, expected value, upper quartile,
-  # while the order in the input web-page is expected value, lower quartile, upper quartile.
+
 
   a <- try(estim.fct(obsval = obsval1, proba = c(probQuant_lower, probQuant_upper), ...), silent = T)
   if (length(a) == 1){a <- estimlight.fct(obsval = obsval1, proba = c(probQuant_lower, probQuant_upper), ...)}

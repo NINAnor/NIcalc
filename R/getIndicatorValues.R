@@ -23,17 +23,19 @@
 
 
 
-getIndicatorValues <- function(indicatorID = NULL, years = NULL, token = niToken){
+getIndicatorValues <- function(indicatorID = NULL, years = NULL){
 
-  url <- "http://ninweb17.nina.no"
+  url = NIcalc:::.getUrl()
+  token = NIcalc:::.getToken()
 
-  if(!is.null(years)){
-    value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values/years/", years)
-  } else  value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values")
+  if(!exists("token")) stop("No connection. Connect to database using 'getToken()' first.")
+
+  value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values")
 
   auth_string <- paste("bearer", token, sep = " ")
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
+
 
   rawResult <- httr::GET(url = url,
                    path = value_path,
@@ -54,8 +56,15 @@ getIndicatorValues <- function(indicatorID = NULL, years = NULL, token = niToken
   }
 
   out$customDistributions <- lapply(customDistributions, backToDist)
-
   class(out) <- c("indicatorData", "list")
+
+
+  if(!is.null(years)){
+   out$indicatorValues <- out$indicatorValues[out$indicatorValues$yearName %in% years,]
+   ##Remove custom distributions not referenced in table
+   presentIDs <- out$indicatorValues[, "customDistributionUUID"]
+   out$customDistributions <- out$customDistributions[names(out$customDistributions) %in% presentIDs]
+   }
 
   return(out)
 

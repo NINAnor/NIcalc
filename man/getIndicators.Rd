@@ -4,7 +4,7 @@
 \alias{getIndicators}
 \title{List the indicators that the user is permitted to alter}
 \usage{
-getIndicators(token = niToken)
+getIndicators()
 }
 \arguments{
 \item{token}{character        A character string containing the database API token. Typically created by the function \link{getToken}.}

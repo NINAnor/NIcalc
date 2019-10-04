@@ -4,7 +4,7 @@
 \alias{getIndicatorValues}
 \title{Get the present indicator values from the Nature Index database}
 \usage{
-getIndicatorValues(indicatorID = NULL, years = NULL, token = niToken)
+getIndicatorValues(indicatorID = NULL, years = NULL)
 }
 \arguments{
 \item{indicatorID}{numerical    a numerical value identifying the indicator. Usually this is first retreived by the \link{getIndicators} function}

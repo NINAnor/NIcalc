@@ -4,7 +4,8 @@
 \alias{getToken}
 \title{Get a connection Token from the NI database}
 \usage{
-getToken(username = NULL, password = NULL)
+getToken(username = NULL, password = NULL,
+  url = "https://ninweb17.nina.no")
 }
 \arguments{
 \item{username}{character        Your username}
