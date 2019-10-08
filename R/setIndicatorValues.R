@@ -81,8 +81,14 @@ setIndicatorValues <- function(indicatorData = NULL,
     dist <- distribution
 
     if(class(dist) == "Lnorm"){
-      est <- distr::meanlog(dist)
-    } else  est <- dist@q(0.5)
+      est <- logNormal2normal(distr::meanlog(dist), distr::sdlog(dist))
+    }
+
+    if(class(dist) == "Pois"){
+      est <- distr::lambda(dist)
+    }
+
+    else  est <- mean(sampleDistribution(dist, 1e5))
 
 
     indicatorData$indicatorValues[rows, "verdi"] <- est
@@ -91,6 +97,8 @@ setIndicatorValues <- function(indicatorData = NULL,
 
     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- NA
     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- NA
+    indicatorData$indicatorValues[rows, "distributionName"] <- NA
+    indicatorData$indicatorValues[rows, "distributionID"] <- NA
 
     indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
     indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
@@ -107,6 +115,8 @@ setIndicatorValues <- function(indicatorData = NULL,
 
     indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
     indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
+    indicatorData$indicatorValues[rows, "distributionName"] <- NA
+    indicatorData$indicatorValues[rows, "distributionID"] <- NA
 
 
     }

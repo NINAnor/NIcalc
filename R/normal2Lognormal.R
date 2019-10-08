@@ -1,13 +1,13 @@
-#' Transform normal distribution to log-normal
+#' Transform normal distribution to log-normal, and vice versa
 #'
-#' This is a convenience function that takes the mean and the standard deviation of a normal distribution and returns the corresponding values for the lognormal distibution of the values.
+#' This is convenience functions that takes the mean and the standard deviation of a normal distribution and returns the corresponding values for the lognormal distibution of the values, and vice versa.
 #'
 #'
-#' @param mu	numerical	a numerical value identifying the indicator. Usually this is first retreived by the \link{getIndicators} function
-#' @param sd numerica the year of the values to retrieve. Default = NULL, which means you get all values.
-#' @param type Return transformed mu or standard deviation? Defaults to mu
 #'
-#' @return A list of "mean" and "sd", giving the mean and sd of the lognormal distribution, suited to be used later in e.g. \code{gamlss.dist}
+#' @param mu Numerical. Mean (or meanlog) parameter.
+#' @param sd Numerical. Standard deviation (or scale) parameter.
+#'
+#' @return A list of "mean" and "sd", giving the mean and scale parameter of the lognormal distribution, suited to be used later in e.g. \code{gamlss.dist}, or the mean and the standard deviation of a the corresponding normal distribution.
 #'
 #' @author Jens Åström, Bård Pedersen
 #'
@@ -15,8 +15,8 @@
 #' \dontrun{
 #'
 #'
-#' lognormalPars <- normal2Lognormal(mean = 100, sd = 10)
-#'
+#' logNormPar <- normal2Lognormal(mean = 100, sd = 10)
+#' logNormal2normal(logNormPar[[1]], logNormPar[[2]])
 #'
 #'  }
 #'
@@ -30,12 +30,30 @@ normal2Lognormal <- function(mean = NULL,
 
   mean <- as.vector(mean)
   sd <- as.vector(sd)
-  out_mean <- log(mean / sqrt((sd*2 / mean^2 + 1)))
-  out_sd <- sqrt(log(1 + (sd^2 / mean^2)))
+  out_mean <- log(mean / sqrt((1 + sd^2 / mean^2 )))
+  out_sd <- log(1 + (sd^2 / mean^2))
 
   out <-list("mean" = out_mean,
            "sd" = out_sd)
 
+  return(out)
+
+}
+
+
+#' @export
+#'
+#' @rdname normal2Lognormal
+logNormal2normal <- function(mean = NULL, sd = NULL){
+
+  mean <- as.vector(mean)
+  sd <- as.vector(sd)
+
+  out_mean <- exp(mean + (sd / 2))
+  out_sd <- sqrt((exp(sd) - 1) * exp(2 * mean + sd))
+
+  out <-list("mean" = out_mean,
+             "sd" = out_sd)
   return(out)
 
 }

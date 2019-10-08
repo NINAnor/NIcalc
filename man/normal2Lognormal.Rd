@@ -2,29 +2,30 @@
 % Please edit documentation in R/normal2Lognormal.R
 \name{normal2Lognormal}
 \alias{normal2Lognormal}
-\title{Transform normal distribution to log-normal}
+\alias{logNormal2normal}
+\title{Transform normal distribution to log-normal, and vice versa}
 \usage{
 normal2Lognormal(mean = NULL, sd = NULL)
+
+logNormal2normal(mean = NULL, sd = NULL)
 }
 \arguments{
-\item{sd}{numerica the year of the values to retrieve. Default = NULL, which means you get all values.}
+\item{sd}{Numerical. Standard deviation (or scale) parameter.}
 
-\item{mu}{numerical    a numerical value identifying the indicator. Usually this is first retreived by the \link{getIndicators} function}
-
-\item{type}{Return transformed mu or standard deviation? Defaults to mu}
+\item{mu}{Numerical. Mean (or meanlog) parameter.}
 }
 \value{
-A list of "mean" and "sd", giving the mean and sd of the lognormal distribution, suited to be used later in e.g. \code{gamlss.dist}
+A list of "mean" and "sd", giving the mean and scale parameter of the lognormal distribution, suited to be used later in e.g. \code{gamlss.dist}, or the mean and the standard deviation of a the corresponding normal distribution.
 }
 \description{
-This is a convenience function that takes the mean and the standard deviation of a normal distribution and returns the corresponding values for the lognormal distibution of the values.
+This is convenience functions that takes the mean and the standard deviation of a normal distribution and returns the corresponding values for the lognormal distibution of the values, and vice versa.
 }
 \examples{
 \dontrun{
 
 
-lognormalPars <- normal2Lognormal(mean = 100, sd = 10)
-
+logNormPar <- normal2Lognormal(mean = 100, sd = 10)
+logNormal2normal(logNormPar[[1]], logNormPar[[2]])
 
  }
 
