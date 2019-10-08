@@ -23,10 +23,9 @@
 
 getIndicators <- function(){
 
+
   url = NIcalc:::.getUrl()
   token = NIcalc:::.getToken()
-
-  if(!exists("token")) stop("No connection. Connect to database using 'getToken()' first.")
 
   indicator_path <- "/NaturindeksAPI/Indicators"
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"

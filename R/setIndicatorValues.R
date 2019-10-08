@@ -13,15 +13,18 @@
 #'
 #' @name setIndicatorValues
 #' @author  Jens Åström
-#' @param indicatorData object of class `indicatorData` created by \code{getIndicatorData}
-#' @param indicatorID Identifier of the indicator to be altered
-#' @param est Point estimate for the indicator. Optional.
-#' @param lower lower quartile of estimate. Required when supplying point estimate.
-#' @param upper upper quartile of estimate. Required when supplying point estimate.
-#' @param distribution distribution type or empirical values to be passed to \code{makeDistribution}.
-#' @param distrParams distribution parameters to be passed to \code{makeDistribution}. Required when
-#' using a named distribution
-#' @return Vector of samples
+#' @param indicatorData Object of class `indicatorData` created by \code{getIndicatorData}.
+#' @param areaID Numeric. Identifier of the indicator to be altered.
+#' @param years Numeric. Which year to set values for.
+#' @param est Numeric. Point estimate for the indicator. Optional.
+#' @param lower Numeric. Lower quartile of estimate. Required when supplying point estimate.
+#' @param upper Numeric. Upper quartile of estimate. Required when supplying point estimate.
+#' @param distribution Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities, to be passed to \code{makeDistribution}. See examples therein.
+#' @param distrParams Distribution parameters to be passed to \code{makeDistribution}. Required when
+#' using a named distribution. See examples in \code{makeDistribution}
+#' @param datatype Type of indicator. Remember to update this when the type changes. Allowed values: 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to 1.
+#' @param unitOfMeasurement Text of maximum length 100. Defaults to "Enhetsløs".
+#' @return Object of class `indicatorData`.
 #' @export
 #' @examples
 #' getToken("testUser", "testPassword")
@@ -46,12 +49,21 @@ setIndicatorValues <- function(indicatorData = NULL,
                                areaId = NULL,
                                years = NULL,
                                est = NULL,
-                               lower = NULL,
-                               upper = NULL,
+                               lower = NA,
+                               upper = NA,
                                distribution = NULL,
-                               distParams = NULL){
+                               distParams = NULL,
+                               datatype = 1,
+                               unitOfMeasurement = "Enhetsløs"){
 
   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
+
+  if(nchar(unitOfMeasurement) > 100) stop("unitOfMeasurement can only be 100 characters long.")
+
+  if(!(datatype %in% 1:3)) stop("Datatype needs to be 1, 2, or 3.")
+
+
+  datatypeName <- c("Ekspervurdering", "Overvåkingsdata", "Beregnet fra modeller")[datatype]
 
   rows <- 1:nrow(indicatorData$indicatorValues)
   if(!is.null(areaId)){
@@ -64,8 +76,9 @@ setIndicatorValues <- function(indicatorData = NULL,
 
 
   if(!is.null(distribution)){
+    if(attr(class(distribution), "package") != "distr") stop("Distribution needs to be a distribution object made from the 'makeDistribution' function")
     distID <- uuid::UUIDgenerate()
-    dist <- makeDistribution(input = distribution, distParams = distParams)
+    dist <- distribution
 
     if(class(dist) == "Lnorm"){
       est <- distr::meanlog(dist)
@@ -76,76 +89,36 @@ setIndicatorValues <- function(indicatorData = NULL,
     indicatorData$indicatorValues[rows, "customDistributionUUID"] <- distID
     indicatorData$customDistributions[[distID]] <- dist
 
+    indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- NA
+    indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- NA
+
+    indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
+    indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
+
     ##Remove custom distributions not referenced in table
     presentIDs <- indicatorData$indicatorValues[, "customDistributionUUID"]
     indicatorData$customDistributions <- indicatorData$customDistributions[names(indicatorData$customDistributions) %in% presentIDs]
 
-    return(indicatorData)
-  } else {
+    } else {
 
     indicatorData$indicatorValues[rows, "verdi"] <- est
     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
 
-    return(indicatorData)
+    indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
+    indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
+
+
+    }
+
+  if(nrow(indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")]) >0){
+    if(any(!is.na(indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")]))) {
+   indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")] <- NA
+   message("Reference value upper and lower quartiles changed to NAs")
+    }
   }
+  return(indicatorData)
 
 }
 
-# Need to set the other params to NA possibly something like this
 
-# setIndicatorValues
-# function(indicatorData = NULL,
-#          areaId = NULL,
-#          years = NULL,
-#          est = NULL,
-#          lower = NULL,
-#          upper = NULL,
-#          distribution = NULL,
-#          distParams = NULL){
-#
-#   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
-#
-#   rows <- 1:nrow(indicatorData$indicatorValues)
-#   if(!is.null(areaId)){
-#     rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
-#   }
-#
-#   if(!is.null(years)){
-#     rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
-#   }
-#
-#
-#   if(!is.null(distribution)){
-#     distID <- uuid::UUIDgenerate()
-#     dist <- makeDistribution(input = distribution, distParams = distParams)
-#
-#     if(class(dist) == "logNormal"){
-#       est <- distr::meanlog(dist)
-#     } else  est <- dist@q(0.5)
-#
-#
-#
-#     indicatorData$indicatorValues[rows, "verdi"] <- est
-#
-#     indicatorData$indicatorValues[rows, "customDistributionUUID"] <- distID
-#
-#     indicatorData$customDistributions[[distID]] <- dist
-#
-#     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- NA
-#     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- NA
-#     indicatorData$indicatorValues[rows, "distributionId"] <- NA
-#     indicatorData$indicatorValues[rows, "distParam1"] <- NA
-#     indicatorData$indicatorValues[rows, "distParam2"] <- NA
-#
-#     return(indicatorData)
-#   } else {
-#
-#     indicatorData$indicatorValues[rows, "verdi"] <- est
-#     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
-#     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
-#
-#     return(indicatorData)
-#   }
-#
-# }

@@ -5,27 +5,33 @@
 \title{Set indicator values in IndicatorData object}
 \usage{
 setIndicatorValues(indicatorData = NULL, areaId = NULL, years = NULL,
-  est = NULL, lower = NULL, upper = NULL, distribution = NULL,
-  distParams = NULL)
+  est = NULL, lower = NA, upper = NA, distribution = NULL,
+  distParams = NULL, datatype = 1, unitOfMeasurement = "Enhetsløs")
 }
 \arguments{
-\item{indicatorData}{object of class `indicatorData` created by \code{getIndicatorData}}
+\item{indicatorData}{Object of class `indicatorData` created by \code{getIndicatorData}.}
 
-\item{est}{Point estimate for the indicator. Optional.}
+\item{years}{Numeric. Which year to set values for.}
 
-\item{lower}{lower quartile of estimate. Required when supplying point estimate.}
+\item{est}{Numeric. Point estimate for the indicator. Optional.}
 
-\item{upper}{upper quartile of estimate. Required when supplying point estimate.}
+\item{lower}{Numeric. Lower quartile of estimate. Required when supplying point estimate.}
 
-\item{distribution}{distribution type or empirical values to be passed to \code{makeDistribution}.}
+\item{upper}{Numeric. Upper quartile of estimate. Required when supplying point estimate.}
 
-\item{indicatorID}{Identifier of the indicator to be altered}
+\item{distribution}{Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities, to be passed to \code{makeDistribution}. See examples therein.}
 
-\item{distrParams}{distribution parameters to be passed to \code{makeDistribution}. Required when
-using a named distribution}
+\item{datatype}{Type of indicator. Remember to update this when the type changes. Allowed values: 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to 1.}
+
+\item{unitOfMeasurement}{Text of maximum length 100. Defaults to "Enhetsløs".}
+
+\item{areaID}{Numeric. Identifier of the indicator to be altered.}
+
+\item{distrParams}{Distribution parameters to be passed to \code{makeDistribution}. Required when
+using a named distribution. See examples in \code{makeDistribution}}
 }
 \value{
-Vector of samples
+Object of class `indicatorData`.
 }
 \description{
 This function fills info into an indicatorData object which can later be uploaded to the database.

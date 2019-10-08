@@ -7,9 +7,9 @@
 makeDistribution(input = NULL, distParams = NULL)
 }
 \arguments{
-\item{input}{Either a name of a known distribution, a vector of values, or a data frame of possibleValues and valueProbabilities}
+\item{input}{Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities. See examples.}
 
-\item{distParams}{(optional) Parameters for the distribution function, if such is provided in `input`}
+\item{distParams}{(optional) Parameters for the distribution function, if such is provided in `input`. See examples.}
 }
 \value{
 an object of class `NIdistribution`

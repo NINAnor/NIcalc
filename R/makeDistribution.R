@@ -5,8 +5,8 @@
 #'
 #' @name makeDistribution
 #' @author Jens Åström
-#' @param input Either a name of a known distribution, a vector of values, or a data frame of possibleValues and valueProbabilities
-#' @param distParams (optional) Parameters for the distribution function, if such is provided in `input`
+#' @param input Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities. See examples.
+#' @param distParams (optional) Parameters for the distribution function, if such is provided in `input`. See examples.
 #' @return an object of class `NIdistribution`
 #'
 #'
@@ -36,7 +36,7 @@ allowedDistributions <- c("logNormal", "Poisson")
 
 errorMSG <- paste("Input needs to be either",
       allowedDistributions[1], "or",
-      allowedDistributions[2], "with appropriate parameters in \"functionParams\" or",
+      allowedDistributions[2], "with appropriate parameters in \"distParams\" or",
       "a data frame or matrix of discrete allowed values with probabilities",
       "or a vector of samples (for example CODA samples)")
 
