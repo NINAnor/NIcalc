@@ -5,5 +5,5 @@
 %\VignetteKeywords{Distributions}
 
 \begin{document}
-\includepdf[pages=-, fitpaper=true]{Distributions.pdf}
+\includepdf[pages=-, fitpaper=true]{DatabaseAndDistributions_.pdf}
 \end{document}

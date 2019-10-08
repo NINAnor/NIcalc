@@ -4,5 +4,5 @@
 %\VignettePackage{NIcalc}
 
 \begin{document}
-\includepdf[pages=-, fitpaper=true]{Workflow.pdf}
+\includepdf[pages=-, fitpaper=true]{Workflow_.pdf}
 \end{document}
