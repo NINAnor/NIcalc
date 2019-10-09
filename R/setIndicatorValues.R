@@ -103,9 +103,6 @@ setIndicatorValues <- function(indicatorData = NULL,
     indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
     indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
 
-    ##Remove custom distributions not referenced in table
-    presentIDs <- indicatorData$indicatorValues[, "customDistributionUUID"]
-    indicatorData$customDistributions <- indicatorData$customDistributions[names(indicatorData$customDistributions) %in% presentIDs]
 
     } else {
 
@@ -117,9 +114,14 @@ setIndicatorValues <- function(indicatorData = NULL,
     indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
     indicatorData$indicatorValues[rows, "distributionName"] <- NA
     indicatorData$indicatorValues[rows, "distributionID"] <- NA
+    indicatorData$indicatorValues[rows, "customDistributionUUID"] <- NA
 
 
     }
+
+  ##Remove custom distributions not referenced in table
+  presentIDs <- indicatorData$indicatorValues[, "customDistributionUUID"]
+  indicatorData$customDistributions <- indicatorData$customDistributions[names(indicatorData$customDistributions) %in% presentIDs]
 
   return(indicatorData)
 
