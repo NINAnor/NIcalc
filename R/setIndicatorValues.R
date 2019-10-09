@@ -121,12 +121,6 @@ setIndicatorValues <- function(indicatorData = NULL,
 
     }
 
-  if(nrow(indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")]) >0){
-    if(any(!is.na(indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")]))) {
-   indicatorData$indicatorValues[indicatorData$indicatorValues$yearName == "Referanseverdi", c("nedre_Kvartil", "ovre_Kvartil")] <- NA
-   message("Reference value upper and lower quartiles changed to NAs")
-    }
-  }
   return(indicatorData)
 
 }
