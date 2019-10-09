@@ -31,7 +31,8 @@ normal2Lognormal <- function(mean = NULL,
   mean <- as.vector(mean)
   sd <- as.vector(sd)
   out_mean <- log(mean / sqrt((1 + sd^2 / mean^2 )))
-  out_sd <- log(1 + (sd^2 / mean^2))
+  out_sd <- sqrt(log(1 + (sd^2 / mean^2)))
+
 
   out <-list("mean" = out_mean,
            "sd" = out_sd)
@@ -49,8 +50,8 @@ logNormal2normal <- function(mean = NULL, sd = NULL){
   mean <- as.vector(mean)
   sd <- as.vector(sd)
 
-  out_mean <- exp(mean + (sd / 2))
-  out_sd <- sqrt((exp(sd) - 1) * exp(2 * mean + sd))
+  out_mean <- exp(mean + (sd^2 / 2))
+  out_sd <- sqrt((exp(sd^2) - 1) * exp(2 * mean + sd^2))
 
   out <-list("mean" = out_mean,
              "sd" = out_sd)
