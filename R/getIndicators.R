@@ -27,13 +27,14 @@ getIndicators <- function(){
   url = NIcalc:::.getUrl()
   token = NIcalc:::.getToken()
 
-  indicator_path <- "/NaturindeksAPI/Indicators"
+  indicator_path <- "/Indicators"
+  combinedURL <- paste0(url, indicator_path)
+
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
   auth_string <- paste("bearer", token, sep = " ")
 
 
-  myIndicators <- httr::GET(url = url,
-                      path = indicator_path,
+  myIndicators <- httr::GET(url = combinedURL,
                       encode = "json",
                       httr::add_headers(Authorization = auth_string)
                       )

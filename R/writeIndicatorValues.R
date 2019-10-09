@@ -26,14 +26,14 @@
 #'
 
 
-writeIndicatorValues <- function(indicatorData = NULL,
-                                 token = niToken){
+writeIndicatorValues <- function(indicatorData = NULL){
 
   url = NIcalc:::.getUrl()
   token = NIcalc:::.getToken()
 
   auth_string <- paste("bearer", token, sep = " ")
-  api_path <- "/NaturindeksAPI/indicators/values"
+  api_path <- "/indicators/values"
+  combinedUrl <- paste0(url, api_path)
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
@@ -48,8 +48,7 @@ writeIndicatorValues <- function(indicatorData = NULL,
 
   body <- indicatorData$indicatorValues
 
-  postdata <- httr::POST(url = url,
-                   path = api_path,
+  postdata <- httr::POST(url = combinedUrl,
                    body = body,
                    encode = "json",
                    httr::add_headers(Authorization = auth_string))

@@ -5,7 +5,7 @@
 \title{Get a connection Token from the NI database}
 \usage{
 getToken(username = NULL, password = NULL,
-  url = "https://ninweb17.nina.no")
+  url = "https://www8.nina.no/NaturindeksNiCalc")
 }
 \arguments{
 \item{username}{character        Your username}

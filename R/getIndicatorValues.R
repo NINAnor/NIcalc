@@ -30,15 +30,14 @@ getIndicatorValues <- function(indicatorID = NULL, years = NULL){
 
   if(!exists("token")) stop("No connection. Connect to database using 'getToken()' first.")
 
-  value_path <- paste0("NaturindeksAPI/indicators/", indicatorID, "/values")
+  value_path <- paste0(url, "/indicators/", indicatorID, "/values")
 
   auth_string <- paste("bearer", token, sep = " ")
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
 
-  rawResult <- httr::GET(url = url,
-                   path = value_path,
+  rawResult <- httr::GET(url = value_path,
                    encode = "json",
                    httr::add_headers(Authorization = auth_string))
 

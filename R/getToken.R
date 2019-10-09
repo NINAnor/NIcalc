@@ -24,17 +24,17 @@
 
 getToken <- function(username = NULL,
                      password = NULL,
-                     url = "https://ninweb17.nina.no"){
+                     url = "https://www8.nina.no/NaturindeksNiCalc"){
 
 
-  token_path <- paste0("/NaturindeksAPI/token?username=", username,"&password=", password)
+  token_path <- paste0("/token?username=", username,"&password=", password)
+  combinedUrl <- paste0(url, token_path)
 
   httr::set_config(httr::config(ssl_verifypeer = 0L)) #Fix "Peer certificate error"
 
 
-  gettoken <- httr::POST(url = url, path = token_path, encode = "json")
+  gettoken <- httr::POST(url = combinedUrl, encode = "json")
   token <- httr::content(gettoken)
-
 
 
   #return(token)
@@ -42,7 +42,8 @@ getToken <- function(username = NULL,
   assign(".niToken", token, envir = passEnv)
   assign(".url", url, envir = passEnv)
 
+  if(exists("token")){
   message(paste0("Token successfully retrieved from ", url))
-
+  } else message(paste0("Token NOT retrieved from ", url, " !"))
 
   }

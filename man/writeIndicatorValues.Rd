@@ -4,7 +4,7 @@
 \alias{writeIndicatorValues}
 \title{Get the present indicator values from the Nature Index database}
 \usage{
-writeIndicatorValues(indicatorData = NULL, token = niToken)
+writeIndicatorValues(indicatorData = NULL)
 }
 \arguments{
 \item{indicatorData}{Data frame of indicator values. Usually format retrieved from \link{getIndicatorValues} and updated through \link{setIndicatorValues}.}
