@@ -1,8 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{NI Examle}
-%\VignettePackage{NIcalc}
-
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{Example_.pdf}
-\end{document}

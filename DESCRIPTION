@@ -1,6 +1,6 @@
 Package: NIcalc
 Title: Functions to Calculate a Nature Index
-Version: 0.0.0.99
+Version: 0.0.1.00
 Date: 2019-10-09
 Authors@R: c(
   person("Bard", "Pedersen", email = "Bard.Pedersen@nina.no", role = c("aut")),
