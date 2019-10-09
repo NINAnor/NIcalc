@@ -54,5 +54,8 @@ writeIndicatorValues <- function(indicatorData = NULL){
                    httr::add_headers(Authorization = auth_string))
 
 
-  cat(httr::content(postdata)[[1]])
+  message(httr::content(postdata))
+  if(length(httr::content(postdata)) == 0){
+    message("Values NOT stored!")
+  }
 }
