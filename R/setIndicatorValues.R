@@ -22,7 +22,7 @@
 #' @param distribution Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities, to be passed to \code{makeDistribution}. See examples therein.
 #' @param distrParams Distribution parameters to be passed to \code{makeDistribution}. Required when
 #' using a named distribution. See examples in \code{makeDistribution}
-#' @param datatype Type of indicator. Remember to update this when the type changes. Allowed values: 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to 1.
+#' @param datatype Type of indicator. Remember to update this when the type changes. Allowed values: NA, 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to NA.
 #' @param unitOfMeasurement Text of maximum length 100. Defaults to "Enhetsløs".
 #' @return Object of class `indicatorData`.
 #' @export
@@ -36,7 +36,7 @@
 #' )
 #'
 #' setIndicatorValues(indicatorID = 2
-#' distribution = "Normal",
+#' distribution = "logNormal",
 #' distParams = list("mean" = 0.5,
 #'                   "sd" = 0.1)
 #')
@@ -48,22 +48,25 @@
 setIndicatorValues <- function(indicatorData = NULL,
                                areaId = NULL,
                                years = NULL,
-                               est = NULL,
+                               est = NA,
                                lower = NA,
                                upper = NA,
                                distribution = NULL,
                                distParams = NULL,
-                               datatype = 1,
+                               datatype = NA,
                                unitOfMeasurement = "Enhetsløs"){
 
   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
 
   if(nchar(unitOfMeasurement) > 100) stop("unitOfMeasurement can only be 100 characters long.")
 
-  if(!(datatype %in% 1:3)) stop("Datatype needs to be 1, 2, or 3.")
+  if(!(datatype %in% c(NA,1:3))) stop("Datatype needs to be 1, 2, 3, or NA.")
 
-
+  if(is.na(datatype)) {
+    datatypeName <- NA
+  } else {
   datatypeName <- c("Ekspervurdering", "Overvåkingsdata", "Beregnet fra modeller")[datatype]
+  }
 
   rows <- 1:nrow(indicatorData$indicatorValues)
   if(!is.null(areaId)){
@@ -79,16 +82,15 @@ setIndicatorValues <- function(indicatorData = NULL,
     if(attr(class(distribution), "package") != "distr") stop("Distribution needs to be a distribution object made from the 'makeDistribution' function")
     distID <- uuid::UUIDgenerate()
     dist <- distribution
+    indicatorData$indicatorValues[rows, c("distParam1", "distParam2")] <- c(NA, NA)
 
     if(class(dist) == "Lnorm"){
-      est <- logNormal2normal(distr::meanlog(dist), distr::sdlog(dist))
-    }
+      est <- logNormal2normal(distr::meanlog(dist), distr::sdlog(dist))[[1]]
+      indicatorData$indicatorValues[rows, c("distParam1", "distParam2")] <- c(distr::meanlog(dist), sdlog(dist))
+    } else if(class(dist) == "Pois"){
+        est <- distr::lambda(dist)
 
-    if(class(dist) == "Pois"){
-      est <- distr::lambda(dist)
-    }
-
-    else  est <- mean(sampleDistribution(dist, 1e5))
+      } else  est <- mean(sampleDistribution(dist, 1e5))
 
 
     indicatorData$indicatorValues[rows, "verdi"] <- est
@@ -98,23 +100,31 @@ setIndicatorValues <- function(indicatorData = NULL,
     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- NA
     indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- NA
     indicatorData$indicatorValues[rows, "distributionName"] <- NA
-    indicatorData$indicatorValues[rows, "distributionID"] <- NA
+    indicatorData$indicatorValues[rows, "distributionId"] <- NA
 
     indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
     indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
+
+    indicatorData$indicatorValues[rows, "distParam1"] <- NA
+    indicatorData$indicatorValues[rows, "distParam2"] <- NA
 
 
     } else {
 
-    indicatorData$indicatorValues[rows, "verdi"] <- est
-    indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
-    indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
+      if(is.na(est) & !is.na(datatype)) stop("Datatype needs to be NA if estimate is NA")
 
-    indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
-    indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
-    indicatorData$indicatorValues[rows, "distributionName"] <- NA
-    indicatorData$indicatorValues[rows, "distributionID"] <- NA
-    indicatorData$indicatorValues[rows, "customDistributionUUID"] <- NA
+      indicatorData$indicatorValues[rows, "verdi"] <- est
+      indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
+      indicatorData$indicatorValues[rows, "ovre_Kvartil"] <- upper
+
+      indicatorData$indicatorValues[rows, "datatypeId"] <- datatype
+      indicatorData$indicatorValues[rows, "datatypeName"] <- datatypeName
+      indicatorData$indicatorValues[rows, "distributionName"] <- NA
+      indicatorData$indicatorValues[rows, "distributionId"] <- NA
+      indicatorData$indicatorValues[rows, "customDistributionUUID"] <- NA
+      indicatorData$indicatorValues[rows, "distParam1"] <- NA
+      indicatorData$indicatorValues[rows, "distParam2"] <- NA
+
 
 
     }

@@ -34,16 +34,21 @@ getToken <- function(username = NULL,
 
 
   gettoken <- httr::POST(url = combinedUrl, encode = "json")
-  token <- httr::content(gettoken)
+  token <- httr::content(gettoken, encoding = "UTF-8")
 
+
+
+  if(exists("token")){
+    if(any(class(token) != "character")) stop(paste0("Token NOT retrieved from ", url, " !"))
+      if(nchar(token) < 30){
+        stop(paste0("Token NOT retrieved from ", url, " !"))
+    } else message(paste0("Token retrieved from ", url, " !"))
+  } else stop(paste0("Token NOT retrieved from ", url, " !"))
 
   #return(token)
   #in package, do something like assign(token, niToken, envir = NIcalc)
   assign(".niToken", token, envir = passEnv)
   assign(".url", url, envir = passEnv)
 
-  if(exists("token")){
-  message(paste0("Token successfully retrieved from ", url))
-  } else message(paste0("Token NOT retrieved from ", url, " !"))
 
   }

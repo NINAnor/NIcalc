@@ -5,8 +5,8 @@
 \title{Set indicator values in IndicatorData object}
 \usage{
 setIndicatorValues(indicatorData = NULL, areaId = NULL, years = NULL,
-  est = NULL, lower = NA, upper = NA, distribution = NULL,
-  distParams = NULL, datatype = 1, unitOfMeasurement = "Enhetsløs")
+  est = NA, lower = NA, upper = NA, distribution = NULL,
+  distParams = NULL, datatype = NA, unitOfMeasurement = "Enhetsløs")
 }
 \arguments{
 \item{indicatorData}{Object of class `indicatorData` created by \code{getIndicatorData}.}
@@ -21,7 +21,7 @@ setIndicatorValues(indicatorData = NULL, areaId = NULL, years = NULL,
 
 \item{distribution}{Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities, to be passed to \code{makeDistribution}. See examples therein.}
 
-\item{datatype}{Type of indicator. Remember to update this when the type changes. Allowed values: 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to 1.}
+\item{datatype}{Type of indicator. Remember to update this when the type changes. Allowed values: NA, 1 = Ekspertvurdering, 2 = Overvåkingsdata, 3 = Beregnet fra modeller. Defaults to NA.}
 
 \item{unitOfMeasurement}{Text of maximum length 100. Defaults to "Enhetsløs".}
 
@@ -56,7 +56,7 @@ upper = 0.7
 )
 
 setIndicatorValues(indicatorID = 2
-distribution = "Normal",
+distribution = "logNormal",
 distParams = list("mean" = 0.5,
                   "sd" = 0.1)
 )
