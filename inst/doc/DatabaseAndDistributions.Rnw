@@ -1,0 +1,9 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Distributions}
+%\VignettePackage{NIcalc}
+%\VignetteKeywords{Distributions}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{DatabaseAndDistributions_.pdf}
+\end{document}
