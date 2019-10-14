@@ -86,7 +86,7 @@ setIndicatorValues <- function(indicatorData = NULL,
 
     if(class(dist) == "Lnorm"){
       est <- logNormal2normal(distr::meanlog(dist), distr::sdlog(dist))[[1]]
-      indicatorData$indicatorValues[rows, c("distParam1", "distParam2")] <- c(distr::meanlog(dist), sdlog(dist))
+      indicatorData$indicatorValues[rows, c("distParam1", "distParam2")] <- c(distr::meanlog(dist), distr::sdlog(dist))
     } else if(class(dist) == "Pois"){
         est <- distr::lambda(dist)
 
