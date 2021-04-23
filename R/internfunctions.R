@@ -1,3 +1,11 @@
+#' Internal functions
+#'
+#' These functions set up a passive environment to store tokens
+#' @return Builds a passive/hidden environment
+#' @author Jens Åström
+#' @keywords internal
+#' @export
+
 passEnv <- new.env()
 
 .getUrl <- function(){

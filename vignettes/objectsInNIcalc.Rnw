@@ -1,0 +1,9 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{S3 classes in NIcalc}
+%\VignettePackage{NIcalc}
+%\VignetteKeywords{S3 classes in NIcalc}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{objectsInNIcalc_.pdf}
+\end{document}

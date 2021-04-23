@@ -1,8 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{NI index calculation}
-%\VignettePackage{NIcalc}
-
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{NatureIndexCalculation_.pdf}
-\end{document}

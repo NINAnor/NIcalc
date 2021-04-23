@@ -1,40 +1,47 @@
-#' plotDistribution
+#' Plot function for known distributions
 #'
 #' Plot function for known distributions, defined by input parameters
 #'
+#' @name plotDistribution
+#' @encoding UTF-8
+#' @author Jens Åström, Bård Pedersen
 #'
-#'
+#' @import graphics
+#' @import gamlss.dist
+#' @importFrom msm dtnorm
+#' @importFrom stats dexp
 #'
 #' @param distrib Type of distribution. Must match allowed values.
-#' @param mu mu parameter of distribution (i.e. mean for normal distribution)
-#' @param sig  sigma parameter of distribution
+#' @param mu first parameter of distribution
+#' @param sig  second parameter of distribution
 #' @param refValue reference value to be plotted along with the distribution
-#' @param obsval
+#' @param obsval double, length = 3, observed mean and quartiles in the sequence
+#'   \code{c(lower.quartile, mean, upper.quartile)}
+#' @param type fixed parameter set to "continuous"
 #'
+#' @seealso \code{\link{fitAndPlotDistribution}}
 #'
-#' @importFrom msm dtnorm
-#'
-#'
-#'
+#' @note In it's present form \code{plotDistribution} covers the Gamma-
+#' lognormal, truncated normal, Weibull and ZIExponential distributions. It may
+#' be expanded to cover more distributions and to accept other parameters than
+#' expected values and quartiles in \code{obsval}.
 #'
 #' @export
 #'
-
-
 
 plotDistribution <- function(distrib = c("Gamma",
                                          "ZIExponential",
                                          "LogNormal",
                                          "TruncNormal",
-                                         "Normal",
-                                         "Weibull",
-                                         "Poisson",
-                                         "NegBinom",
-                                         "ZIP",
-                                         "NoBoot"),
+                                         #"Normal",
+                                         #"Poisson",
+                                         #"NegBinom",
+                                         #"ZIP",
+                                         #"NoBoot"
+                                         "Weibull"),
                              mu = NULL,
                              sig = NULL,
-                             refvalue = 1,
+                             refValue = 1,
                              obsval = c("lower" = NULL,
                                         "mu" = NULL,
                                         "upper" = NULL),
@@ -46,20 +53,20 @@ plotDistribution <- function(distrib = c("Gamma",
                                             "ZIExponential",
                                             "LogNormal",
                                             "TruncNormal",
-                                            "Normal",
-                                            "Weibull",
-                                            "Poisson",
-                                            "NegBinom",
-                                            "ZIP",
-                                            "NoBoot"))
+                                            #"Normal",
+                                            #"Poisson",
+                                            #"NegBinom",
+                                            #"ZIP",
+                                            #"NoBoot",
+                                            "Weibull"))
 
   #type.t <- "continuous"
 
-  calcQuantiles <- function(q3=NULL,qhigh=NULL,refvalue=NULL,obsval=NULL) {
+  calcQuantiles <- function(q3=NULL,qhigh=NULL,refValue=NULL,obsval=NULL) {
     qhighest <- min(q3*2,qhigh)
-    endQuantiles <- max(1.05*refvalue,1.05*qhighest)
-    if ((refvalue > (3*qhighest)) & (qhighest > 0)) {endQuantiles <- 2*qhighest}
-    #if (obsval[1]==obsval[3]) {endQuantiles <- 1.05*refvalue}
+    endQuantiles <- max(1.05*refValue,1.05*qhighest)
+    if ((refValue > (3*qhighest)) & (qhighest > 0)) {endQuantiles <- 2*qhighest}
+    #if (obsval[1]==obsval[3]) {endQuantiles <- 1.05*refValue}
     stepp <- endQuantiles/12500
     quantiles<-seq(0,endQuantiles,stepp)
     return(quantiles)
@@ -70,7 +77,7 @@ plotDistribution <- function(distrib = c("Gamma",
     q2<-mu
     q3<-qGA(p=0.75, mu=mu, sigma=sig)
     qhigh<-qGA(p=0.995, mu=mu, sigma=sig)
-    quantiles<-calcQuantiles(q3,qhigh,refvalue,obsval)
+    quantiles<-calcQuantiles(q3,qhigh,refValue,obsval)
     vec<-dGA(quantiles,mu=mu,sigma=sig)
     d1<-dGA(q1, mu=mu, sigma=sig)
     d2<-dGA(q2, mu=mu, sigma=sig)
@@ -86,7 +93,7 @@ plotDistribution <- function(distrib = c("Gamma",
     q2<-(1-mu)/sig
     q3<-ifelse(mu >= 0.75, 0, qexp(p=(0.75-mu)/(1-mu),rate=sig))
     qhigh<-ifelse(mu >= 0.995, 0, qexp(p=(0.995-mu)/(1-mu),rate=sig))
-    quantiles<-calcQuantiles(q3,qhigh,refvalue,obsval)
+    quantiles<-calcQuantiles(q3,qhigh,refValue,obsval)
     vec<-c(mu,dexp(quantiles[2:length(quantiles)],rate=sig)*(1-mu))
     d1<-ifelse(q1 == 0, mu, (1-mu)*dexp(q1,rate=sig))
     d2<-(1-mu)*dexp(q2,rate=sig)
@@ -101,7 +108,7 @@ plotDistribution <- function(distrib = c("Gamma",
     q2<-(exp(sig^2))^0.5*exp(mu)
     q3<-qLOGNO(p=0.75, mu=mu, sigma=sig)
     qhigh<-qLOGNO(p=0.995, mu=mu, sigma=sig)
-    quantiles<-calcQuantiles(q3,qhigh,refvalue,obsval)
+    quantiles<-calcQuantiles(q3,qhigh,refValue,obsval)
     vec<-dLOGNO(quantiles,mu=mu,sigma=sig)
     d1<-dLOGNO(q1, mu=mu, sigma=sig)
     d2<-dLOGNO(q2, mu=mu, sigma=sig)
@@ -116,7 +123,7 @@ plotDistribution <- function(distrib = c("Gamma",
     q2<-etruncnorm(a=0, b=1e11, mean=mu, sd=sig)
     q3<-qtnorm(p=0.75, mean=mu, sd=sig, lower=0)
     qhigh<-qtnorm(p=0.995, mean=mu, sd=sig)
-    quantiles<-calcQuantiles(q3,qhigh,refvalue,obsval)
+    quantiles<-calcQuantiles(q3,qhigh,refValue,obsval)
     vec<-dtnorm(quantiles,mean=mu,sd=sig,lower=0)
     d1<-dtnorm(q1, mean=mu, sd=sig, lower=0)
     d2<-dtnorm(q2, mean=mu, sd=sig, lower=0)
@@ -132,7 +139,7 @@ plotDistribution <- function(distrib = c("Gamma",
     q2<-mu*gamma(1/sig+1)
     q3<-qWEI(p=0.75, mu=mu, sigma=sig)
     qhigh<-qWEI(p=0.995, mu=mu, sigma=sig)
-    quantiles<-calcQuantiles(q3,qhigh,refvalue,obsval)
+    quantiles<-calcQuantiles(q3,qhigh,refValue,obsval)
     quantiles<-sort(c(quantiles,q1,q2,q3))
     suppressWarnings(
       vec<-dWEI(quantiles,mu=mu,sigma=sig)
@@ -207,8 +214,8 @@ plotDistribution <- function(distrib = c("Gamma",
   lines(c(q2,q2),c(0,d2),lwd=1,col=4,lty=1)
   lines(c(q3,q3),c(0,d3),lwd=1,col=4,lty=2)
 
-  lines(c(refvalue,refvalue),c(0,0.93*max(vec)),lwd=2,col=1,lty=2)
-  lines(c(refvalue,refvalue),c(0,0.85),lwd=2,col=1,lty=2)
+  lines(c(refValue,refValue),c(0,0.93*max(vec)),lwd=2,col=1,lty=2)
+  lines(c(refValue,refValue),c(0,0.85),lwd=2,col=1,lty=2)
 
   title(xlab = list("Quantiles", cex=1.5))
   title(ylab = list("Density",cex=1.5))
@@ -216,5 +223,4 @@ plotDistribution <- function(distrib = c("Gamma",
   text(0.8*max(quantiles),1.1*max(vec),disttext,cex=1.25)
 
 }
-
 
