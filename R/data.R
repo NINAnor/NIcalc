@@ -46,3 +46,66 @@
 #' @seealso \code{\link{niInput}}. \cr The vignette \code{objectsInNIcalc} gives a
 #' detailed description of \code{\link{niInput}} lists.
 "themeData"
+
+#' @title BSunits
+#' @description DATASET_DESCRIPTION
+#' @format A data frame with 4 rows and 5 variables:
+#' \describe{
+#'   \item{\code{BasicunitID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Basicunit}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{Area}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{NIarea1}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{NIarea2}}{integer COLUMN_DESCRIPTION}
+#'}
+#' @source \url{http://somewhere.important.com/}
+"BSunits"
+
+#' @title Indic
+#' @description DATASET_DESCRIPTION
+#' @format A data frame with 33 rows and 6 variables:
+#' \describe{
+#'   \item{\code{IndicatorID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Indicator_name}}{character COLUMN_DESCRIPTION}
+#'   \item{\code{TrophicgroupID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Scalingmodel}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Key.indicators}}{logical COLUMN_DESCRIPTION}
+#'   \item{\code{Fidelity}}{double COLUMN_DESCRIPTION}
+#'}
+#' @source \url{http://somewhere.important.com/}
+"Indic"
+#' @title Indicator.area.ind
+#' @description DATASET_DESCRIPTION
+#' @format A data frame with 59 rows and 3 variables:
+#' \describe{
+#'   \item{\code{IndicatorareaID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{IndicatorID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Indicator_name}}{integer COLUMN_DESCRIPTION}
+#'}
+#' @source \url{http://somewhere.important.com/}
+"Indicator.area.ind"
+
+#' @title Indicator.area
+#' @description DATASET_DESCRIPTION
+#' @format A data frame with 67 rows and 3 variables:
+#' \describe{
+#'   \item{\code{IndicatorareaID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{BasicsunitID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Basicunit}}{integer COLUMN_DESCRIPTION}
+#'}
+#' @source \url{http://somewhere.important.com/}
+"Indicator.area"
+
+#' @title Observations
+#' @description DATASET_DESCRIPTION
+#' @format A data frame with 295 rows and 7 variables:
+#' \describe{
+#'   \item{\code{ValueID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{IndicatorID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{Expected.value}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{Lower}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{Upper}}{double COLUMN_DESCRIPTION}
+#'   \item{\code{ReferenceYearID}}{integer COLUMN_DESCRIPTION}
+#'   \item{\code{IndicatorareaID}}{integer COLUMN_DESCRIPTION}
+#'}
+#' @source \url{http://somewhere.important.com/}
+"Observations"
