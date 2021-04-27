@@ -2,36 +2,40 @@
 % Please edit documentation in R/writeIndicatorValues.R
 \name{writeIndicatorValues}
 \alias{writeIndicatorValues}
-\title{Get the present indicator values from the Nature Index database}
+\title{Write indicator values}
 \usage{
 writeIndicatorValues(indicatorData = NULL)
 }
 \arguments{
-\item{indicatorData}{Data frame of indicator values. Usually format retrieved from \link{getIndicatorValues} and updated through \link{setIndicatorValues}.}
-
-\item{token}{A connection token aquired by \link{getToken}. Simply leave as is if you use `getToken`}
+\item{indicatorData}{Data frame of indicator values. Usually format retrieved
+from \code{getIndicatorValues} and updated through \code{setIndicatorValues}.}
 }
 \value{
-A message from the database API of the turn out of the action.
+If posting the data fails, an error message is returned.
 }
 \description{
-This function retreives the current values for a given indicator. It is used both to check the current
-information, and as a starting point for updating the data. In case of updates, individual rows are altered
-by the function setIndicatorValue.
+This function writes updated values for a given indicator to the Nature Index
+database via the Nature Index API.
 }
-\section{Notes}{
-
+\details{
+Functions \code{\link{getIndicatorValues}}, \code{\link{setIndicatorValues}},
+and \code{writeIndicatorValues} are used in series to update the set of
+values for an indicator. After retrieving the current set of values from the
+database using \code{getIndicatorValues}, and updating the set with
+\code{setIndicatorValues}, \code{writeIndicatorValues} may be used to post the
+updated set to the database.
 }
-
 \examples{
 \dontrun{
 getToken()
 myIndicators <- getIndicators()
-myValues <- getIndicatorValues(IndicatorID = 1)
-updatedValues <- setIndicatorValues(myValues, year = 2018, est = 0.3)
+myValues <- getIndicatorValues(indicatorID = 359)
+updatedValues <- setIndicatorValues(myValues, year = 2019, est = 0.3)
 writeIndicatorValues(updatedValues)
 }
-
+}
+\seealso{
+\code{\link{getIndicatorValues}}, \code{\link{setIndicatorValues}}
 }
 \author{
 Jens Åström

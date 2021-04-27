@@ -2,13 +2,17 @@
 #'
 #' This functions formats various representations of indicator uncertainty into a common structure for further processing
 #'
-#'
-#' @name makeDistribution
+#' @encoding UTF-8
 #' @author Jens Åström
+#' @name makeDistribution
+#'
+#' @importFrom  distr r
+#' @importFrom distr meanlog
+#' @importFrom distr lambda
+#'
 #' @param input Either "logNormal", "Poisson", a vector of values, or a data frame of possible values and value probabilities. See examples.
 #' @param distParams (optional) Parameters for the distribution function, if such is provided in `input`. See examples.
 #' @return an object of class `NIdistribution`
-#'
 #'
 #' @export
 #' @examples
@@ -28,42 +32,45 @@
 #'
 #'
 #' @seealso \code{\link{sampleDistribution}}
+#' The vignette \code{Distributions} gives detailed descriptions of how to use
+#' \code{makeDistribution} to generate distribution objects when revising and
+#' updating the data set for an indicator.
 
 
 makeDistribution <- function(input = NULL, distParams = NULL){
 
-allowedDistributions <- c("logNormal", "Poisson")
+  allowedDistributions <- c("logNormal", "Poisson")
 
-errorMSG <- paste("Input needs to be either",
-      allowedDistributions[1], "or",
-      allowedDistributions[2], "with appropriate parameters in \"distParams\" or",
-      "a data frame or matrix of discrete allowed values with probabilities",
-      "or a vector of samples (for example CODA samples)")
+  errorMSG <- paste("Input needs to be either",
+                    allowedDistributions[1], "or",
+                    allowedDistributions[2], "with appropriate parameters in \"distParams\" or",
+                    "a data frame or matrix of discrete allowed values with probabilities",
+                    "or a vector of samples (for example CODA samples)")
 
-if (!requireNamespace("distr", quietly = TRUE)) {
-  stop("Pkg 'distr' needed for this function to work. Please install it.",
-       call. = FALSE)
-}
+  if (!requireNamespace("distr", quietly = TRUE)) {
+    stop("Pkg 'distr' needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
 
-if (class(input) == "character"){
-  namedDist = match.arg(input, allowedDistributions)
+  if ("character" %in% class(input)){
+    namedDist = match.arg(input, allowedDistributions)
 
-  dist <- switch(namedDist,
-                 logNormal = distr::Lnorm(distParams$mean, distParams$sd),
-                 Poisson = distr::Pois(distParams$lambda)
+    dist <- switch(namedDist,
+                   logNormal = distr::Lnorm(distParams$mean, distParams$sd),
+                   Poisson = distr::Pois(distParams$lambda)
     )
-} else
+  } else
 
-if (class(input) == "data.frame" | class(input) == "matrix"){
-  dist <- distr::DiscreteDistribution(input[,1], input[,2])
-} else
+    if ("data.frame" %in% class(input) | "matrix" %in% class(input)){
+      dist <- distr::DiscreteDistribution(input[,1], input[,2])
+    } else
 
-if (is.numeric(input)){
-  dist <- distr::EmpiricalDistribution(input)
-} else stop(errorMSG)
+      if (is.numeric(input)){
+        dist <- distr::EmpiricalDistribution(input)
+      } else stop(errorMSG)
 
 
-return(dist)
+  return(dist)
 
 }
 
