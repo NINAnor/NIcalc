@@ -6,7 +6,7 @@ April 21, 2021
 # NIcalc
 
 *NIcalc* contains a set of utility functions tailored for working with
-the Nature Index for Norway. Functions in *NIcalc* may be used to upload
+the Nature Index for Norway (see https://hdl.handle.net/11250/2739962). Functions in *NIcalc* may be used to upload
 new and revised data into the Nature Index database, to harvest and
 assemble data sets from the database, to use these data sets in
 calculations of the Nature Index and similar indices, and to summarize
