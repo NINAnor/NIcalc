@@ -160,6 +160,22 @@ imputeData <- function(x = NULL,
 
   naData <- data.frame(lexpected,llower,lID,fyears,findicators)
 
+  # Identify indicators reported without uncertainty (expected = llower = lupper)
+  
+  indNames <- unique(naData$findicators)
+  noVar <- rep(FALSE, length(indNames))
+  for(i in 1:length(indNames)){
+    indData <- subset(naData, findicators == indNames[i])
+    if(identical(indData$lexpected, indData$llower) & all(indData$lID %in% c(log(transConst), NA)))
+    noVar[i] <- TRUE
+  }
+  ind_noVar <- indNames[which(noVar)]
+  
+  # Issue warning if dataset contains a mixture of indicators with and without uncertainty
+  if(dplyr::between(length(ind_noVar), 1, (length(indNames)-1))){
+    warning("Dataset contains a mixture of indicators provided with and without uncertainty. \nThis may lead to bias in imputation of missing values.")
+  }
+  
   # Multiple imputations using MICE
 
   message("\nMultiple imputations:\nm = ",nSim," imputations for each of ",nMissing,
@@ -172,14 +188,21 @@ imputeData <- function(x = NULL,
                                      method = c("pmm", "pmm", "pmm", "", ""),
                                      print = TRUE,
                                      ...))
-
+  
   # Backtransform imputations
-
+  
   var1Imp <- (exp(imp$imp$lexpected) - transConst)[,1:nImputations]
-  var2Imp <- (exp(imp$imp$llower) - transConst)[,1:nImputations]
-  var3Imp <- (exp(imp$imp$lID) - transConst)[,1:nImputations] + var2Imp
+  
+  if(all(indNames %in% ind_noVar)){ # If all indicators in set were reported without uncertainty...
+    var2Imp <- var1Imp # ... set imputed "lower" to same as "expected"
+    var3Imp <- var1Imp # ... set imputed "upper" to same as "expected"
+    warning("Dataset consists of only indicators that were reported without uncertainty. \n Imputed distributions are therefore elicited using expected values only (lower and upper bounds assumed equal to expected value). ")
+  }else{
+    var2Imp <- (exp(imp$imp$llower) - transConst)[,1:nImputations]
+    var3Imp <- (exp(imp$imp$lID) - transConst)[,1:nImputations] + var2Imp
+  }
 
-  # Multiply with referance values
+  # Multiply with reference values
 
   names(refVal) <- ICrefVal
   refss <- refVal[as.character(ICunit[as.numeric(names(imp$where[,1][imp$where[,1]]))])]
