@@ -172,7 +172,7 @@ imputeData <- function(x = NULL,
   ind_noVar <- indNames[which(noVar)]
   
   # Issue warning if dataset contains a mixture of indicators with and without uncertainty
-  if(length(ind_noVar) < length(indNames)){
+  if(dplyr::between(length(ind_noVar), 1, (length(indNames)-1))){
     warning("Dataset contains a mixture of indicators provided with and without uncertainty. \nThis may lead to bias in imputation of missing values.")
   }
   
