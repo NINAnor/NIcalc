@@ -28,6 +28,7 @@
 #' updatedValues <- setIndicatorValues(myValues, year = 2019, est = 0.3)
 #' writeIndicatorValues(updatedValues)
 #' }
+#' @export
 
 writeIndicatorValues <- function (indicatorData = NULL){
   url = NIcalc:::.getUrl()
