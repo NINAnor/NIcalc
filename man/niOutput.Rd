@@ -15,35 +15,33 @@ niOutput(x)
 niSeries(x)
 
 niValue(
-  indexArea = stop("Required argument 'indexArea' missing with no default", call. =
-    TRUE),
+  indexArea = stop("Required argument 'indexArea' missing with no default", call. = TRUE),
   call = stop("Required argument 'call' missing with no default", call. = TRUE),
-  calculationParameters = stop("Required argument 'calculationParameters' missing",
-    call. = TRUE),
+  calculationParameters = stop("Required argument 'calculationParameters' missing", call.
+    = TRUE),
   metadata = stop("Required argument 'metadata' missing with no default", call. = TRUE),
   year = stop("Required argument 'year' missing with no default", call. = TRUE),
   indicators = stop("Required argument 'indicators' missing with no default", call. =
     TRUE),
-  indicatorData = stop("Required argument 'indicatorData' missing with no default",
-    call. = TRUE),
-  ICunits = stop("Required argument 'ICunits' missing with no default", call. = TRUE),
-  ICunitMatrix = stop("Required argument 'ICunitMatrix' missing with no default", call.
+  indicatorData = stop("Required argument 'indicatorData' missing with no default", call.
     = TRUE),
+  ICunits = stop("Required argument 'ICunits' missing with no default", call. = TRUE),
+  ICunitMatrix = stop("Required argument 'ICunitMatrix' missing with no default", call. =
+    TRUE),
   imputations = stop("Required argument 'imputations' missing with no default", call. =
     TRUE),
   BSunits = stop("Required argument 'BSunits' missing with no default", call. = TRUE),
   BSunitData = stop("Required argument 'BSunitData' missing with no default", call. =
     TRUE),
-  BSunitWeights = stop("Required argument 'BSunitWeights' missing with no default",
-    call. = TRUE),
-  NIunitWeights = stop("Required argument 'NIunitWeights' missing with no default",
-    call. = TRUE),
-  BSunitIndices = stop("Required argument 'BSunitIndices' missing with no default",
-    call. = TRUE),
-  BSunitbbb = stop("Required argument 'BSunitbbb' missing with no default", call. =
-    TRUE),
-  indexWeights = stop("Required argument 'indexWeights' missing with no default", call.
+  BSunitWeights = stop("Required argument 'BSunitWeights' missing with no default", call.
     = TRUE),
+  NIunitWeights = stop("Required argument 'NIunitWeights' missing with no default", call.
+    = TRUE),
+  BSunitIndices = stop("Required argument 'BSunitIndices' missing with no default", call.
+    = TRUE),
+  BSunitbbb = stop("Required argument 'BSunitbbb' missing with no default", call. = TRUE),
+  indexWeights = stop("Required argument 'indexWeights' missing with no default", call. =
+    TRUE),
   index = stop("Required argument 'index' missing with no default", call. = TRUE),
   bbb = stop("Required argument 'bbb' missing with no default", call. = TRUE)
 )
