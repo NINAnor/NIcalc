@@ -60,12 +60,22 @@ setIndicatorValues <- function(indicatorData = NULL,
                                datatype = NA,
                                unitOfMeasurement = "Enhetsløs"){
 
+  ## Check class of indicatorData
   if(!("indicatorData" %in% class(indicatorData))) stop("indicatorData needs to be of class \"indicatorData\". Use function \"getIndicatorData\" to retreive or create such an object")
 
+  ## Check length of unitOfMeasurement
   if(nchar(unitOfMeasurement) > 100) stop("unitOfMeasurement can only be 100 characters long.")
 
+  ## Check datatype and expand from scalar to vector if necessary
   if(!(any(datatype %in% c(NA,1:3)))) stop("Datatype needs to be 1, 2, 3, or NA.")
 
+  if(any(is.na(est) & !is.na(datatype))) stop("Datatype needs to be NA if estimate is NA")
+  
+  if(length(est) > 1 & length(datatype) == 1){
+    datatype <- rep(datatype, length(est))
+  }
+  
+  ## Assign data type name
   datatypeName <- rep(NA, length(datatype))
   for(i in 1:length(datatype)){
     if(!is.na(datatype[i])){
@@ -73,8 +83,7 @@ setIndicatorValues <- function(indicatorData = NULL,
     }
   }
 
-  if(any(is.na(est) & !is.na(datatype))) stop("Datatype needs to be NA if estimate is NA")
-  
+  ## Determine data rows to be updated
   rows <- 1:nrow(indicatorData$indicatorValues)
   if(!is.null(areaId)){
     rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
@@ -85,6 +94,7 @@ setIndicatorValues <- function(indicatorData = NULL,
   }
 
 
+  ## Update data rows
   if(!is.null(distribution)){
     if(attr(class(distribution), "package") != "distr") stop("Distribution needs to be a distribution object made from the 'makeDistribution' function")
     distID <- uuid::UUIDgenerate()
