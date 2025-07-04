@@ -73,8 +73,6 @@ setIndicatorValues <- function(indicatorData = NULL,
   ## Check datatype and expand from scalar to vector if necessary
   if(!(any(datatype %in% c(NA,1:3)))) stop("Datatype needs to be 1, 2, 3, or NA.")
 
-  if(any(is.na(est) & !is.na(datatype))) stop("Datatype needs to be NA if estimate is NA")
-  
   if(length(est) > 1 & length(datatype) == 1){
     datatype <- rep(datatype, length(est))
   }
@@ -133,7 +131,8 @@ setIndicatorValues <- function(indicatorData = NULL,
 
   } else {
 
-
+    if(any(is.na(est) & !is.na(datatype))) stop("Datatype needs to be NA if estimate is NA")
+    
 
     indicatorData$indicatorValues[rows, "verdi"] <- est
     indicatorData$indicatorValues[rows, "nedre_Kvartil"] <- lower
