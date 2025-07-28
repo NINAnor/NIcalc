@@ -86,15 +86,21 @@ setIndicatorValues <- function(indicatorData = NULL,
   }
 
   ## Determine data rows to be updated
-  rows <- 1:nrow(indicatorData$indicatorValues)
-  if(!is.null(areaId)){
-    rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
+  # rows <- 1:nrow(indicatorData$indicatorValues)
+  # if(!is.null(areaId)){
+  #   rows <- rows[indicatorData$indicatorValues$areaId[rows] %in% areaId]
+  # }
+  # 
+  # if(!is.null(years)){
+  #   rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
+  # }
+  
+  rows <- c()
+  for(i in 1:length(est)){
+    row_i <- which(indicatorData$indicatorValues$areaId == areaId[i] &
+                     indicatorData$indicatorValues$yearName == years[i])
+    rows <- c(rows, row_i)
   }
-
-  if(!is.null(years)){
-    rows <- rows[indicatorData$indicatorValues$yearName[rows] %in% years]
-  }
-
 
   ## Update data rows
   if(!is.null(distribution)){
