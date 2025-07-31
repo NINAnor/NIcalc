@@ -35,6 +35,12 @@
 #' @seealso \code{\link{makeDistribution}}
 
 sampleDistribution <- function(dist, nSamples = 10){
-  out <- distr::r(dist)(nSamples)
+  
+  if(is.na(dist)){
+    out <- rep(NA, nSamples)
+  }else{
+    out <- distr::r(dist)(nSamples)
+  }
+  
   return(out)
 }
