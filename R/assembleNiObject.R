@@ -338,6 +338,24 @@ assembleNiObject <- function(inputData = NULL,
                                            nSamples = 100000))
       }
     } else {
+      
+      # Ensure data types of expected values and quantiles are identical
+      dataType <- typeof(hhh$indicatorObservations$indicatorValues$expectedValue)
+      intervalTypes <- c(typeof(hhh$indicatorObservations$indicatorValues$lowerQuantile),
+                         typeof(hhh$indicatorObservations$indicatorValues$upperQuantile))
+      if(any(intervalTypes != dataType)){
+        
+        if(dataType == "double"){
+          hhh$indicatorObservations$indicatorValues$lowerQuantile <- as.numeric(hhh$indicatorObservations$indicatorValues$lowerQuantile)
+          hhh$indicatorObservations$indicatorValues$upperQuantile <- as.numeric(hhh$indicatorObservations$indicatorValues$upperQuantile)
+        }
+        
+        if(dataType == "integer"){
+          hhh$indicatorObservations$indicatorValues$lowerQuantile <- as.integer(hhh$indicatorObservations$indicatorValues$lowerQuantile)
+          hhh$indicatorObservations$indicatorValues$upperQuantile <- as.integer(hhh$indicatorObservations$indicatorValues$upperQuantile)
+        }
+      }
+        
       hhh$indicatorObservations$indicatorValues[doEstimQuantile,
                                                 c("lowerQuantile","upperQuantile")] <- a
     }
