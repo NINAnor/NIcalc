@@ -36,7 +36,7 @@
 
 sampleDistribution <- function(dist, nSamples = 10){
   
-  if(is.na(dist)){
+  if(!isS4(dist)){
     out <- rep(NA, nSamples)
   }else{
     out <- distr::r(dist)(nSamples)
