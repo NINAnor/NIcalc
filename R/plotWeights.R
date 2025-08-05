@@ -19,6 +19,8 @@
 #'   \cr per trophic group (\code{group = "troph"}),
 #'   \cr per BSunit (\code{group = "BSunit"}), or
 #'   \cr per ICunit (\code{group = "ICunit"})?
+#' @param allBars logical. Whether to plot bars for all indicators or only a selection (default, specified via argumen "barnum")
+#' @param nrBars integer. Number of indicators for which to display bars when allBars = FALSE. Default = 35.
 #' @param ... further arguments controlling the appearance of the plot,
 #'   some passed further to \code{\link{par}}:
 #'   \cr\code{lwd}, \code{cex}, \code{cex.axis}, \code{main}, \code{cex.main},
@@ -45,7 +47,7 @@
 #' @export
 #'
 
-plotWeights <- function(x = NULL, group = "indic", ...) {
+plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35, ...) {
 
   z <- match.call()
 
@@ -60,7 +62,11 @@ plotWeights <- function(x = NULL, group = "indic", ...) {
                paste(validPlots,collapse = "', '"),"'.", sep=""), call. = TRUE)
   }
 
-  setPlotParameters <- function(barnum = 35,
+  if(allBars){
+    nrBars <- length(x$indicators)
+  }
+
+  setPlotParameters <- function(barnum = nrBars,
                                 keys = TRUE,
                                 barcol = grDevices::gray(0.75),
                                 keycol = grDevices::rgb(red=0, green=0.65, blue=0.65*100/105, alpha = 0.3),
@@ -212,7 +218,7 @@ plotWeights <- function(x = NULL, group = "indic", ...) {
           cex.names = cexn,
           cex.main = cex.main,
           args.legend = NULL,
-          lwd=lwd,
-          las=1)
+          lwd = lwd,
+          las = 2)
 
 }
