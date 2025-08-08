@@ -167,7 +167,7 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
   substringEnd <- 15
   cexn <- cex
   if (barnum <= 20) {
-    substringEnd <- 9
+    #substringEnd <- 9
     cexn <- cex*0.75/0.5
   }
 
