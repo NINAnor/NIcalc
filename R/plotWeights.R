@@ -206,7 +206,7 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
   oldpar <- par(no.readonly = TRUE)
 
   # Adjust left margin based on max label width.
-  par(mar = c(5, 5, 4, 2) + 0.1)  # Increase left margin (second value, default = 4)
+  par(mar = c(5, 5.5, 4, 2) + 0.1)  # Increase left margin (second value, default = 4)
 
   # Recalculate xlim2 if necessary. If labels are very long and extend into the plot area,
   # extending xlim2 may be required to keep the bars from shrinking. This depends on the
