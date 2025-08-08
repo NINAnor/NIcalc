@@ -202,23 +202,46 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
     }
   }
 
-  graphics::barplot(height = ytg,
-          width = 1,
-          space = NULL,
-          names.arg = substring(names(ytg),1,substringEnd),
-          legend.text = NULL,
-          beside = FALSE,
-          horiz = TRUE,
-          col = farger, border = par("fg"),
-          main = mainName, sub = NULL,
-          xlab = "Weight", ylab = NULL,
-          xlim = c(0,xlim2), ylim = NULL, xpd = TRUE, log = "",
-          axes = TRUE, axisnames = TRUE,
-          cex.axis = cex.axis,
-          cex.names = cexn,
-          cex.main = cex.main,
-          args.legend = NULL,
-          lwd = lwd,
-          las = 2)
+  # Save the current par settings (important for resetting later)
+  oldpar <- par(no.readonly = TRUE)
 
+  # Initialize plot
+  plot.new()
+
+  # Calculate the maximum width of the y-axis labels
+  max_label_width <- max(strwidth(substring(names(ytg), 1, substringEnd), cex = cexn))
+
+  # Adjust left margin based on max label width.  The '4' is a default margin value.  We
+  # add the label width to this. Adjust the multiplier if needed.  This is key!
+  par(mar = c(5, 4 + max_label_width * 1.2, 4, 2) + 2)  # Increase left margin
+
+  # Recalculate xlim2 if necessary. If labels are very long and extend into the plot area,
+  # extending xlim2 may be required to keep the bars from shrinking. This depends on the
+  # values in ytg.  The best approach is to check the plot output *after* adjusting margins.
+
+  # If you need to increase xlim2, do it here:
+  # xlim2 <- xlim2 * 1.2 # Example: Increase xlim2 by 20%
+
+  # Now create the barplot with the adjusted margins and potentially adjusted xlim2
+  graphics::barplot(height = ytg,
+                    width = 1,
+                    space = NULL,
+                    names.arg = substring(names(ytg), 1, substringEnd),
+                    legend.text = NULL,
+                    beside = FALSE,
+                    horiz = TRUE,
+                    col = farger, border = par("fg"),
+                    main = mainName, sub = NULL,
+                    xlab = "Weight", ylab = NULL,
+                    xlim = c(0, xlim2), ylim = NULL, xpd = TRUE, log = "",
+                    axes = TRUE, axisnames = TRUE,
+                    cex.axis = cex.axis,
+                    cex.names = cexn,
+                    cex.main = cex.main,
+                    args.legend = NULL,
+                    lwd = lwd,
+                    las = 2)
+
+  # Reset the par settings to their original values
+  on.exit(par(oldpar))
 }
