@@ -63,6 +63,8 @@
 #' @param nSim integer, number of imputations, default is 1000.
 #' @param transConst numeric scalar, \code{0<transConst<=0.1}.
 #'   Transformation constant in log-transformation. Default is \code{0.01}.
+#' @param mice_threshold_alt numeric scalar, alternative threshold to try with
+#' `mice::mice()` if the default (0.999) fails. Set to default to 0.9999.
 #' @param ... further arguments passed on to \code{mice::mice}.
 #'
 #' @return A list of class \code{niImputations} containing two elements:
@@ -86,6 +88,7 @@
 imputeData <- function(x = NULL,
                        nSim = 1000,
                        transConst = 0.01,
+                       mice_threshold_alt = 0.9999,
                        ...) {
 
   # Control input
@@ -161,7 +164,7 @@ imputeData <- function(x = NULL,
   naData <- data.frame(lexpected,llower,lID,fyears,findicators)
 
   # Identify indicators reported without uncertainty (expected = llower = lupper)
-  
+
   indNames <- unique(naData$findicators)
   noVar <- rep(FALSE, length(indNames))
   for(i in 1:length(indNames)){
@@ -170,12 +173,12 @@ imputeData <- function(x = NULL,
     noVar[i] <- TRUE
   }
   ind_noVar <- indNames[which(noVar)]
-  
+
   # Issue warning if dataset contains a mixture of indicators with and without uncertainty
   if(dplyr::between(length(ind_noVar), 1, (length(indNames)-1))){
     warning("Dataset contains a mixture of indicators provided with and without uncertainty. \nThis may lead to bias in imputation of missing values.")
   }
-  
+
   # Multiple imputations using MICE
 
   message("\nMultiple imputations:\nm = ",nSim," imputations for each of ",nMissing,
@@ -188,11 +191,31 @@ imputeData <- function(x = NULL,
                                      method = c("pmm", "pmm", "pmm", "", ""),
                                      print = TRUE,
                                      ...))
-  
+
+  # Check imputations for NA (= failure) & re-run with alternative threshold if needed
+  impute_fail <- ifelse(any(is.na(cbind(imp$imp$lexpected, imp$imp$llower, imp$imp$lID))), TRUE, FALSE)
+
+  if(impute_fail){
+
+    message(paste0("Imputation failed with standard setup. Retrying with threshold = ", mice_threshold_alt))
+    imp <- suppressWarnings(mice::mice(naData,
+                                       m = nImputations,
+                                       method = c("pmm", "pmm", "pmm", "", ""),
+                                       threshold = mice_threshold_alt,
+                                       print = TRUE,
+                                       ...))
+
+    impute_fail2 <- ifelse(any(is.na(cbind(imp$imp$lexpected, imp$imp$llower, imp$imp$lID))), TRUE, FALSE)
+    if(impute_fail2){
+      stop(paste0("Imputation failed with alternative threshold = ", mice_threshold_alt,
+                  ".\n You may try with a higher threshold, but be aware that this issue indicates that mice::mice is not operating the way it should.\n You may instead want to reconsider your input dataset and the need for/sensibility of imputation."))
+    }
+  }
+
   # Backtransform imputations
-  
+
   var1Imp <- (exp(imp$imp$lexpected) - transConst)[,1:nImputations]
-  
+
   if(all(indNames %in% ind_noVar)){ # If all indicators in set were reported without uncertainty...
     var2Imp <- var1Imp # ... set imputed "lower" to same as "expected"
     var3Imp <- var1Imp # ... set imputed "upper" to same as "expected"
