@@ -27,7 +27,11 @@
 #' @param NIunitWeights numeric BSunit x NIunit matrix with NIunit weights for
 #'   each combination of BSunits and NIunits, where
 #'   \code{colSums(NIunitWeights) = rep(1,n)}.
-#'
+#' @param enforce_weightSum1 logical. If TRUE, rescales weights for each indicator-
+#' year combination to sum to 1. This allows calculating indices representing
+#' comparable area-weighted means that are specific to the combination of areas for
+#' which data is available. This is so far only relevant for single indicator
+#' indices calulated without imputation; the default is therefore set to FALSE.
 #' @return A list \code{x} of BSunit x indicator matrices \code{zi}, one matrix for
 #'   each NIunit. Each matrix \code{zi} containing weights for each combination of
 #'   BSunit and indicator, and satisfying \code{sum(zi,na.rm = TRUE) = 1}.
@@ -64,7 +68,8 @@
 #'
 
 calculateWeights <- function(BSunitWeights = NULL,
-                             NIunitWeights = NULL) {
+                             NIunitWeights = NULL,
+                             enforce_weightSum1 = FALSE) {
 
   # Check input
 
@@ -94,6 +99,20 @@ calculateWeights <- function(BSunitWeights = NULL,
     }
     outWeights <- c(outWeights,list(zzz))
     names(outWeights)[length(outWeights)] <- dimnames(NIunitWeights)[[2]][i]
+  }
+
+
+  # Optional: rescale weights to sum to 1
+  if(enforce_weightSum1){
+    for(i in 1:length(outWeights)){
+      for(k in 1:ncol(outWeights[[i]])){
+
+        sumWeights <- sum(outWeights[[i]][,k], na.rm = TRUE)
+        if(sumWeights != 1){
+          outWeights[[i]][,k] <- outWeights[[i]][,k]/sumWeights
+        }
+      }
+    }
   }
 
   return(outWeights)

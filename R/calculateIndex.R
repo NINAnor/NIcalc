@@ -44,6 +44,11 @@
 #' @param awBSunit character, name of variable in \code{x$BSunit} used to calculate
 #'   NIunit weights.
 #' @param nsim integer - number of bootstrap simulations, default is 1000.
+#' @param enforce_weightSum1 logical. If TRUE, rescales weights for each indicator-
+#' year combination to sum to 1. This allows calculating indices representing
+#' comparable area-weighted means that are specific to the combination of areas for
+#' which data is available. This is so far only relevant for single indicator
+#' indices calulated without imputation; the default is therefore set to FALSE.
 #' @param ... further arguments passed on to \code{\link{calculateBSunitWeights}}
 #'   (\code{fids, tgroups, keys, w}), \code{\link{calculateNIunitWeights}}
 #'   (\code{awbs, awBSunit}), and \code{\link{scaleObsMat}}
@@ -80,7 +85,8 @@
 calculateIndex <- function(x = NULL,
                            imputations = NULL,
                            awBSunit = NULL,
-                           nsim = 1000, ...) {
+                           nsim = 1000,
+                           enforce_weightSum1 = FALSE, ...) {
 
 
   y <- match.call()
@@ -210,9 +216,19 @@ calculateIndex <- function(x = NULL,
                 "\nThere are ", nICunits,
                 " ICunits with observations in data set '",y[2],"'.",sep=""))
 
+  # Adjust weight re-scaling settings (should only be done when some areas are missing data and no imputations are present)
+  if(!(is.null(imputations) & any(!allObs))){
+    enforce_weightSum1 <- FALSE
+    message("\nIgnoring enforce_weightSum1 = TRUE because either all data are observed or imputations are present.")
+  }
+
   # Skriv beskjed om vektene
   if (weightsEachYear) {
     message("\nWeights will be recalculated for each year")
+  }
+
+  if(enforce_weightSum1){
+    message("\nWeights will be rescaled to sum to 1 for each indicator-year combination.")
   }
 
   if ("fidelity" %in% names(dataSet$indicators)) {
@@ -506,7 +522,9 @@ calculateIndex <- function(x = NULL,
                                          NIunits = dataSet$NIunits,
                                          awbs = param$awbs,
                                          awBSunit = BSunitWeightVariable)
-      NIWeights[[i]] <- calculateWeights(BSunitWeights = xxx[[i]],NIunitWeights = yyy[[i]])
+      NIWeights[[i]] <- calculateWeights(BSunitWeights = xxx[[i]],
+                                         NIunitWeights = yyy[[i]],
+                                         enforce_weightSum1 = enforce_weightSum1)
 
 
       # For each year: sample bootmat
