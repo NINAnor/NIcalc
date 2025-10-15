@@ -23,7 +23,7 @@
 #' @param nrBars integer. Number of indicators for which to display bars when allBars = FALSE. Default = 35.
 #' @param ... further arguments controlling the appearance of the plot,
 #'   some passed further to \code{\link{par}}:
-#'   \cr\code{lwd}, \code{cex}, \code{cex.axis}, \code{main}, \code{cex.main},
+#'   \cr\code{lwd}, \code{cex}, \code{cex.axis}, \code{main}, \code{cex.main}, \code{xlab},
 #'   \cr\code{barnum} - maximum number of bars (default = 35),
 #'   \cr\code{barcol} - color for the bars (defaults to \code{gray(0.75)}),
 #'   \cr\code{keys} - whether key indicators should be shown in a separate color (\code{T}, default),
@@ -74,7 +74,8 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
                                 cex = 0.5,
                                 cex.axis = par("cex.axis"),
                                 cex.main = 1.75,
-                                main = "") {
+                                main = "",
+                                xlab = "") {
 
     return(list(barnum = barnum,
                 keys = keys,
@@ -84,7 +85,8 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
                 cex = cex,
                 cex.axis = cex.axis,
                 cex.main = cex.main,
-                main = main))
+                main = main,
+                xlab = xlab))
   }
 
   param <- setPlotParameters(...)
@@ -98,6 +100,7 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
   cex.axis <- param$cex.axis
   cex.main <- param$cex.main
   main <- param$main
+  xlab <- param$xlab
 
   if (group == "BSunit") {
     y <- x$NIunitWeights
@@ -156,6 +159,11 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
     mainName <- main
   }
 
+  if (xlab == "") {
+    xlabName <- "Weight"
+  } else {
+    xlabName <- xlab
+  }
 
   ytg <- y
   if (group == "ICunit") {
@@ -225,7 +233,7 @@ plotWeights <- function(x = NULL, group = "indic", allBars = FALSE, nrBars = 35,
                     horiz = TRUE,
                     col = farger, border = par("fg"),
                     main = mainName, sub = NULL,
-                    xlab = "Weight", ylab = NULL,
+                    xlab = xlabName, ylab = NULL,
                     xlim = c(0, xlim2), ylim = NULL, xpd = TRUE, log = "",
                     axes = TRUE, axisnames = TRUE,
                     cex.axis = cex.axis,
