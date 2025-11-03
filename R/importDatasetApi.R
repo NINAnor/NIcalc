@@ -36,8 +36,8 @@
 #'
 #' @import tibble
 #'
-#' @param username	character. Your username for accessing the NI database.
-#' @param password	character. Your password for accessing the NI database.
+#' @param username	character. Your username for accessing the NI database. If none is provided, defaults to the public read-only access.
+#' @param password	character. Your password for accessing the NI database. If none is provided, defaults to the public read-only access.
 #' @param eco	character; optional vector specifying ecosystems to include in the
 #'   dataset. Ignored with nonempty \code{indic}.
 #' @param indic	character; optional vector specifying indicators to include in
@@ -99,8 +99,8 @@
 #' @export
 
 importDatasetApi <- function(
-  username = NULL,
-  password = NULL,
+  username = "lesebruker@nina.no",
+  password = "9Lz^O893uBy*",
   eco = NULL,
   indic = NULL,
   year = NULL,
