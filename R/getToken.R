@@ -8,8 +8,8 @@
 #'
 #' @import httr
 #'
-#' @param username	character		Your username
-#' @param password	character		Your password
+#' @param username	character		Your username. If none provided, defaults to public read-only access.
+#' @param password	character		Your password. If none provided, defaults to public read-only access.
 #' @param url	      character		API address.
 #' @return The function sets the variables niToken and url, which both are used in other functions that
 #' communicate with the database through the API.
@@ -22,7 +22,7 @@
 #' @export
 #'
 
-getToken <- function (username = NULL, password = NULL, url = "https://www8.nina.no/NaturindeksNiCalc")
+getToken <- function (username = "lesebruker@nina.no", password = "9Lz^O893uBy*", url = "https://www8.nina.no/NaturindeksNiCalc")
 {
   token_path <- paste0("/token?username=", username,
                        "&password=", password)
