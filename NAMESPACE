@@ -79,29 +79,37 @@ import(httr)
 import(lattice)
 import(mice)
 import(tibble)
-importFrom(distr,DiscreteDistribution)
-importFrom(distr,EmpiricalDistribution)
-importFrom(distr,Lnorm)
-importFrom(distr,Pois)
-importFrom(distr,lambda)
-importFrom(distr,meanlog)
-importFrom(distr,r)
+importFrom(distr,
+  DiscreteDistribution,
+  EmpiricalDistribution,
+  Lnorm,
+  Pois,
+  lambda,
+  meanlog,
+  r
+)
 importFrom(grDevices,grey)
-importFrom(graphics,axis)
-importFrom(graphics,barplot)
-importFrom(graphics,lines)
-importFrom(graphics,title)
-importFrom(msm,dtnorm)
-importFrom(msm,qtnorm)
-importFrom(msm,rtnorm)
+importFrom(graphics,
+  axis,
+  barplot,
+  lines,
+  title
+)
+importFrom(msm,
+  dtnorm,
+  qtnorm,
+  rtnorm
+)
 importFrom(plyr,ldply)
-importFrom(stats,dexp)
-importFrom(stats,median)
-importFrom(stats,nlminb)
-importFrom(stats,qexp)
-importFrom(stats,quantile)
-importFrom(stats,rexp)
-importFrom(stats,runif)
+importFrom(stats,
+  dexp,
+  median,
+  nlminb,
+  qexp,
+  quantile,
+  rexp,
+  runif
+)
 importFrom(truncnorm,etruncnorm)
 importFrom(utils,globalVariables)
 importFrom(uuid,UUIDgenerate)

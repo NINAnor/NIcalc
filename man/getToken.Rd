@@ -5,11 +5,7 @@
 \alias{getToken}
 \title{Get a Connection Token from the NI Database}
 \usage{
-getToken(
-  username = NULL,
-  password = NULL,
-  url = "https://www8.nina.no/NaturindeksNiCalc"
-)
+getToken(username, password, url = "https://naturindekscalcapi.nina.no")
 }
 \arguments{
 \item{username}{character        Your username}
@@ -33,5 +29,5 @@ getToken("test.user", "test.password")
 
 }
 \author{
-Jens Åström
+Chloé R. Nater
 }
