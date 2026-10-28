@@ -36,8 +36,12 @@
 #'
 #' @import tibble
 #'
-#' @param username	character. Your username for accessing the NI database.
-#' @param password	character. Your password for accessing the NI database.
+#' @param username character. Optional API username. If NULL, uses
+#'   environmental variable NICALC_USER if set, otherwise the built-in
+#'   public read-only username.
+#' @param password character. Optional API password. If NULL, uses
+#'   environmental variable NICALC_PASSWORD if set, otherwise the built-in
+#'   public read-only username.
 #' @param eco	character; optional vector specifying ecosystems to include in the
 #'   dataset. Ignored with nonempty \code{indic}.
 #' @param indic	character; optional vector specifying indicators to include in
@@ -65,9 +69,7 @@
 #' # Import data for the calculation of a Nature Index for forests in Norway
 #' # covering the years 1990, 2000, 2010, 2014, 2019.
 #'
-#' forestImport <- importDatasetApi(username = "your username",
-#'                                  password = "your password",
-#'                                  eco = "Skog",
+#' forestImport <- importDatasetApi(eco = "Skog",
 #'                                  indic = NULL,
 #'                                  year = c("1990","2000","2010","2014","2019"),
 #'                                  norwegian = TRUE,
@@ -76,9 +78,7 @@
 #' # Import data for the calculation of a thematic index for game birds in Norway
 #' # in 2000
 #'
-#' amphibImport <- importDatasetApi(username = "your username",
-#'                                  password = "your password",
-#'                                  eco = NULL,
+#' amphibImport <- importDatasetApi(eco = NULL,
 #'                                  indic = c("Fjellrype","Lirype","Orrfugl","Storfugl"),
 #'                                  year = c("2000"),
 #'                                  norwegian = TRUE,
@@ -86,9 +86,7 @@
 #'
 #' # Import data for the calculation of an indicator index
 #'
-#' cormorImport <- importDatasetApi(username = "your username",
-#'                                  password = "your password",
-#'                                  eco = NULL,
+#' cormorImport <- importDatasetApi(eco = NULL,
 #'                                  indic = c("Toppskarv"),
 #'                                  year = c("1990","2000","2010","2014","2019"),
 #'                                  norwegian = TRUE,
