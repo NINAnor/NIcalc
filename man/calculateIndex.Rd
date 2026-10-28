@@ -5,7 +5,14 @@
 \alias{calculateIndex}
 \title{Calculate Index}
 \usage{
-calculateIndex(x = NULL, imputations = NULL, awBSunit = NULL, nsim = 1000, ...)
+calculateIndex(
+  x = NULL,
+  imputations = NULL,
+  awBSunit = NULL,
+  nsim = 1000,
+  enforce_weightSum1 = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{list of class \code{niInput}.}
@@ -16,6 +23,12 @@ calculateIndex(x = NULL, imputations = NULL, awBSunit = NULL, nsim = 1000, ...)
 NIunit weights.}
 
 \item{nsim}{integer - number of bootstrap simulations, default is 1000.}
+
+\item{enforce_weightSum1}{logical. If TRUE, rescales weights for each indicator-
+year combination to sum to 1. This allows calculating indices representing
+comparable area-weighted means that are specific to the combination of areas for
+which data is available. This is so far only relevant for single indicator
+indices calulated without imputation; the default is therefore set to FALSE.}
 
 \item{...}{further arguments passed on to \code{\link{calculateBSunitWeights}}
 (\code{fids, tgroups, keys, w}), \code{\link{calculateNIunitWeights}}

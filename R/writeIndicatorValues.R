@@ -59,8 +59,16 @@ writeIndicatorValues <- function (indicatorData = NULL){
     unlist(rawDist[names(rawDist) %ino% indicatorData$indicatorValues$customDistributionUUID]) # in order of customdist list and not the order in the dataframe
   body <- indicatorData$indicatorValues
 
-  postdata <- httr::POST(url = combinedUrl, body = body, encode = "json",
-                         httr::add_headers(Authorization = auth_string))
+  postdata <- httr::POST(
+    url = combinedUrl,
+    body = body,
+    encode = "json",
+    httr::add_headers(
+      Authorization = auth_string,
+      `User-Agent` = "NI-R-client"
+    )
+  )
+
   message(httr::content(postdata))
 
   if (length(httr::content(postdata)) == 0) {

@@ -45,8 +45,14 @@ getIndicatorValues <- function (indicatorID = NULL, years = NULL) {
 
   httr::set_config(httr::config(ssl_verifypeer = 0L))
 
-  rawResult <- httr::GET(url = value_path, encode = "json",
-                         httr::add_headers(Authorization = auth_string))
+  rawResult <- httr::GET(
+    url = value_path,
+    encode = "json",
+    httr::add_headers(
+      Authorization = auth_string,
+      `User-Agent` = "NI-R-client"
+    )
+  )
 
   rawContent <- httr::content(rawResult, as = "text")
 

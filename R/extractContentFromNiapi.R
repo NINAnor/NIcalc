@@ -20,7 +20,7 @@
 #'
 #' @export
 
-extractContentFromNiapi <- function(APIUrl = "https://www8.nina.no/NaturindeksNiCalc",
+extractContentFromNiapi <- function(APIUrl = "https://naturindekscalcapi.nina.no",
                                     methodPath = NULL,
                                     token = NULL, ...) {
 
@@ -32,17 +32,19 @@ extractContentFromNiapi <- function(APIUrl = "https://www8.nina.no/NaturindeksNi
 
   auth_string <- paste("bearer", token, sep = " ")
 
-  # extractContentFromNiapi does not set an user agent identifier with httr::user_agent().
-  # Setting identifiers might be necessary in the future if the API is set up to log requests based on user agents.
-  # Currently the API does not have a system for logging requests. The plan is to base such a system on
-  # tokens and authorization strings instead of user agent identifiers. Tokens can be used to recognize the
-  # clients as they are linked to their usernames in the NI database.
+  # Identify NI-R-client to the API security layer.
+  # Required for compatibility with the current Cloudflare configuration.
 
   # API request
 
-  apiResponce <- httr::GET(url = paste(APIUrl,methodPath,sep=""),
-                           encode = "json",
-                           httr::add_headers(Authorization = auth_string))
+  apiResponce <- httr::GET(
+    url = paste0(APIUrl, methodPath),
+    encode = "json",
+    httr::add_headers(
+      Authorization = auth_string,
+      `User-Agent` = "NI-R-client"
+    )
+  )
 
   # Check for errors. Stop execution if errors occur
 

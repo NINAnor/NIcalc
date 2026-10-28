@@ -6,7 +6,7 @@
 \title{Extract Data from the Nature Index API}
 \usage{
 extractContentFromNiapi(
-  APIUrl = "https://www8.nina.no/NaturindeksNiCalc",
+  APIUrl = "https://naturindekscalcapi.nina.no",
   methodPath = NULL,
   token = NULL,
   ...
