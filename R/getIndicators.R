@@ -37,9 +37,14 @@ getIndicators <- function() {
 
   auth_string <- paste("bearer", token, sep = " ")
 
-  myIndicators <- httr::GET(url = combinedURL,
-                            encode = "json",
-                            httr::add_headers(Authorization = auth_string))
+  myIndicators <- httr::GET(
+    url = combinedURL,
+    encode = "json",
+    httr::add_headers(
+      Authorization = auth_string,
+      `User-Agent` = "NI-R-client"
+    )
+  )
 
   rawContent <- httr::content(myIndicators, as = "parsed")
 

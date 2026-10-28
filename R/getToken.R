@@ -4,7 +4,7 @@
 #' communicate with the database.
 #'
 #' @encoding UTF-8
-#' @author Jens Åström
+#' @author Chloé R. Nater
 #'
 #' @import httr
 #'
@@ -22,31 +22,60 @@
 #' @export
 #'
 
-getToken <- function (username = "lesebruker@nina.no", password = "9Lz^O893uBy*", url = "https://www8.nina.no/NaturindeksNiCalc")
-{
-  token_path <- paste0("/token?username=", username,
-                       "&password=", password)
-  combinedUrl <- paste0(url, token_path)
-  httr::set_config(httr::config(ssl_verifypeer = 0L))
-  gettoken <- httr::POST(url = combinedUrl, encode = "json")
-  token <- httr::content(gettoken, encoding = "UTF-8")
-  if (exists("token")) {
-    if (any(class(token) != "character"))
-      stop(paste0("Token NOT retrieved from ", url,
-                  " !"))
-    if (nchar(token) < 30) {
-      stop(paste0("Token NOT retrieved from ", url,
-                  " !"))
-    }
-    else message(paste0("Token retrieved from ", url,
-                        " !"))
+getToken <- function(
+    username,
+    password,
+    url = "https://naturindekscalcapi.nina.no"
+) {
+
+  response <- httr::POST(
+    url = paste0(sub("/+$", "", url), "/token"),
+    query = list(
+      username = username,
+      password = password
+    ),
+    httr::add_headers(
+      Accept = "text/plain",
+      `User-Agent` = "NI-R-client"
+    )
+  )
+
+  # Check HTTP response before processing token
+  if (httr::http_error(response)) {
+    stop(
+      "Token NOT retrieved. HTTP status: ",
+      httr::status_code(response),
+      call. = FALSE
+    )
   }
-  else stop(paste0("Token NOT retrieved from ", url,
-                   " !"))
 
-  pos <- 1
-  envir = as.environment(pos)
+  # Extract token as plain text
+  token <- httr::content(
+    response,
+    as = "text",
+    encoding = "UTF-8"
+  )
 
-  assign(".niToken", token, envir = envir) #envir = .GlobalEnv) #, envir = passEnv)
-  assign(".url", url, envir = envir) #envir = .GlobalEnv) #, envir = passEnv)
+  # Validate response
+  if (
+    length(token) != 1L ||
+    is.na(token) ||
+    nchar(token) < 30L
+  ) {
+    stop(
+      "Token NOT retrieved: unexpected response.",
+      call. = FALSE
+    )
+  }
+
+  # Preserve existing variables for other NI functions
+  assign(".niToken", token, envir = .GlobalEnv)
+  assign(".url", url, envir = .GlobalEnv)
+
+  assign(".niToken", token, envir = passEnv)
+  assign(".url", url, envir = passEnv)
+
+  message("Token retrieved successfully!")
+
+  invisible(token)
 }

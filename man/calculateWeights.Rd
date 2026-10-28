@@ -5,7 +5,11 @@
 \alias{calculateWeights}
 \title{Weighting per NIunit}
 \usage{
-calculateWeights(BSunitWeights = NULL, NIunitWeights = NULL)
+calculateWeights(
+  BSunitWeights = NULL,
+  NIunitWeights = NULL,
+  enforce_weightSum1 = FALSE
+)
 }
 \arguments{
 \item{BSunitWeights}{numeric BSunit x indicator matrix with BSunit weights
@@ -15,6 +19,12 @@ for each combination of BSunits and indicators, where
 \item{NIunitWeights}{numeric BSunit x NIunit matrix with NIunit weights for
 each combination of BSunits and NIunits, where
 \code{colSums(NIunitWeights) = rep(1,n)}.}
+
+\item{enforce_weightSum1}{logical. If TRUE, rescales weights for each indicator-
+year combination to sum to 1. This allows calculating indices representing
+comparable area-weighted means that are specific to the combination of areas for
+which data is available. This is so far only relevant for single indicator
+indices calulated without imputation; the default is therefore set to FALSE.}
 }
 \value{
 A list \code{x} of BSunit x indicator matrices \code{zi}, one matrix for

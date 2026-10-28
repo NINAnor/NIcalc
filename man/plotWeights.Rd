@@ -5,7 +5,7 @@
 \alias{plotWeights}
 \title{Barplot showing Weights per Indicator, trophic Group, BSunit or ICunit.}
 \usage{
-plotWeights(x = NULL, group = "indic", ...)
+plotWeights(x = NULL, group = "indic", allBars = FALSE, nrBars = 35, ...)
 }
 \arguments{
 \item{x}{an \code{niValue} object.}
@@ -16,9 +16,13 @@ plotWeights(x = NULL, group = "indic", ...)
 \cr per BSunit (\code{group = "BSunit"}), or
 \cr per ICunit (\code{group = "ICunit"})?}
 
+\item{allBars}{logical. Whether to plot bars for all indicators or only a selection (default, specified via argumen "barnum")}
+
+\item{nrBars}{integer. Number of indicators for which to display bars when allBars = FALSE. Default = 35.}
+
 \item{...}{further arguments controlling the appearance of the plot,
 some passed further to \code{\link{par}}:
-\cr\code{lwd}, \code{cex}, \code{cex.axis}, \code{main}, \code{cex.main},
+\cr\code{lwd}, \code{cex}, \code{cex.axis}, \code{main}, \code{cex.main}, \code{xlab},
 \cr\code{barnum} - maximum number of bars (default = 35),
 \cr\code{barcol} - color for the bars (defaults to \code{gray(0.75)}),
 \cr\code{keys} - whether key indicators should be shown in a separate color (\code{T}, default),

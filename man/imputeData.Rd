@@ -5,7 +5,13 @@
 \alias{imputeData}
 \title{Multiple Imputations}
 \usage{
-imputeData(x = NULL, nSim = 1000, transConst = 0.01, ...)
+imputeData(
+  x = NULL,
+  nSim = 1000,
+  transConst = 0.01,
+  mice_threshold_alt = 0.9999,
+  ...
+)
 }
 \arguments{
 \item{x}{list of class \code{niInput}.}
@@ -14,6 +20,9 @@ imputeData(x = NULL, nSim = 1000, transConst = 0.01, ...)
 
 \item{transConst}{numeric scalar, \code{0<transConst<=0.1}.
 Transformation constant in log-transformation. Default is \code{0.01}.}
+
+\item{mice_threshold_alt}{numeric scalar, alternative threshold to try with
+`mice::mice()` if the default (0.999) fails. Set to default to 0.9999.}
 
 \item{...}{further arguments passed on to \code{mice::mice}.}
 }
