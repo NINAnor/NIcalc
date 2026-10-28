@@ -5,22 +5,27 @@
 \alias{getToken}
 \title{Get a Connection Token from the NI Database}
 \usage{
-getToken(username, password, url = "https://naturindekscalcapi.nina.no")
+getToken(
+  username = NULL,
+  password = NULL,
+  url = "https://naturindekscalcapi.nina.no"
+)
 }
 \arguments{
-\item{username}{character        Your username}
+\item{username}{character. Your username. Defaults to open read-only credentials unless provided.}
 
-\item{password}{character        Your password}
+\item{password}{character. Your password. Defaults to open read-only credentials unless provided.}
 
-\item{url}{character        API address.}
+\item{url}{character.    API address.}
 }
 \value{
-The function sets the variables niToken and url, which both are used in other functions that
-communicate with the database through the API.
+Invisibly returns the authentication token and stores it in .niToken and .url for subsequent API requests.
 }
 \description{
 This function tries to connect to the NI database API and retrieves a token that is later used to
-communicate with the database.
+communicate with the database. If no personal username and password are provided, defaults to
+the public read-only access. If you are providing your own login credentials, you can either
+supply them to the function directly, or specify them as environmental variables NICALC_USER and NICALC_PASSWORD.
 }
 \examples{
 \dontrun{
